@@ -5,17 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mahmoud & Eman | Save The Date</title>
     
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    
-    <!-- Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Cinzel:wght@400;700;900&family=Amiri:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Tajawal:wght@400;500;700;800;900&family=El+Messiri:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700;800&family=Raleway:wght@300;400;500;600;700;800&family=Changa:wght@400;500;600;700;800&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Cinzel:wght@400;700;900&family=Amiri:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Tajawal:wght@400;500;700;800;900&family=El+Messiri:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700;800&family=Raleway:wght@300;400;500;600;700;800&family=Changa:wght@400;500;600;700;800&family=Almarai:wght@400;700;800&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -32,7 +28,7 @@
             --gold-light: #e8d9c5;
             --shadow-soft: 0 20px 60px rgba(60, 44, 48, 0.06);
             --shadow-glow: 0 0 40px rgba(232, 160, 180, 0.3);
-            --shadow-envelope: 0 30px 80px rgba(60, 44, 48, 0.12), 0 10px 30px rgba(232,160,180,0.1);
+            --shadow-envelope: 0 30px 80px rgba(60, 44, 48, 0.15), 0 10px 30px rgba(232,160,180,0.1);
             --gradient-main: linear-gradient(135deg, #e8a0b4 0%, #c47d8b 50%, #e8b4c4 100%);
             --gradient-pink: linear-gradient(135deg, #fdf5f7 0%, #f9e4ea 50%, #f2c8d4 100%);
             --names-font: 'Cormorant Garamond', serif;
@@ -60,9 +56,72 @@
             user-select: none;
             -webkit-touch-callout: none;
             -webkit-overflow-scrolling: touch;
+            cursor: default;
         }
 
-        /* ============ AI BACKGROUND FLORAL PATH ============ */
+        /* ============ AI CURSOR FOLLOWER ============ */
+        .ai-cursor-glow {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(232,160,180,0.15) 0%, rgba(232,160,180,0.05) 40%, transparent 70%);
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .ai-cursor-glow.active {
+            opacity: 1;
+        }
+
+        /* ============ AI FLOATING HEARTS SYSTEM ============ */
+        .ai-heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 2;
+            animation: aiHeartFloat var(--float-duration) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            animation-delay: var(--float-delay);
+            opacity: 0;
+            filter: blur(0.5px);
+        }
+
+        @keyframes aiHeartFloat {
+            0% {
+                transform: translateY(110vh) translateX(0) scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: var(--heart-opacity, 0.6);
+            }
+            50% {
+                transform: translateY(50vh) translateX(var(--drift-x)) scale(var(--heart-scale, 1)) rotate(var(--drift-rotate));
+                opacity: var(--heart-opacity, 0.6);
+            }
+            90% {
+                opacity: var(--heart-opacity, 0.6);
+            }
+            100% {
+                transform: translateY(-20vh) translateX(var(--drift-x-end)) scale(0.3) rotate(var(--drift-rotate-end));
+                opacity: 0;
+            }
+        }
+
+        /* ============ AI PARTICLES CANVAS ============ */
+        #aiParticlesCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.6;
+        }
+
+        /* ============ FLORAL BACKGROUND DECORATION ============ */
         .floral-bg-container {
             position: fixed;
             inset: 0;
@@ -73,9 +132,11 @@
 
         .floral-bg-svg {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            opacity: 0.08;
+            width: 110%;
+            height: 110%;
+            top: -5%;
+            left: -5%;
+            opacity: 0.06;
         }
 
         .floral-path-item {
@@ -103,218 +164,271 @@
             }
         }
 
-        /* ============ AI PARTICLES CANVAS ============ */
-        #aiParticlesCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            opacity: 0.5;
-        }
-
         /* ============ ENVELOPE SCREEN ============ */
         #envelopeScreen {
             position: fixed;
             inset: 0;
             z-index: 99999;
-            background: var(--gradient-pink);
+            background: radial-gradient(ellipse at center, #f9e4ea 0%, #f2c8d4 40%, #e8a0b4 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 1.5s cubic-bezier(0.7, 0, 0.3, 1);
+            transition: all 1.8s cubic-bezier(0.7, 0, 0.3, 1);
             overflow: hidden;
+            perspective: 1200px;
         }
 
         #envelopeScreen.hidden {
             opacity: 0;
             pointer-events: none;
-            transform: scale(1.5);
-            filter: blur(20px);
+            transform: scale(1.6);
+            filter: blur(30px);
         }
 
-        /* Envelope BG Sparkles */
-        .envelope-sparkle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: var(--pink);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: sparkleFloat var(--duration) ease-out infinite;
-            animation-delay: var(--delay);
-        }
-
-        @keyframes sparkleFloat {
-            0% { transform: translate(0, 0) scale(1); opacity: 0.7; }
-            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
-        }
-
-        /* ============ INTERACTIVE ENVELOPE ============ */
-        .envelope-interactive {
+        /* ============ 3D ENVELOPE ============ */
+        .envelope-3d-scene {
             position: relative;
-            width: 340px;
-            width: min(88vw, 360px);
-            height: 260px;
-            height: min(45vh, 280px);
-            z-index: 10;
-            perspective: 800px;
+            width: 360px;
+            width: min(88vw, 380px);
+            height: 280px;
+            height: min(48vh, 300px);
+            transform-style: preserve-3d;
+            cursor: pointer;
         }
 
-        /* Envelope bottom (fixed part) */
-        .envelope-bottom {
+        .envelope-3d {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s var(--ai-transition);
+        }
+
+        /* Envelope shadow */
+        .envelope-shadow {
+            position: absolute;
+            bottom: -30px;
+            left: 10%;
+            right: 10%;
+            height: 40px;
+            background: radial-gradient(ellipse, rgba(0,0,0,0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        /* Back face */
+        .env-back {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, #f5d5de 0%, #edc4d0 100%);
+            border-radius: 16px;
+            transform: translateZ(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            z-index: 0;
+            border: 1px solid rgba(196,125,139,0.15);
+        }
+
+        /* Bottom envelope */
+        .env-bottom {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 55%;
-            background: linear-gradient(180deg, #fdf5f7 0%, #f9e4ea 100%);
-            border-radius: 0 0 12px 12px;
-            box-shadow: 0 10px 40px rgba(60, 44, 48, 0.1);
+            height: 58%;
+            background: linear-gradient(180deg, #fff0f3 0%, #f9e4ea 40%, #f2c8d4 100%);
+            border-radius: 0 0 16px 16px;
+            transform: translateZ(0px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
             z-index: 2;
-            border: 1px solid rgba(232, 160, 180, 0.15);
+            border: 1px solid rgba(196,125,139,0.12);
             border-top: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            overflow: hidden;
         }
 
-        .envelope-bottom::before {
+        .env-bottom::before {
             content: '';
             position: absolute;
-            top: -1px;
+            top: 0;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 30px solid transparent;
-            border-right: 30px solid transparent;
-            border-top: 25px solid #f9e4ea;
+            border-left: 35px solid transparent;
+            border-right: 35px solid transparent;
+            border-top: 28px solid #f9e4ea;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
         }
 
-        /* Envelope bottom decorative line */
-        .envelope-bottom-line {
+        .env-bottom-inner {
             position: absolute;
-            inset: 15px;
-            border: 1px dashed rgba(232, 160, 180, 0.2);
-            border-radius: 8px;
+            inset: 12px;
+            border: 1.5px dashed rgba(196,125,139,0.2);
+            border-radius: 10px;
             pointer-events: none;
         }
 
-        /* Envelope flap (interactive part) */
-        .envelope-flap {
+        /* Envelope flap - 3D interactive */
+        .env-flap {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             height: 55%;
             background: linear-gradient(180deg, #f2c8d4 0%, #e8b4c4 30%, #e8a0b4 100%);
-            border-radius: 12px 12px 50% 50%;
+            border-radius: 16px 16px 55% 55%;
             transform-origin: top center;
-            transition: transform 0.6s var(--ai-transition);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-            z-index: 3;
+            transform: translateZ(5px);
+            transition: transform 0.7s var(--ai-transition);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15), inset 0 -2px 0 rgba(196,125,139,0.1);
+            z-index: 5;
             cursor: grab;
             touch-action: none;
         }
 
-        .envelope-flap:active {
+        .env-flap:active {
             cursor: grabbing;
         }
 
-        .envelope-flap.opened {
-            transform: rotateX(-175deg);
-            border-radius: 12px 12px 0 0;
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+        .env-flap.opened {
+            transform: rotateX(-180deg) translateZ(5px);
+            border-radius: 16px 16px 0 0;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
         }
 
-        /* Letter peeking out */
-        .letter-peek {
+        /* Flap decorative lines */
+        .env-flap::after {
+            content: '';
             position: absolute;
-            left: 18px;
-            right: 18px;
-            top: 30%;
-            height: 55%;
-            background: white;
+            inset: 15px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 12px 12px 45% 45%;
+            pointer-events: none;
+        }
+
+        /* Letter inside */
+        .letter-3d {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            top: 32%;
+            height: 52%;
+            background: linear-gradient(180deg, #ffffff 0%, #fefefe 100%);
             border-radius: 10px;
             z-index: 1;
             transition: transform 0.8s var(--ai-transition);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.08);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            transform: translateZ(0);
         }
 
-        .letter-peek.revealed {
-            transform: translateY(-50%);
+        .letter-3d.revealed {
+            transform: translateY(-42%) translateZ(0);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
 
-        .letter-peek-content {
+        .letter-3d-content {
             text-align: center;
-            padding: 20px;
+            padding: 15px;
         }
 
-        .letter-peek-names {
+        .letter-3d-names {
             font-family: var(--envelope-font);
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 600;
             color: var(--pink-dark);
             letter-spacing: 3px;
-            line-height: 1.1;
-            transition: all 0.3s ease;
+            line-height: 1.2;
         }
 
-        .letter-peek-names:hover {
-            color: var(--pink);
-            transform: scale(1.05);
-        }
-
-        .letter-peek-and {
+        .letter-3d-and {
             display: block;
             font-family: var(--envelope-font);
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--pink);
             font-style: italic;
-            margin: 6px 0;
+            margin: 5px 0;
         }
 
-        .letter-peek-tap {
+        .letter-3d-tap {
             display: block;
             font-family: var(--main-font);
             font-size: 0.6rem;
             color: #ccc;
-            letter-spacing: 4px;
+            letter-spacing: 5px;
             text-transform: uppercase;
-            margin-top: 8px;
-            animation: tapPulse 2s ease-in-out infinite;
+            margin-top: 10px;
+            animation: letterTapPulse 2s ease-in-out infinite;
         }
 
-        @keyframes tapPulse {
+        @keyframes letterTapPulse {
             0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.8; }
+            50% { opacity: 0.9; }
         }
 
-        /* Hint text */
-        .envelope-hint {
+        /* Seal stamp */
+        .envelope-seal {
             position: absolute;
-            bottom: -45px;
+            top: 52%;
+            left: 50%;
+            transform: translate(-50%, -50%) translateZ(8px);
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: var(--gradient-main);
+            z-index: 6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(196,125,139,0.4), inset 0 2px 0 rgba(255,255,255,0.2);
+            transition: all 0.5s var(--ai-transition);
+            pointer-events: none;
+        }
+
+        .envelope-seal.hidden {
+            opacity: 0;
+            transform: translate(-50%, -50%) translateZ(8px) scale(0) rotate(180deg);
+        }
+
+        .seal-inner-ring {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px dashed rgba(255,255,255,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .seal-inner-text {
+            font-family: var(--envelope-font);
+            font-size: 1.1rem;
+            color: white;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* Hint */
+        .envelope-hint-text {
+            position: absolute;
+            bottom: -55px;
             left: 50%;
             transform: translateX(-50%);
             color: var(--pink-dark);
-            font-size: 0.75rem;
-            letter-spacing: 3px;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
             font-weight: 600;
-            animation: hintBounce 2s ease-in-out infinite;
+            animation: hintFloat 2s ease-in-out infinite;
             white-space: nowrap;
-            z-index: 5;
+            z-index: 10;
+            text-align: center;
         }
 
-        @keyframes hintBounce {
+        @keyframes hintFloat {
             0%, 100% { opacity: 0.4; transform: translateX(-50%) translateY(0); }
-            50% { opacity: 0.9; transform: translateX(-50%) translateY(4px); }
+            50% { opacity: 0.95; transform: translateX(-50%) translateY(6px); }
         }
 
         /* ============ MAIN CONTENT ============ */
@@ -335,145 +449,146 @@
             transform: translateY(0);
         }
 
-        /* ============ HEADER CARD ============ */
-        .header-card {
-            background: var(--white);
-            border-radius: 25px;
-            padding: 55px 25px 45px;
-            text-align: center;
+        /* ============ FLORAL DETAILS CARD ============ */
+        .floral-details-card {
             position: relative;
+            border-radius: 30px;
             overflow: hidden;
-            box-shadow: 0 10px 40px rgba(60, 44, 48, 0.04);
             margin-bottom: 20px;
-            border: 1px solid rgba(232, 160, 180, 0.08);
-            transition: all 0.5s ease;
+            box-shadow: 0 20px 60px rgba(60, 44, 48, 0.08);
+            border: 1px solid rgba(232, 160, 180, 0.1);
+            min-height: 500px;
+            background: var(--white);
         }
 
-        .header-card::after {
-            content: '';
+        .floral-bg-image {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--pink-light), transparent);
-            border-radius: 2px 2px 0 0;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.55;
         }
 
-        .header-card:hover {
-            box-shadow: 0 20px 50px rgba(60, 44, 48, 0.08);
-            transform: translateY(-2px);
-        }
-
-        .couple-frame {
-            width: 115px;
-            height: 115px;
-            margin: 0 auto 28px;
-            border-radius: 50%;
-            padding: 3px;
-            background: linear-gradient(135deg, #f2c8d4, #e8a0b4, #f2c8d4);
-            position: relative;
+        .floral-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, 
+                rgba(255,255,255,0.7) 0%, 
+                rgba(255,245,247,0.5) 30%, 
+                rgba(255,255,255,0.6) 60%, 
+                rgba(255,245,247,0.8) 100%);
             z-index: 1;
-            box-shadow: 0 0 30px rgba(232, 160, 180, 0.25);
-            animation: frameGlow 5s ease-in-out infinite;
         }
 
-        @keyframes frameGlow {
-            0%, 100% { box-shadow: 0 0 22px rgba(232, 160, 180, 0.18); }
-            50% { box-shadow: 0 0 50px rgba(232, 160, 180, 0.4); }
+        .floral-details-content {
+            position: relative;
+            z-index: 2;
+            padding: 45px 25px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
         }
 
-        #headImg {
+        .floral-couple-frame {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            border-radius: 50%;
+            padding: 4px;
+            background: linear-gradient(135deg, #f2c8d4, #e8a0b4, #f2c8d4);
+            box-shadow: 0 0 40px rgba(232, 160, 180, 0.3);
+            animation: floralFrameGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes floralFrameGlow {
+            0%, 100% { box-shadow: 0 0 25px rgba(232, 160, 180, 0.2); }
+            50% { box-shadow: 0 0 55px rgba(232, 160, 180, 0.45); }
+        }
+
+        #headImgFloral {
             width: 100%;
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid white;
+            border: 4px solid white;
             display: block;
         }
 
-        .couple-names-main {
+        .floral-names {
             font-family: var(--names-font);
+            font-size: 2.8rem;
             font-weight: 400;
-            font-size: 2.6rem;
             color: var(--pink-dark);
-            letter-spacing: 3px;
-            margin-bottom: 3px;
+            letter-spacing: 4px;
             line-height: 1.1;
-            transition: all 0.5s ease;
+            margin-bottom: 5px;
         }
 
-        .names-and-main {
+        .floral-and {
             display: block;
             font-family: var(--names-font);
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             color: var(--pink);
             font-style: italic;
             font-weight: 400;
-            margin: 2px 0 4px;
+            margin: 3px 0 6px;
         }
 
-        .event-label {
+        .floral-event-label {
             display: inline-block;
             color: var(--pink);
-            padding: 6px 20px;
+            padding: 6px 22px;
             border-radius: 20px;
             font-size: 0.75rem;
             letter-spacing: 5px;
             font-weight: 700;
             text-transform: uppercase;
             font-family: 'Montserrat', sans-serif;
-            background: transparent;
-            border: 1px solid rgba(232, 160, 180, 0.15);
+            border: 1px solid rgba(232, 160, 180, 0.2);
+            background: rgba(255,255,255,0.5);
+            backdrop-filter: blur(5px);
+            margin-bottom: 30px;
         }
 
-        .event-details {
-            margin-top: 32px;
-        }
-
-        .detail-item {
+        .floral-detail-item {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin: 14px 0;
+            gap: 10px;
+            margin: 10px 0;
             color: var(--dark-soft);
             font-size: 0.9rem;
-            font-weight: 400;
             transition: all 0.3s ease;
-            letter-spacing: 0.5px;
         }
 
-        .detail-item:hover {
+        .floral-detail-item:hover {
             transform: translateX(-4px);
             color: var(--pink);
         }
 
-        .detail-icon {
-            width: 38px;
-            height: 38px;
+        .floral-detail-icon {
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
-            background: var(--pink-pale);
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(3px);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.95rem;
-            transition: all 0.4s ease;
-            border: 1px solid rgba(232, 160, 180, 0.08);
+            font-size: 0.9rem;
+            border: 1px solid rgba(232, 160, 180, 0.12);
         }
 
-        .detail-item:hover .detail-icon {
-            transform: scale(1.12);
-            box-shadow: 0 5px 15px rgba(232, 160, 180, 0.2);
-            background: white;
-            border-color: var(--pink-light);
-        }
-
-        .location-link {
+        .floral-location-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-top: 22px;
+            margin-top: 24px;
             padding: 12px 28px;
             background: var(--gradient-main);
             color: white;
@@ -482,14 +597,14 @@
             font-weight: 600;
             font-size: 0.8rem;
             transition: all 0.4s var(--ai-transition);
-            box-shadow: 0 5px 18px rgba(232, 160, 180, 0.3);
+            box-shadow: 0 5px 20px rgba(232, 160, 180, 0.3);
             letter-spacing: 1px;
             text-transform: uppercase;
         }
 
-        .location-link:hover {
+        .floral-location-link:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(232, 160, 180, 0.4);
+            box-shadow: 0 15px 35px rgba(232, 160, 180, 0.45);
         }
 
         /* ============ COUNTDOWN ============ */
@@ -497,7 +612,7 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
-            margin: -8px 0 20px;
+            margin-bottom: 20px;
             position: relative;
             z-index: 10;
         }
@@ -591,12 +706,9 @@
             text-align: center;
             margin-bottom: 25px;
             font-weight: 500;
-            letter-spacing: 1px;
         }
 
-        .input-group {
-            margin-bottom: 18px;
-        }
+        .input-group { margin-bottom: 18px; }
 
         .input-group label {
             display: block;
@@ -605,7 +717,6 @@
             color: var(--dark-soft);
             font-size: 0.8rem;
             text-align: right;
-            letter-spacing: 0.5px;
         }
 
         .input-field {
@@ -661,14 +772,9 @@
             z-index: 0;
         }
 
-        .side-btn.active::before {
-            opacity: 1;
-        }
+        .side-btn.active::before { opacity: 1; }
 
-        .side-btn span {
-            position: relative;
-            z-index: 1;
-        }
+        .side-btn span { position: relative; z-index: 1; }
 
         .side-btn.active {
             color: white;
@@ -710,7 +816,6 @@
             margin-bottom: 18px;
             text-align: right;
             color: var(--dark);
-            transition: all 0.3s ease;
         }
 
         .message-area:focus {
@@ -864,12 +969,6 @@
             justify-content: center;
             padding: 20px;
             backdrop-filter: blur(12px);
-            animation: modalFadeIn 0.3s ease;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
 
         .modal-content {
@@ -971,10 +1070,7 @@
             backdrop-filter: blur(12px);
         }
 
-        .admin-container {
-            max-width: 500px;
-            margin: 0 auto;
-        }
+        .admin-container { max-width: 500px; margin: 0 auto; }
 
         .admin-title {
             text-align: center;
@@ -996,7 +1092,6 @@
             border-radius: 20px;
             text-align: center;
             color: white;
-            transition: all 0.3s ease;
         }
 
         .stat-card.total { background: linear-gradient(135deg, #a78b95, #8b6f7a); }
@@ -1004,18 +1099,8 @@
         .stat-card.maybe { background: linear-gradient(135deg, #d4b896, #c9a87c); }
         .stat-card.excused { background: linear-gradient(135deg, #d4959f, #c47d8b); }
 
-        .stat-number {
-            font-size: 1.8rem;
-            font-weight: 900;
-            display: block;
-        }
-
-        .stat-label {
-            font-size: 0.65rem;
-            opacity: 0.9;
-            margin-top: 4px;
-            letter-spacing: 1px;
-        }
+        .stat-number { font-size: 1.8rem; font-weight: 900; display: block; }
+        .stat-label { font-size: 0.65rem; opacity: 0.9; margin-top: 4px; }
 
         .stat-detail-grid {
             display: grid;
@@ -1032,18 +1117,8 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
 
-        .stat-detail-number {
-            font-size: 1.2rem;
-            font-weight: 900;
-            color: var(--pink-dark);
-            display: block;
-        }
-
-        .stat-detail-label {
-            font-size: 0.55rem;
-            color: #999;
-            margin-top: 2px;
-        }
+        .stat-detail-number { font-size: 1.2rem; font-weight: 900; color: var(--pink-dark); display: block; }
+        .stat-detail-label { font-size: 0.55rem; color: #999; margin-top: 2px; }
 
         .admin-card {
             background: white;
@@ -1053,19 +1128,8 @@
             margin-bottom: 16px;
         }
 
-        .admin-card h3 {
-            margin-bottom: 16px;
-            color: var(--dark);
-            font-size: 1rem;
-            font-weight: 700;
-        }
-
-        .admin-card h4 {
-            margin: 14px 0 8px;
-            color: #999;
-            font-size: 0.72rem;
-            font-weight: 700;
-        }
+        .admin-card h3 { margin-bottom: 16px; color: var(--dark); font-size: 1rem; font-weight: 700; }
+        .admin-card h4 { margin: 14px 0 8px; color: #999; font-size: 0.72rem; font-weight: 700; }
 
         .admin-input {
             width: 100%;
@@ -1077,7 +1141,6 @@
             background: #fdf8f9;
             outline: none;
             font-size: 0.82rem;
-            transition: all 0.3s ease;
         }
 
         .admin-input:focus {
@@ -1103,12 +1166,7 @@
         .admin-btn.save { background: linear-gradient(135deg, #8bc4a0, #6aad82); }
         .admin-btn.close { background: linear-gradient(135deg, #a78b95, #8b6f7a); }
 
-        .filter-stats-row {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-        }
+        .filter-stats-row { display: flex; gap: 5px; margin-bottom: 12px; flex-wrap: wrap; }
 
         .filter-stat-btn {
             padding: 7px 12px;
@@ -1127,10 +1185,7 @@
             border-color: transparent;
         }
 
-        .guest-list {
-            max-height: 320px;
-            overflow-y: auto;
-        }
+        .guest-list { max-height: 320px; overflow-y: auto; }
 
         .guest-item {
             display: flex;
@@ -1144,12 +1199,7 @@
 
         .guest-item:hover { background: #fdf8f9; }
 
-        .guest-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
+        .guest-info { display: flex; flex-direction: column; gap: 2px; }
         .guest-name { font-weight: 700; }
         .guest-side { font-size: 0.6rem; color: #999; }
 
@@ -1166,134 +1216,115 @@
 
         .delete-btn:hover { background: #f9e4ea; }
 
-        /* ============ MOBILE RESPONSIVE ============ */
+        /* ============ MOBILE ============ */
         @media screen and (max-width: 480px) {
-            .envelope-interactive {
-                width: 88vw;
-                height: 38vh;
-                max-height: 240px;
-            }
-            
-            .couple-names-main {
-                font-size: 2.2rem;
-            }
-            
-            .names-and-main {
-                font-size: 1.1rem;
-            }
-            
-            .countdown-number {
-                font-size: 1.5rem;
-            }
-            
-            .header-card {
-                padding: 40px 18px 35px;
-            }
-            
-            .form-card, .comments-card {
-                padding: 28px 16px;
-            }
-            
-            .letter-peek-names {
-                font-size: 1.4rem;
-            }
-            
-            .stat-detail-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .envelope-3d-scene { width: 88vw; height: 38vh; max-height: 250px; }
+            .floral-names { font-size: 2.3rem; }
+            .floral-and { font-size: 1.1rem; }
+            .countdown-number { font-size: 1.5rem; }
+            .form-card, .comments-card { padding: 28px 16px; }
+            .letter-3d-names { font-size: 1.5rem; }
+            .stat-detail-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media screen and (max-width: 360px) {
-            .couple-names-main {
-                font-size: 1.9rem;
-            }
-            
-            .countdown-number {
-                font-size: 1.3rem;
-            }
-            
-            .envelope-interactive {
-                height: 35vh;
-            }
+            .floral-names { font-size: 2rem; }
+            .countdown-number { font-size: 1.3rem; }
+            .envelope-3d-scene { height: 35vh; }
         }
 
         @supports (-webkit-touch-callout: none) {
-            body {
-                min-height: -webkit-fill-available;
-            }
+            body { min-height: -webkit-fill-available; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ============ AI BACKGROUND FLORAL PATH ============ -->
-    <div class="floral-bg-container" id="floralBgContainer"></div>
+    <!-- AI Cursor Follower -->
+    <div class="ai-cursor-glow" id="aiCursorGlow"></div>
 
-    <!-- ============ AI PARTICLES CANVAS ============ -->
+    <!-- AI Floating Hearts Container -->
+    <div id="aiHeartsContainer" style="position:fixed;inset:0;pointer-events:none;z-index:2;"></div>
+
+    <!-- AI Particles Canvas -->
     <canvas id="aiParticlesCanvas"></canvas>
+
+    <!-- Floral Background -->
+    <div class="floral-bg-container" id="floralBgContainer"></div>
 
     <!-- ============ ENVELOPE SCREEN ============ -->
     <div id="envelopeScreen">
-        <div id="envelopeSparklesContainer" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;"></div>
-
-        <div class="envelope-interactive" id="envelopeContainer">
-            <!-- Envelope Bottom (Fixed part) -->
-            <div class="envelope-bottom">
-                <div class="envelope-bottom-line"></div>
-            </div>
-            
-            <!-- Letter Peeking -->
-            <div class="letter-peek" id="letterPeek">
-                <div class="letter-peek-content">
-                    <div class="letter-peek-names">
-                        <span id="letterGroom">mahmoud</span>
-                        <span class="letter-peek-and">&</span>
-                        <span id="letterBride">eman</span>
+        <div class="envelope-3d-scene" id="envelope3DScene">
+            <div class="envelope-shadow"></div>
+            <div class="envelope-3d" id="envelope3D">
+                <div class="env-back"></div>
+                
+                <div class="env-bottom">
+                    <div class="env-bottom-inner"></div>
+                </div>
+                
+                <div class="letter-3d" id="letter3D">
+                    <div class="letter-3d-content">
+                        <div class="letter-3d-names">
+                            <span id="letterGroom">mahmoud</span>
+                            <span class="letter-3d-and">&</span>
+                            <span id="letterBride">eman</span>
+                        </div>
+                        <span class="letter-3d-tap">tap to open</span>
                     </div>
-                    <span class="letter-peek-tap">tap to open</span>
+                </div>
+                
+                <div class="env-flap" id="envFlap3D"></div>
+                
+                <div class="envelope-seal" id="envelopeSeal3D">
+                    <div class="seal-inner-ring">
+                        <span class="seal-inner-text">M&E</span>
+                    </div>
                 </div>
             </div>
             
-            <!-- Envelope Flap (Interactive) -->
-            <div class="envelope-flap" id="envelopeFlap"></div>
-            
-            <!-- Hint -->
-            <div class="envelope-hint" id="envelopeHint">اسحب الطرف للأعلى لفتح الظرف</div>
+            <div class="envelope-hint-text" id="envelopeHint3D">اسحب الطرف للأعلى لفتح الظرف</div>
         </div>
     </div>
 
     <!-- ============ MAIN CONTENT ============ -->
     <div class="main-wrapper" id="mainWrapper">
         
-        <div class="header-card" id="headerCard">
-            <div class="couple-frame">
-                <img id="headImg" src="" alt="">
-            </div>
-            <div class="couple-names-main" id="coupleNamesMain">
-                <span id="mainGroom">mahmoud</span>
-                <span class="names-and-main">&</span>
-                <span id="mainBride">eman</span>
-            </div>
-            <div class="event-label" id="eventLabel">We're getting married!</div>
-            <div class="event-details">
-                <div class="detail-item">
-                    <div class="detail-icon">&#x1F4CD;</div>
-                    <span id="txtHall">diva hall</span>
+        <!-- Floral Details Card -->
+        <div class="floral-details-card">
+            <img class="floral-bg-image" id="floralBgImage" src="https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg" alt="Floral Background" crossorigin="anonymous">
+            <div class="floral-overlay"></div>
+            <div class="floral-details-content">
+                <div class="floral-couple-frame">
+                    <img id="headImgFloral" src="" alt="">
                 </div>
-                <div class="detail-item">
-                    <div class="detail-icon">&#x1F4C5;</div>
-                    <span id="txtDay">08.08.2026</span>
+                <div class="floral-names">
+                    <span id="mainGroomFloral">mahmoud</span>
+                    <span class="floral-and">&</span>
+                    <span id="mainBrideFloral">eman</span>
                 </div>
-                <div class="detail-item">
-                    <div class="detail-icon">&#x1F550;</div>
-                    <span id="txtTime">7:00 pm</span>
+                <div class="floral-event-label" id="eventLabelFloral">We're getting married!</div>
+                
+                <div class="floral-detail-item">
+                    <div class="floral-detail-icon">&#x1F4CD;</div>
+                    <span id="txtHallFloral">diva hall</span>
                 </div>
-                <a id="lnkLoc" href="#" target="_blank" class="location-link">
+                <div class="floral-detail-item">
+                    <div class="floral-detail-icon">&#x1F4C5;</div>
+                    <span id="txtDayFloral">08.08.2026</span>
+                </div>
+                <div class="floral-detail-item">
+                    <div class="floral-detail-icon">&#x1F550;</div>
+                    <span id="txtTimeFloral">7:00 pm</span>
+                </div>
+                
+                <a id="lnkLocFloral" href="#" target="_blank" class="floral-location-link">
                     Formal invitation to follow
                 </a>
             </div>
         </div>
 
+        <!-- Countdown -->
         <div class="countdown-wrapper">
             <div class="countdown-item" id="countDaysBox">
                 <span class="countdown-number" id="countDays">00</span>
@@ -1313,6 +1344,7 @@
             </div>
         </div>
 
+        <!-- Form -->
         <div class="form-card">
             <div class="form-title">تأكيد الحضور والتهنئة</div>
             <div class="input-group">
@@ -1320,12 +1352,8 @@
                 <input type="text" id="inName" class="input-field" placeholder="اكتب اسمك هنا...">
             </div>
             <div class="side-selection">
-                <div class="side-btn" onclick="selectSide('عريس', this)">
-                    <span>طرف العريس</span>
-                </div>
-                <div class="side-btn" onclick="selectSide('عروسة', this)">
-                    <span>طرف العروسة</span>
-                </div>
+                <div class="side-btn" onclick="selectSide('عريس', this)"><span>طرف العريس</span></div>
+                <div class="side-btn" onclick="selectSide('عروسة', this)"><span>طرف العروسة</span></div>
             </div>
             <select id="inStatus" class="status-select">
                 <option value="حاضر">بإذن الله سأحضر</option>
@@ -1333,11 +1361,10 @@
                 <option value="معتذر">أعتذر لظروف خاصة</option>
             </select>
             <textarea id="inMsg" class="message-area" placeholder="كلمة تهنئة أو رسالة جميلة..."></textarea>
-            <button onclick="submitWish()" class="submit-btn" id="submitBtn">
-                إرسال التهنئة
-            </button>
+            <button onclick="submitWish()" class="submit-btn" id="submitBtn">إرسال التهنئة</button>
         </div>
 
+        <!-- Comments -->
         <div class="comments-card">
             <div class="comments-header">كلمات الحب والتهاني</div>
             <div class="filter-tabs">
@@ -1348,13 +1375,14 @@
             <div class="comments-list" id="wishesList"></div>
         </div>
 
+        <!-- Footer -->
         <div class="footer">
             <p>جميع الحقوق محفوظة <a href="#" target="_blank">لنقابة تكنولوجيا المعلومات والبرمجيات المصرية</a></p>
             <p style="margin-top:4px;opacity:0.6;">Powered by AI Technology</p>
         </div>
     </div>
 
-    <!-- ============ SUCCESS MODAL ============ -->
+    <!-- Success Modal -->
     <div id="successModal" class="modal-overlay" style="display:none;">
         <div class="modal-content">
             <div class="modal-icon" id="modalIcon">&#x2728;</div>
@@ -1364,63 +1392,31 @@
         </div>
     </div>
 
-    <!-- ============ ADMIN PANEL ============ -->
+    <!-- Admin Panel -->
     <div id="adminPanel">
         <div class="admin-container">
             <div class="admin-title">لوحة تحكم الدعوة</div>
-            
             <div class="stat-grid">
-                <div class="stat-card total">
-                    <span class="stat-number" id="statTotal">0</span>
-                    <span class="stat-label">إجمالي التعليقات</span>
-                </div>
-                <div class="stat-card present">
-                    <span class="stat-number" id="statPresent">0</span>
-                    <span class="stat-label">الحاضرون</span>
-                </div>
-                <div class="stat-card maybe">
-                    <span class="stat-number" id="statMaybe">0</span>
-                    <span class="stat-label">سيحاولون</span>
-                </div>
-                <div class="stat-card excused">
-                    <span class="stat-number" id="statExcused">0</span>
-                    <span class="stat-label">المعتذرون</span>
-                </div>
+                <div class="stat-card total"><span class="stat-number" id="statTotal">0</span><span class="stat-label">إجمالي</span></div>
+                <div class="stat-card present"><span class="stat-number" id="statPresent">0</span><span class="stat-label">حاضرون</span></div>
+                <div class="stat-card maybe"><span class="stat-number" id="statMaybe">0</span><span class="stat-label">سيحاولون</span></div>
+                <div class="stat-card excused"><span class="stat-number" id="statExcused">0</span><span class="stat-label">معتذرون</span></div>
             </div>
-
             <div class="stat-detail-grid">
-                <div class="stat-detail-card">
-                    <span class="stat-detail-number" id="statGroomPresent">0</span>
-                    <span class="stat-detail-label">حاضر - عريس</span>
-                </div>
-                <div class="stat-detail-card">
-                    <span class="stat-detail-number" id="statBridePresent">0</span>
-                    <span class="stat-detail-label">حاضرة - عروسة</span>
-                </div>
-                <div class="stat-detail-card">
-                    <span class="stat-detail-number" id="statGroomMaybe">0</span>
-                    <span class="stat-detail-label">سيحاول - عريس</span>
-                </div>
-                <div class="stat-detail-card">
-                    <span class="stat-detail-number" id="statBrideMaybe">0</span>
-                    <span class="stat-detail-label">ستحاول - عروسة</span>
-                </div>
-                <div class="stat-detail-card">
-                    <span class="stat-detail-number" id="statGroomExcused">0</span>
-                    <span class="stat-detail-label">معتذر - عريس</span>
-                </div>
-                <div class="stat-detail-card">
-                    <span class="stat-detail-number" id="statBrideExcused">0</span>
-                    <span class="stat-detail-label">معتذرة - عروسة</span>
-                </div>
+                <div class="stat-detail-card"><span class="stat-detail-number" id="statGroomPresent">0</span><span class="stat-detail-label">حاضر-عريس</span></div>
+                <div class="stat-detail-card"><span class="stat-detail-number" id="statBridePresent">0</span><span class="stat-detail-label">حاضرة-عروسة</span></div>
+                <div class="stat-detail-card"><span class="stat-detail-number" id="statGroomMaybe">0</span><span class="stat-detail-label">سيحاول-عريس</span></div>
+                <div class="stat-detail-card"><span class="stat-detail-number" id="statBrideMaybe">0</span><span class="stat-detail-label">ستحاول-عروسة</span></div>
+                <div class="stat-detail-card"><span class="stat-detail-number" id="statGroomExcused">0</span><span class="stat-detail-label">معتذر-عريس</span></div>
+                <div class="stat-detail-card"><span class="stat-detail-number" id="statBrideExcused">0</span><span class="stat-detail-label">معتذرة-عروسة</span></div>
             </div>
-
             <div class="admin-card">
                 <h3>تعديل بيانات الحفل</h3>
                 <input id="aGroomName" class="admin-input" placeholder="اسم العريس">
                 <input id="aBrideName" class="admin-input" placeholder="اسم العروسة">
                 <input id="aEventLabel" class="admin-input" placeholder="النص تحت الأسماء">
                 <input id="aImg" class="admin-input" placeholder="رابط صورة العروسين">
+                <input id="aFloralBg" class="admin-input" placeholder="رابط صورة الخلفية الوردية">
                 <input id="aHall" class="admin-input" placeholder="اسم القاعة">
                 <input id="aDay" class="admin-input" placeholder="اليوم والتاريخ">
                 <input id="aTime" class="admin-input" placeholder="الساعة">
@@ -1430,21 +1426,19 @@
                 <input id="aMainFont" class="admin-input" placeholder="الخط الرئيسي">
                 <button onclick="saveSettings()" class="admin-btn save">حفظ جميع التغييرات</button>
             </div>
-
             <div class="admin-card">
                 <h3>إدارة التعليقات</h3>
-                <h4>تصفية حسب:</h4>
+                <h4>تصفية:</h4>
                 <div class="filter-stats-row" id="adminFilterRow">
                     <button class="filter-stat-btn active" onclick="filterAdminGuests('all', this)">الكل</button>
-                    <button class="filter-stat-btn" onclick="filterAdminGuests('حاضر', this)">الحاضرون</button>
+                    <button class="filter-stat-btn" onclick="filterAdminGuests('حاضر', this)">حاضرون</button>
                     <button class="filter-stat-btn" onclick="filterAdminGuests('ربما', this)">سيحاولون</button>
-                    <button class="filter-stat-btn" onclick="filterAdminGuests('معتذر', this)">المعتذرون</button>
-                    <button class="filter-stat-btn" onclick="filterAdminGuests('عريس', this)">العريس</button>
-                    <button class="filter-stat-btn" onclick="filterAdminGuests('عروسة', this)">العروسة</button>
+                    <button class="filter-stat-btn" onclick="filterAdminGuests('معتذر', this)">معتذرون</button>
+                    <button class="filter-stat-btn" onclick="filterAdminGuests('عريس', this)">عريس</button>
+                    <button class="filter-stat-btn" onclick="filterAdminGuests('عروسة', this)">عروسة</button>
                 </div>
                 <div class="guest-list" id="guestList"></div>
             </div>
-
             <button onclick="closeAdmin()" class="admin-btn close">إغلاق لوحة التحكم</button>
         </div>
     </div>
@@ -1472,376 +1466,381 @@
         let adminGuestFilter = 'all';
         let flapOpen = false;
         let isAnimating = false;
+        let mouseX = 0, mouseY = 0;
 
-        // ============ AI: CREATE BACKGROUND FLORAL PATH ============
+        // ============ AI: CURSOR FOLLOWER ============
+        function initAICursorFollower() {
+            const glow = document.getElementById('aiCursorGlow');
+            
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                glow.style.left = `${mouseX}px`;
+                glow.style.top = `${mouseY}px`;
+                glow.classList.add('active');
+                
+                // Update hearts based on mouse position
+                updateAIHearts(mouseX, mouseY);
+            });
+            
+            document.addEventListener('mouseleave', () => {
+                glow.classList.remove('active');
+            });
+            
+            document.addEventListener('touchmove', (e) => {
+                mouseX = e.touches[0].clientX;
+                mouseY = e.touches[0].clientY;
+                glow.style.left = `${mouseX}px`;
+                glow.style.top = `${mouseY}px`;
+                glow.classList.add('active');
+                updateAIHearts(mouseX, mouseY);
+            }, { passive: true });
+            
+            document.addEventListener('touchend', () => {
+                glow.classList.remove('active');
+            });
+        }
+
+        // ============ AI: FLOATING HEARTS SYSTEM ============
+        let heartInterval;
+        let userActivity = 0;
+        let lastActivity = Date.now();
+
+        function createAIHeart(originX, originY, fromUser) {
+            const container = document.getElementById('aiHeartsContainer');
+            const heart = document.createElement('div');
+            heart.className = 'ai-heart';
+            
+            const size = Math.random() * 18 + 10;
+            const driftX = (Math.random() - 0.5) * 120;
+            const driftXEnd = (Math.random() - 0.5) * 80;
+            const driftRotate = (Math.random() - 0.5) * 40;
+            const driftRotateEnd = (Math.random() - 0.5) * 60;
+            const duration = Math.random() * 6 + 5;
+            const delay = fromUser ? 0 : Math.random() * 3;
+            const opacity = Math.random() * 0.3 + 0.4;
+            const scale = Math.random() * 0.5 + 0.8;
+            
+            heart.style.cssText = `
+                left: ${originX || Math.random() * 100}%;
+                bottom: -30px;
+                font-size: ${size}px;
+                --float-duration: ${duration}s;
+                --float-delay: ${delay}s;
+                --drift-x: ${driftX}px;
+                --drift-x-end: ${driftXEnd}px;
+                --drift-rotate: ${driftRotate}deg;
+                --drift-rotate-end: ${driftRotateEnd}deg;
+                --heart-opacity: ${opacity};
+                --heart-scale: ${scale};
+                color: ${Math.random() > 0.5 ? '#e8a0b4' : '#f2c8d4'};
+                text-shadow: 0 0 ${size}px rgba(232,160,180,0.4);
+            `;
+            
+            heart.innerHTML = '&#x2764;';
+            container.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), (duration + delay) * 1000 + 500);
+        }
+
+        function updateAIHearts(mx, my) {
+            userActivity++;
+            lastActivity = Date.now();
+            
+            // Create hearts near cursor
+            if (userActivity % 2 === 0) {
+                const heartX = ((mx / window.innerWidth) * 100);
+                const heartY = ((my / window.innerHeight) * 100);
+                createAIHeart(heartX, heartY, true);
+            }
+        }
+
+        function spawnAmbientHearts() {
+            // Check user activity
+            const timeSinceActivity = Date.now() - lastActivity;
+            
+            let spawnRate;
+            if (timeSinceActivity < 2000) {
+                spawnRate = 800; // Active user - more hearts
+            } else if (timeSinceActivity < 5000) {
+                spawnRate = 1500; // Moderate
+            } else {
+                spawnRate = 2500; // Idle - fewer hearts
+            }
+            
+            const x = Math.random() * 100;
+            createAIHeart(x, -10, false);
+            
+            clearInterval(heartInterval);
+            heartInterval = setInterval(() => {
+                const x = Math.random() * 100;
+                createAIHeart(x, -10, false);
+            }, spawnRate);
+        }
+
+        function initAIHearts() {
+            // Initial burst
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * 100;
+                    createAIHeart(x, -10, false);
+                }, i * 400);
+            }
+            
+            // Ambient hearts
+            heartInterval = setInterval(() => {
+                const timeSinceActivity = Date.now() - lastActivity;
+                let spawnRate = timeSinceActivity < 2000 ? 800 : timeSinceActivity < 5000 ? 1500 : 2500;
+                const x = Math.random() * 100;
+                createAIHeart(x, -10, false);
+                clearInterval(heartInterval);
+                heartInterval = setInterval(() => {
+                    const x = Math.random() * 100;
+                    createAIHeart(x, -10, false);
+                }, spawnRate);
+            }, 2500);
+            
+            // Monitor activity and adjust
+            setInterval(spawnAmbientHearts, 10000);
+        }
+
+        // ============ AI: FLORAL BACKGROUND ============
         function createAIFloralBackground() {
             const container = document.getElementById('floralBgContainer');
             const svgNS = 'http://www.w3.org/2000/svg';
+            const svg = document.createElementNS(svgNS, 'svg');
+            svg.setAttribute('viewBox', '0 0 1200 900');
+            svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+            svg.classList.add('floral-bg-svg');
             
-            function createSVG() {
-                const svg = document.createElementNS(svgNS, 'svg');
-                svg.setAttribute('viewBox', '0 0 1200 800');
-                svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
-                svg.classList.add('floral-bg-svg');
-                
-                const defs = document.createElementNS(svgNS, 'defs');
-                
-                // Gradient definitions
-                const gradients = [
-                    { id: 'floralGrad1', colors: ['#e8a0b4', '#f2c8d4'] },
-                    { id: 'floralGrad2', colors: ['#f2c8d4', '#e8b4c4'] },
-                    { id: 'floralGrad3', colors: ['#e8b4c4', '#f9e4ea'] },
-                    { id: 'floralGrad4', colors: ['#f9e4ea', '#e8a0b4'] }
-                ];
-                
-                gradients.forEach(g => {
-                    const grad = document.createElementNS(svgNS, 'linearGradient');
-                    grad.setAttribute('id', g.id);
-                    grad.setAttribute('x1', '0%'); grad.setAttribute('y1', '0%');
-                    grad.setAttribute('x2', '100%'); grad.setAttribute('y2', '100%');
-                    const stop1 = document.createElementNS(svgNS, 'stop');
-                    stop1.setAttribute('offset', '0%'); stop1.setAttribute('stop-color', g.colors[0]); stop1.setAttribute('stop-opacity', '0.6');
-                    const stop2 = document.createElementNS(svgNS, 'stop');
-                    stop2.setAttribute('offset', '100%'); stop2.setAttribute('stop-color', g.colors[1]); stop2.setAttribute('stop-opacity', '0.2');
-                    grad.appendChild(stop1); grad.appendChild(stop2);
-                    defs.appendChild(grad);
-                });
-                svg.appendChild(defs);
-                
-                // Create floral path items
-                const floralGroups = [
-                    { cx: 100, cy: 200, r: 35, grad: 'floralGrad1', delay: 0, dur: 8 },
-                    { cx: 80, cy: 120, r: 25, grad: 'floralGrad2', delay: 1.5, dur: 7 },
-                    { cx: 140, cy: 130, r: 28, grad: 'floralGrad3', delay: 0.8, dur: 9 },
-                    { cx: 60, cy: 280, r: 22, grad: 'floralGrad4', delay: 2, dur: 8 },
-                    { cx: 120, cy: 310, r: 30, grad: 'floralGrad1', delay: 3, dur: 7.5 },
-                    { cx: 50, cy: 390, r: 26, grad: 'floralGrad2', delay: 1.2, dur: 8.5 },
-                    { cx: 150, cy: 420, r: 24, grad: 'floralGrad3', delay: 2.5, dur: 7 },
-                    { cx: 90, cy: 500, r: 32, grad: 'floralGrad4', delay: 0.5, dur: 9 },
-                    { cx: 40, cy: 540, r: 20, grad: 'floralGrad1', delay: 3.5, dur: 7.5 },
-                    { cx: 130, cy: 570, r: 27, grad: 'floralGrad2', delay: 1.8, dur: 8 },
-                    // Right side floral path
-                    { cx: 1050, cy: 180, r: 33, grad: 'floralGrad3', delay: 1, dur: 8 },
-                    { cx: 1100, cy: 100, r: 24, grad: 'floralGrad4', delay: 2.2, dur: 7 },
-                    { cx: 1020, cy: 260, r: 29, grad: 'floralGrad1', delay: 0.4, dur: 9 },
-                    { cx: 1150, cy: 340, r: 26, grad: 'floralGrad2', delay: 1.7, dur: 7.5 },
-                    { cx: 1080, cy: 400, r: 31, grad: 'floralGrad3', delay: 3.2, dur: 8 },
-                    { cx: 1120, cy: 470, r: 23, grad: 'floralGrad4', delay: 0.9, dur: 8.5 },
-                    { cx: 1040, cy: 520, r: 28, grad: 'floralGrad1', delay: 2.8, dur: 7 },
-                    { cx: 1160, cy: 580, r: 25, grad: 'floralGrad2', delay: 1.4, dur: 9 },
-                    // Center scattered
-                    { cx: 400, cy: 150, r: 20, grad: 'floralGrad3', delay: 0.6, dur: 7 },
-                    { cx: 600, cy: 100, r: 22, grad: 'floralGrad4', delay: 2.1, dur: 8 },
-                    { cx: 350, cy: 650, r: 24, grad: 'floralGrad1', delay: 1.9, dur: 7.5 },
-                    { cx: 700, cy: 620, r: 21, grad: 'floralGrad2', delay: 3.1, dur: 8 },
-                    { cx: 500, cy: 700, r: 26, grad: 'floralGrad3', delay: 0.3, dur: 9 },
-                    { cx: 800, cy: 200, r: 19, grad: 'floralGrad4', delay: 1.1, dur: 7 },
-                    { cx: 850, cy: 550, r: 23, grad: 'floralGrad1', delay: 2.6, dur: 8 }
-                ];
-                
-                floralGroups.forEach((fg, index) => {
-                    const g = document.createElementNS(svgNS, 'g');
-                    g.classList.add('floral-path-item');
-                    
-                    // Random animation parameters
-                    const tx1 = (Math.random() - 0.5) * 40;
-                    const ty1 = (Math.random() - 0.5) * 40;
-                    const tx2 = (Math.random() - 0.5) * 50;
-                    const ty2 = (Math.random() - 0.5) * 50;
-                    const tx3 = (Math.random() - 0.5) * 35;
-                    const ty3 = (Math.random() - 0.5) * 35;
-                    const rot1 = (Math.random() - 0.5) * 15;
-                    const rot2 = (Math.random() - 0.5) * 20;
-                    const rot3 = (Math.random() - 0.5) * 12;
-                    const baseRotate = Math.random() * 360;
-                    
-                    g.style.cssText = `
-                        --duration: ${fg.dur}s;
-                        --delay: ${fg.delay}s;
-                        --tx1: ${tx1}px; --ty1: ${ty1}px;
-                        --tx2: ${tx2}px; --ty2: ${ty2}px;
-                        --tx3: ${tx3}px; --ty3: ${ty3}px;
-                        --rot1: ${rot1}deg; --rot2: ${rot2}deg; --rot3: ${rot3}deg;
-                        --base-rotate: ${baseRotate}deg;
-                    `;
-                    
-                    const circle = document.createElementNS(svgNS, 'circle');
-                    circle.setAttribute('cx', fg.cx);
-                    circle.setAttribute('cy', fg.cy);
-                    circle.setAttribute('r', fg.r);
-                    circle.setAttribute('fill', `url(#${fg.grad})`);
-                    circle.setAttribute('opacity', '0.7');
-                    g.appendChild(circle);
-                    
-                    // Add smaller surrounding circles
-                    for (let i = 0; i < 3; i++) {
-                        const sc = document.createElementNS(svgNS, 'circle');
-                        const angle = (i / 3) * Math.PI * 2;
-                        const dist = fg.r * 1.5;
-                        sc.setAttribute('cx', fg.cx + Math.cos(angle) * dist);
-                        sc.setAttribute('cy', fg.cy + Math.sin(angle) * dist);
-                        sc.setAttribute('r', fg.r * 0.4);
-                        sc.setAttribute('fill', `url(#${fg.grad})`);
-                        sc.setAttribute('opacity', '0.4');
-                        g.appendChild(sc);
-                    }
-                    
-                    svg.appendChild(g);
-                });
-                
-                container.appendChild(svg);
-            }
+            const defs = document.createElementNS(svgNS, 'defs');
+            const grads = [
+                { id: 'fg1', c1: '#e8a0b4', c2: '#f2c8d4' },
+                { id: 'fg2', c1: '#f2c8d4', c2: '#e8b4c4' },
+                { id: 'fg3', c1: '#e8b4c4', c2: '#f9e4ea' },
+                { id: 'fg4', c1: '#f9e4ea', c2: '#e8a0b4' }
+            ];
             
-            createSVG();
+            grads.forEach(g => {
+                const grad = document.createElementNS(svgNS, 'linearGradient');
+                grad.setAttribute('id', g.id);
+                grad.setAttribute('x1', '0%'); grad.setAttribute('y1', '0%');
+                grad.setAttribute('x2', '100%'); grad.setAttribute('y2', '100%');
+                const s1 = document.createElementNS(svgNS, 'stop');
+                s1.setAttribute('offset', '0%'); s1.setAttribute('stop-color', g.c1); s1.setAttribute('stop-opacity', '0.5');
+                const s2 = document.createElementNS(svgNS, 'stop');
+                s2.setAttribute('offset', '100%'); s2.setAttribute('stop-color', g.c2); s2.setAttribute('stop-opacity', '0.2');
+                grad.appendChild(s1); grad.appendChild(s2);
+                defs.appendChild(grad);
+            });
+            svg.appendChild(defs);
+            
+            const items = [
+                { cx: 80, cy: 150, r: 40, g: 'fg1', d: 8, del: 0 },
+                { cx: 60, cy: 80, r: 28, g: 'fg2', d: 7, del: 1.2 },
+                { cx: 130, cy: 100, r: 32, g: 'fg3', d: 9, del: 0.6 },
+                { cx: 40, cy: 250, r: 25, g: 'fg4', d: 8, del: 1.8 },
+                { cx: 100, cy: 280, r: 35, g: 'fg1', d: 7.5, del: 2.4 },
+                { cx: 55, cy: 380, r: 30, g: 'fg2', d: 8.5, del: 0.9 },
+                { cx: 120, cy: 420, r: 27, g: 'fg3', d: 7, del: 3 },
+                { cx: 70, cy: 500, r: 33, g: 'fg4', d: 9, del: 1.5 },
+                { cx: 140, cy: 530, r: 24, g: 'fg1', d: 8, del: 2.1 },
+                { cx: 45, cy: 580, r: 29, g: 'fg2', d: 7.5, del: 0.3 },
+                { cx: 1080, cy: 130, r: 38, g: 'fg3', d: 8, del: 0.8 },
+                { cx: 1120, cy: 60, r: 26, g: 'fg4', d: 7, del: 2 },
+                { cx: 1050, cy: 220, r: 34, g: 'fg1', d: 9, del: 1.1 },
+                { cx: 1160, cy: 300, r: 28, g: 'fg2', d: 7.5, del: 2.7 },
+                { cx: 1090, cy: 370, r: 31, g: 'fg3', d: 8, del: 0.5 },
+                { cx: 1140, cy: 450, r: 25, g: 'fg4', d: 8.5, del: 3.3 },
+                { cx: 1070, cy: 500, r: 32, g: 'fg1', d: 7, del: 1.7 },
+                { cx: 1170, cy: 560, r: 27, g: 'fg2', d: 9, del: 2.5 },
+                { cx: 350, cy: 100, r: 22, g: 'fg3', d: 7, del: 0.4 },
+                { cx: 550, cy: 80, r: 24, g: 'fg4', d: 8, del: 1.6 },
+                { cx: 400, cy: 650, r: 26, g: 'fg1', d: 7.5, del: 2.2 },
+                { cx: 650, cy: 620, r: 23, g: 'fg2', d: 8, del: 0.7 },
+                { cx: 500, cy: 720, r: 28, g: 'fg3', d: 9, del: 3.5 },
+                { cx: 750, cy: 180, r: 21, g: 'fg4', d: 7, del: 1.4 },
+                { cx: 820, cy: 520, r: 25, g: 'fg1', d: 8, del: 2.8 }
+            ];
+            
+            items.forEach(fg => {
+                const g = document.createElementNS(svgNS, 'g');
+                g.classList.add('floral-path-item');
+                const tx1 = (Math.random() - 0.5) * 50;
+                const ty1 = (Math.random() - 0.5) * 50;
+                const tx2 = (Math.random() - 0.5) * 60;
+                const ty2 = (Math.random() - 0.5) * 60;
+                const tx3 = (Math.random() - 0.5) * 45;
+                const ty3 = (Math.random() - 0.5) * 45;
+                const rot1 = (Math.random() - 0.5) * 20;
+                const rot2 = (Math.random() - 0.5) * 25;
+                const rot3 = (Math.random() - 0.5) * 18;
+                const baseRotate = Math.random() * 360;
+                
+                g.style.cssText = `
+                    --duration: ${fg.d}s; --delay: ${fg.del}s;
+                    --tx1: ${tx1}px; --ty1: ${ty1}px; --tx2: ${tx2}px; --ty2: ${ty2}px; --tx3: ${tx3}px; --ty3: ${ty3}px;
+                    --rot1: ${rot1}deg; --rot2: ${rot2}deg; --rot3: ${rot3}deg; --base-rotate: ${baseRotate}deg;
+                `;
+                
+                const circle = document.createElementNS(svgNS, 'circle');
+                circle.setAttribute('cx', fg.cx); circle.setAttribute('cy', fg.cy); circle.setAttribute('r', fg.r);
+                circle.setAttribute('fill', `url(#${fg.g})`); circle.setAttribute('opacity', '0.6');
+                g.appendChild(circle);
+                
+                for (let i = 0; i < 4; i++) {
+                    const sc = document.createElementNS(svgNS, 'circle');
+                    const angle = (i / 4) * Math.PI * 2;
+                    const dist = fg.r * 1.4;
+                    sc.setAttribute('cx', fg.cx + Math.cos(angle) * dist);
+                    sc.setAttribute('cy', fg.cy + Math.sin(angle) * dist);
+                    sc.setAttribute('r', fg.r * 0.35);
+                    sc.setAttribute('fill', `url(#${fg.g})`); sc.setAttribute('opacity', '0.35');
+                    g.appendChild(sc);
+                }
+                
+                svg.appendChild(g);
+            });
+            
+            container.appendChild(svg);
         }
 
-        // ============ AI PARTICLES SYSTEM ============
+        // ============ AI PARTICLES ============
         function initAIParticles() {
             const canvas = document.getElementById('aiParticlesCanvas');
             const ctx = canvas.getContext('2d');
+            function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+            resize(); window.addEventListener('resize', resize);
             
-            function resize() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-            resize();
-            window.addEventListener('resize', resize);
-
             const particles = [];
-            const particleCount = 60;
-
-            class AIParticle {
-                constructor() {
-                    this.init();
-                }
-
-                init() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = Math.random() * canvas.height;
-                    this.size = Math.random() * 3.5 + 0.8;
-                    this.speedX = (Math.random() - 0.5) * 0.25;
-                    this.speedY = (Math.random() - 0.5) * 0.2;
-                    this.opacity = Math.random() * 0.4 + 0.08;
-                    this.color = Math.random() > 0.5 ? '#e8a0b4' : '#c9a87c';
-                    this.phase = Math.random() * Math.PI * 2;
-                    this.oscSpeed = Math.random() * 0.012 + 0.004;
-                    this.oscAmp = Math.random() * 25 + 8;
-                }
-
-                update() {
-                    this.phase += this.oscSpeed;
-                    this.x += this.speedX + Math.sin(this.phase) * 0.25;
-                    this.y += this.speedY + Math.cos(this.phase) * 0.2;
-
-                    if (this.x < -40) this.x = canvas.width + 40;
-                    if (this.x > canvas.width + 40) this.x = -40;
-                    if (this.y < -40) this.y = canvas.height + 40;
-                    if (this.y > canvas.height + 40) this.y = -40;
-                }
-
-                draw(ctx) {
-                    ctx.save();
-                    ctx.globalAlpha = this.opacity + Math.sin(this.phase) * 0.12;
-                    ctx.fillStyle = this.color;
-                    ctx.shadowBlur = 10;
-                    ctx.shadowColor = this.color;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.restore();
-                }
+            for (let i = 0; i < 70; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                    size: Math.random() * 3 + 0.6, speedX: (Math.random() - 0.5) * 0.3,
+                    speedY: (Math.random() - 0.5) * 0.2, opacity: Math.random() * 0.35 + 0.06,
+                    color: Math.random() > 0.5 ? '#e8a0b4' : '#c9a87c',
+                    phase: Math.random() * Math.PI * 2, oscSpeed: Math.random() * 0.01 + 0.003
+                });
             }
-
-            for (let i = 0; i < particleCount; i++) {
-                particles.push(new AIParticle());
-            }
-
+            
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 particles.forEach(p => {
-                    p.update();
-                    p.draw(ctx);
+                    p.phase += p.oscSpeed;
+                    p.x += p.speedX + Math.sin(p.phase) * 0.2;
+                    p.y += p.speedY + Math.cos(p.phase) * 0.15;
+                    if (p.x < -30) p.x = canvas.width + 30;
+                    if (p.x > canvas.width + 30) p.x = -30;
+                    if (p.y < -30) p.y = canvas.height + 30;
+                    if (p.y > canvas.height + 30) p.y = -30;
+                    ctx.save();
+                    ctx.globalAlpha = p.opacity + Math.sin(p.phase) * 0.1;
+                    ctx.fillStyle = p.color; ctx.shadowBlur = 10; ctx.shadowColor = p.color;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+                    ctx.restore();
                 });
                 requestAnimationFrame(animate);
             }
-
             animate();
         }
 
-        // ============ ENVELOPE SPARKLES ============
-        function createEnvelopeSparkles() {
-            const container = document.getElementById('envelopeSparklesContainer');
+        // ============ 3D ENVELOPE INTERACTION ============
+        function init3DEnvelope() {
+            const flap = document.getElementById('envFlap3D');
+            const letter = document.getElementById('letter3D');
+            const seal = document.getElementById('envelopeSeal3D');
+            const hint = document.getElementById('envelopeHint3D');
             
-            setInterval(() => {
-                const sparkle = document.createElement('div');
-                sparkle.className = 'envelope-sparkle';
-                const tx = (Math.random() - 0.5) * 120;
-                const ty = (Math.random() - 0.5) * 120 - 40;
-                sparkle.style.cssText = `
-                    left: ${Math.random() * 90}%;
-                    top: ${Math.random() * 90}%;
-                    --duration: ${Math.random() * 2 + 1.5}s;
-                    --delay: 0s;
-                    --tx: ${tx}px;
-                    --ty: ${ty}px;
-                `;
-                container.appendChild(sparkle);
-                setTimeout(() => sparkle.remove(), 2500);
-            }, 300);
-        }
-
-        // ============ INTERACTIVE ENVELOPE ============
-        function initInteractiveEnvelope() {
-            const flap = document.getElementById('envelopeFlap');
-            const letter = document.getElementById('letterPeek');
-            const hint = document.getElementById('envelopeHint');
-            const container = document.getElementById('envelopeContainer');
-            
-            let startY = 0;
-            let currentRotation = 0;
+            let startY = 0, currentRotation = 0;
             const maxOpen = -175;
             
             function openFlap() {
                 if (isAnimating || flapOpen) return;
-                isAnimating = true;
-                flapOpen = true;
+                isAnimating = true; flapOpen = true;
                 flap.classList.add('opened');
                 letter.classList.add('revealed');
+                seal.classList.add('hidden');
                 hint.textContent = 'اضغط على الورقة للمتابعة';
-                setTimeout(() => { isAnimating = false; }, 600);
+                setTimeout(() => { isAnimating = false; }, 700);
             }
             
             function closeFlap() {
                 if (isAnimating || !flapOpen) return;
-                isAnimating = true;
-                flapOpen = false;
+                isAnimating = true; flapOpen = false;
                 flap.classList.remove('opened');
                 letter.classList.remove('revealed');
+                seal.classList.remove('hidden');
                 hint.textContent = 'اسحب الطرف للأعلى لفتح الظرف';
-                setTimeout(() => { isAnimating = false; }, 600);
+                setTimeout(() => { isAnimating = false; }, 700);
             }
             
-            // Touch events
             flap.addEventListener('touchstart', (e) => {
-                startY = e.touches[0].clientY;
-                flap.style.transition = 'none';
+                startY = e.touches[0].clientY; flap.style.transition = 'none';
             }, { passive: true });
             
             flap.addEventListener('touchmove', (e) => {
                 const diff = startY - e.touches[0].clientY;
-                const rotation = Math.max(maxOpen, Math.min(0, -diff * 1.8));
-                flap.style.transform = `rotateX(${rotation}deg)`;
+                const rotation = Math.max(maxOpen, Math.min(0, -diff * 1.6));
+                flap.style.transform = `rotateX(${rotation}deg) translateZ(5px)`;
                 currentRotation = rotation;
-                
-                if (rotation < -100) {
-                    letter.classList.add('revealed');
-                } else {
-                    letter.classList.remove('revealed');
-                }
+                if (rotation < -90) { letter.classList.add('revealed'); seal.classList.add('hidden'); }
+                else { letter.classList.remove('revealed'); seal.classList.remove('hidden'); }
             }, { passive: true });
             
             flap.addEventListener('touchend', () => {
-                flap.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-                if (currentRotation < -80) {
-                    openFlap();
-                } else {
-                    closeFlap();
-                }
+                flap.style.transition = 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)';
+                if (currentRotation < -70) openFlap(); else closeFlap();
                 currentRotation = 0;
             });
             
-            // Mouse events
             flap.addEventListener('mousedown', (e) => {
-                startY = e.clientY;
-                flap.style.transition = 'none';
-                document.addEventListener('mousemove', onMouseMove);
-                document.addEventListener('mouseup', onMouseUp);
+                startY = e.clientY; flap.style.transition = 'none';
+                document.addEventListener('mousemove', onMM); document.addEventListener('mouseup', onMU);
             });
             
-            function onMouseMove(e) {
+            function onMM(e) {
                 const diff = startY - e.clientY;
-                const rotation = Math.max(maxOpen, Math.min(0, -diff * 1.8));
-                flap.style.transform = `rotateX(${rotation}deg)`;
+                const rotation = Math.max(maxOpen, Math.min(0, -diff * 1.6));
+                flap.style.transform = `rotateX(${rotation}deg) translateZ(5px)`;
                 currentRotation = rotation;
-                
-                if (rotation < -100) {
-                    letter.classList.add('revealed');
-                } else {
-                    letter.classList.remove('revealed');
-                }
+                if (rotation < -90) { letter.classList.add('revealed'); seal.classList.add('hidden'); }
+                else { letter.classList.remove('revealed'); seal.classList.remove('hidden'); }
             }
             
-            function onMouseUp() {
-                flap.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
-                
-                if (currentRotation < -80) {
-                    openFlap();
-                } else {
-                    closeFlap();
-                }
+            function onMU() {
+                flap.style.transition = 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)';
+                document.removeEventListener('mousemove', onMM); document.removeEventListener('mouseup', onMU);
+                if (currentRotation < -70) openFlap(); else closeFlap();
                 currentRotation = 0;
             }
             
-            // Click on letter to open main invitation
             letter.addEventListener('click', () => {
-                if (flapOpen && letter.classList.contains('revealed')) {
-                    openMainInvitation();
-                }
+                if (flapOpen && letter.classList.contains('revealed')) openMainInvitation();
             });
         }
 
         function openMainInvitation() {
             const envelope = document.getElementById('envelopeScreen');
             const main = document.getElementById('mainWrapper');
-            
             launchAIConfetti();
-            
             envelope.classList.add('hidden');
-            
-            setTimeout(() => {
-                main.classList.add('visible');
-            }, 800);
-            
-            // Multiple confetti bursts
-            for (let i = 0; i < 5; i++) {
-                setTimeout(() => launchAIConfetti(), i * 400);
-            }
+            setTimeout(() => { main.classList.add('visible'); }, 800);
+            for (let i = 0; i < 6; i++) { setTimeout(() => launchAIConfetti(), i * 350); }
         }
 
         function launchAIConfetti() {
             const colors = ['#e8a0b4', '#f2c8d4', '#c9a87c', '#e8b4c4', '#fdf5f7', '#ffffff'];
-            
-            confetti({
-                particleCount: 130,
-                spread: 90,
-                origin: { y: 0.6 },
-                colors: colors,
-                shapes: ['circle', 'square']
-            });
-
+            confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors, shapes: ['circle', 'square'] });
             setTimeout(() => {
-                confetti({
-                    particleCount: 70,
-                    spread: 50,
-                    origin: { y: 0.5, x: 0.3 },
-                    colors: colors
-                });
-                confetti({
-                    particleCount: 70,
-                    spread: 50,
-                    origin: { y: 0.5, x: 0.7 },
-                    colors: colors
-                });
+                confetti({ particleCount: 80, spread: 60, origin: { y: 0.5, x: 0.3 }, colors });
+                confetti({ particleCount: 80, spread: 60, origin: { y: 0.5, x: 0.7 }, colors });
             }, 150);
         }
 
         // ============ SIDE SELECTION ============
         function selectSide(side, element) {
             document.querySelectorAll('.side-btn').forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
-            currentSide = side;
+            element.classList.add('active'); currentSide = side;
         }
 
         // ============ SUBMIT WISH ============
@@ -1850,354 +1849,178 @@
             const status = document.getElementById('inStatus').value;
             const message = document.getElementById('inMsg').value.trim();
             const submitBtn = document.getElementById('submitBtn');
-
-            if (!name || !currentSide) {
-                alert('من فضلك اكتب اسمك واختر طرف (العريس أو العروسة)');
-                return;
-            }
-
-            submitBtn.classList.add('loading');
-            submitBtn.innerHTML = '';
-
+            if (!name || !currentSide) { alert('من فضلك اكتب اسمك واختر طرف (العريس أو العروسة)'); return; }
+            submitBtn.classList.add('loading'); submitBtn.innerHTML = '';
             try {
-                await db.ref('wishes').push({
-                    name: name,
-                    side: currentSide,
-                    status: status,
-                    message: message,
-                    timestamp: firebase.database.ServerValue.TIMESTAMP
-                });
-
+                await db.ref('wishes').push({ name, side: currentSide, status, message, timestamp: firebase.database.ServerValue.TIMESTAMP });
                 launchAIConfetti();
-
                 const responses = {
-                    'حاضر': {
-                        icon: '&#x1F389;',
-                        title: `أهلاً وسهلاً ${name}!`,
-                        message: `تشرفت خطوبتنا بحضورك الكريم من طرف ${currentSide === 'عريس' ? 'العريس' : 'العروسة'}<br><br>نورت الفرحة بوجودك يا غالي<br>نراك على خير إن شاء الله`
-                    },
-                    'ربما': {
-                        icon: '&#x1F91E;',
-                        title: `إن شاء الله ${name}`,
-                        message: `بإذن الله تكون معانا وتشاركنا فرحتنا من طرف ${currentSide === 'عريس' ? 'العريس' : 'العروسة'}<br><br>ربنا يسهلك أمورك ونجتمع على خير<br>مستنيينك بفارغ الصبر`
-                    },
-                    'معتذر': {
-                        icon: '&#x1F48C;',
-                        title: `تسلم يا ${name}`,
-                        message: `قدرنا ظروفك وغيابك عن خطوبتنا هيكون له أثر<br>من طرف ${currentSide === 'عريس' ? 'العريس' : 'العروسة'}<br><br>محبتك في قلوبنا دايمًا<br>وإن شاء الله في مناسبة قريبة نتقابل`
-                    }
+                    'حاضر': { icon: '&#x1F389;', title: `أهلاً وسهلاً ${name}!`, message: `تشرفت خطوبتنا بحضورك الكريم من طرف ${currentSide === 'عريس' ? 'العريس' : 'العروسة'}<br><br>نورت الفرحة بوجودك يا غالي<br>نراك على خير إن شاء الله` },
+                    'ربما': { icon: '&#x1F91E;', title: `إن شاء الله ${name}`, message: `بإذن الله تكون معانا وتشاركنا فرحتنا من طرف ${currentSide === 'عريس' ? 'العريس' : 'العروسة'}<br><br>ربنا يسهلك أمورك ونجتمع على خير<br>مستنيينك بفارغ الصبر` },
+                    'معتذر': { icon: '&#x1F48C;', title: `تسلم يا ${name}`, message: `قدرنا ظروفك وغيابك عن خطوبتنا هيكون له أثر<br>من طرف ${currentSide === 'عريس' ? 'العريس' : 'العروسة'}<br><br>محبتك في قلوبنا دايمًا<br>وإن شاء الله في مناسبة قريبة نتقابل` }
                 };
-
                 const response = responses[status] || responses['حاضر'];
                 document.getElementById('modalIcon').innerHTML = response.icon;
                 document.getElementById('modalTitle').textContent = response.title;
                 document.getElementById('successMessage').innerHTML = response.message;
                 document.getElementById('successModal').style.display = 'flex';
-
-                // Clear form
-                document.getElementById('inName').value = '';
-                document.getElementById('inMsg').value = '';
+                document.getElementById('inName').value = ''; document.getElementById('inMsg').value = '';
                 document.querySelectorAll('.side-btn').forEach(btn => btn.classList.remove('active'));
                 currentSide = '';
-
-            } catch (error) {
-                alert('حدث خطأ ما، حاول مرة أخرى');
-                console.error(error);
-            } finally {
-                submitBtn.classList.remove('loading');
-                submitBtn.innerHTML = 'إرسال التهنئة';
-            }
+            } catch (error) { alert('حدث خطأ ما، حاول مرة أخرى'); }
+            finally { submitBtn.classList.remove('loading'); submitBtn.innerHTML = 'إرسال التهنئة'; }
         }
 
-        // ============ CLOSE MODAL ============
-        function closeModal() {
-            document.getElementById('successModal').style.display = 'none';
-        }
+        function closeModal() { document.getElementById('successModal').style.display = 'none'; }
 
-        // ============ FILTER WISHES ============
+        // ============ FILTER & RENDER ============
         function filterWishes(type, element) {
             activeFilter = type;
             document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
-            element.classList.add('active');
-            renderWishes();
+            element.classList.add('active'); renderWishes();
         }
 
-        // ============ RENDER WISHES ============
         function renderWishes() {
             const list = document.getElementById('wishesList');
             const filtered = activeFilter === 'all' ? allWishes : allWishes.filter(w => w.side === activeFilter);
-
-            if (filtered.length === 0) {
-                list.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">لا توجد تهاني بعد...</div>';
-                return;
-            }
-
-            list.innerHTML = filtered.map((wish, i) => {
-                const statusText = wish.status === 'حاضر' ? 'بإذن الله سأحضر' : wish.status === 'ربما' ? 'سأحاول الحضور' : 'أعتذر لظروف خاصة';
-                return `
-                    <div class="comment-card" style="animation-delay:${i * 0.06}s;">
-                        <div class="comment-header">
-                            <span class="comment-side-badge">${wish.side === 'عريس' ? 'العريس' : 'العروسة'}</span>
-                            <span class="comment-name">${escapeHtml(wish.name)}</span>
-                            <span class="comment-status">${statusText}</span>
-                        </div>
-                        ${wish.message ? `<div class="comment-message">"${escapeHtml(wish.message)}"</div>` : ''}
-                    </div>
-                `;
+            if (filtered.length === 0) { list.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">لا توجد تهاني بعد...</div>'; return; }
+            list.innerHTML = filtered.map((w, i) => {
+                const st = w.status === 'حاضر' ? 'بإذن الله سأحضر' : w.status === 'ربما' ? 'سأحاول الحضور' : 'أعتذر لظروف خاصة';
+                return `<div class="comment-card" style="animation-delay:${i*0.06}s;"><div class="comment-header"><span class="comment-side-badge">${w.side === 'عريس' ? 'العريس' : 'العروسة'}</span><span class="comment-name">${escapeHtml(w.name)}</span><span class="comment-status">${st}</span></div>${w.message ? `<div class="comment-message">"${escapeHtml(w.message)}"</div>` : ''}</div>`;
             }).join('');
         }
 
-        // ============ ESCAPE HTML ============
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+        function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
 
-        // ============ ADMIN PANEL ACCESS ============
+        // ============ ADMIN ============
         document.getElementById('countSecondsBox').addEventListener('click', () => {
             adminClicks++;
-            if (adminClicks >= 10) {
-                document.getElementById('adminPanel').style.display = 'block';
-                adminClicks = 0;
-                renderAdminGuests();
-            }
+            if (adminClicks >= 10) { document.getElementById('adminPanel').style.display = 'block'; adminClicks = 0; renderAdminGuests(); }
             setTimeout(() => { adminClicks = 0; }, 3000);
         });
 
-        function closeAdmin() {
-            document.getElementById('adminPanel').style.display = 'none';
-        }
+        function closeAdmin() { document.getElementById('adminPanel').style.display = 'none'; }
 
-        // ============ FILTER ADMIN GUESTS ============
         function filterAdminGuests(filter, el) {
             adminGuestFilter = filter;
             document.querySelectorAll('#adminFilterRow .filter-stat-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-            renderAdminGuests();
+            el.classList.add('active'); renderAdminGuests();
         }
 
         function renderAdminGuests() {
             const list = document.getElementById('guestList');
             let filtered = allWishes;
-
-            if (['حاضر', 'ربما', 'معتذر'].includes(adminGuestFilter)) {
-                filtered = allWishes.filter(w => w.status === adminGuestFilter);
-            } else if (['عريس', 'عروسة'].includes(adminGuestFilter)) {
-                filtered = allWishes.filter(w => w.side === adminGuestFilter);
-            }
-
-            if (filtered.length === 0) {
-                list.innerHTML = '<p style="text-align:center;color:#999;padding:25px;">لا توجد نتائج</p>';
-                return;
-            }
-
+            if (['حاضر','ربما','معتذر'].includes(adminGuestFilter)) filtered = allWishes.filter(w => w.status === adminGuestFilter);
+            else if (['عريس','عروسة'].includes(adminGuestFilter)) filtered = allWishes.filter(w => w.side === adminGuestFilter);
+            if (filtered.length === 0) { list.innerHTML = '<p style="text-align:center;color:#999;padding:25px;">لا توجد نتائج</p>'; return; }
             list.innerHTML = filtered.map(w => {
                 const st = w.status === 'حاضر' ? 'حاضر' : w.status === 'ربما' ? 'سيحاول' : 'معتذر';
-                return `
-                    <div class="guest-item">
-                        <div class="guest-info">
-                            <span class="guest-name">${escapeHtml(w.name)}</span>
-                            <span class="guest-side">${w.side === 'عريس' ? 'العريس' : 'العروسة'} - ${st}</span>
-                        </div>
-                        <button class="delete-btn" onclick="deleteWish('${w.id}')">X</button>
-                    </div>
-                `;
+                return `<div class="guest-item"><div class="guest-info"><span class="guest-name">${escapeHtml(w.name)}</span><span class="guest-side">${w.side === 'عريس' ? 'العريس' : 'العروسة'} - ${st}</span></div><button class="delete-btn" onclick="deleteWish('${w.id}')">X</button></div>`;
             }).join('');
         }
 
-        // ============ DELETE WISH ============
-        function deleteWish(id) {
-            if (confirm('هل أنت متأكد من حذف هذه التهنئة؟')) {
-                db.ref('wishes/' + id).remove();
-            }
-        }
+        function deleteWish(id) { if (confirm('هل أنت متأكد من حذف هذه التهنئة؟')) db.ref('wishes/' + id).remove(); }
 
-        // ============ SAVE SETTINGS ============
         function saveSettings() {
             db.ref('settings').set({
                 groomName: document.getElementById('aGroomName').value,
                 brideName: document.getElementById('aBrideName').value,
                 eventLabel: document.getElementById('aEventLabel').value,
                 image: document.getElementById('aImg').value,
+                floralBg: document.getElementById('aFloralBg').value,
                 hall: document.getElementById('aHall').value,
                 day: document.getElementById('aDay').value,
                 time: document.getElementById('aTime').value,
                 location: document.getElementById('aLoc').value,
                 date: document.getElementById('aDate').value,
-                namesSize: parseFloat(document.getElementById('aNamesSize').value) || 2.6,
+                namesSize: parseFloat(document.getElementById('aNamesSize').value) || 2.8,
                 mainFont: document.getElementById('aMainFont').value
             }).then(() => alert('تم الحفظ بنجاح')).catch(() => alert('خطأ في الحفظ'));
         }
 
-        // ============ APPLY SETTINGS ============
         function applySettings(data) {
             const groom = data.groomName || 'mahmoud';
             const bride = data.brideName || 'eman';
-
+            
             document.getElementById('letterGroom').textContent = groom;
             document.getElementById('letterBride').textContent = bride;
-            document.getElementById('mainGroom').textContent = groom;
-            document.getElementById('mainBride').textContent = bride;
+            document.getElementById('mainGroomFloral').textContent = groom;
+            document.getElementById('mainBrideFloral').textContent = bride;
             document.title = `${groom} & ${bride} | Save The Date`;
-
-            document.getElementById('eventLabel').textContent = data.eventLabel || "We're getting married!";
-
+            
+            const label = data.eventLabel || "We're getting married!";
+            document.getElementById('eventLabelFloral').textContent = label;
+            
             if (data.image) {
-                document.getElementById('headImg').src = data.image;
-                document.getElementById('headImg').style.display = 'block';
+                document.getElementById('headImgFloral').src = data.image;
+                document.getElementById('headImgFloral').style.display = 'block';
             }
-
-            document.getElementById('txtHall').textContent = data.hall || 'diva hall';
-            document.getElementById('txtDay').textContent = data.day || '08.08.2026';
-            document.getElementById('txtTime').textContent = data.time || '7:00 pm';
-            document.getElementById('lnkLoc').href = data.location || '#';
-
+            if (data.floralBg) {
+                document.getElementById('floralBgImage').src = data.floralBg;
+            }
+            
+            document.getElementById('txtHallFloral').textContent = data.hall || 'diva hall';
+            document.getElementById('txtDayFloral').textContent = data.day || '08.08.2026';
+            document.getElementById('txtTimeFloral').textContent = data.time || '7:00 pm';
+            document.getElementById('lnkLocFloral').href = data.location || '#';
+            
             targetDate = data.date ? new Date(data.date).getTime() : new Date('2026-08-08T19:00:00').getTime();
-
-            if (data.namesSize) {
-                document.documentElement.style.setProperty('--names-size', `${data.namesSize}rem`);
-            }
-            if (data.mainFont) {
-                document.documentElement.style.setProperty('--names-font', `'${data.mainFont}', serif`);
-            }
+            if (data.namesSize) document.documentElement.style.setProperty('--names-size', `${data.namesSize}rem`);
+            if (data.mainFont) document.documentElement.style.setProperty('--names-font', `'${data.mainFont}', serif`);
         }
 
-        // ============ REAL-TIME LISTENERS ============
         db.ref('settings').on('value', snap => {
             const data = snap.val() || {};
             applySettings(data);
-            
-            // Populate admin fields
-            const fields = {
-                'aGroomName': data.groomName || '',
-                'aBrideName': data.brideName || '',
-                'aEventLabel': data.eventLabel || '',
-                'aImg': data.image || '',
-                'aHall': data.hall || '',
-                'aDay': data.day || '',
-                'aTime': data.time || '',
-                'aLoc': data.location || '',
-                'aDate': data.date || '',
-                'aNamesSize': data.namesSize || 2.6,
-                'aMainFont': data.mainFont || ''
-            };
-            
-            Object.entries(fields).forEach(([id, value]) => {
+            ['aGroomName','aBrideName','aEventLabel','aImg','aFloralBg','aHall','aDay','aTime','aLoc','aDate','aNamesSize','aMainFont'].forEach(id => {
                 const el = document.getElementById(id);
-                if (el) el.value = value;
+                if (el) el.value = data[id.replace('a','').charAt(0).toLowerCase() + id.replace('a','').slice(1)] || '';
             });
         });
 
         db.ref('wishes').orderByChild('timestamp').on('value', snap => {
             allWishes = [];
-            const stats = {
-                total: 0, present: 0, maybe: 0, excused: 0,
-                groomPresent: 0, bridePresent: 0,
-                groomMaybe: 0, brideMaybe: 0,
-                groomExcused: 0, brideExcused: 0
-            };
-
+            const s = { t:0, p:0, m:0, e:0, gp:0, bp:0, gm:0, bm:0, ge:0, be:0 };
             snap.forEach(child => {
-                const w = child.val();
-                w.id = child.key;
-                allWishes.unshift(w);
-                stats.total++;
-
-                if (w.status === 'حاضر') {
-                    stats.present++;
-                    if (w.side === 'عريس') stats.groomPresent++;
-                    else stats.bridePresent++;
-                } else if (w.status === 'ربما') {
-                    stats.maybe++;
-                    if (w.side === 'عريس') stats.groomMaybe++;
-                    else stats.brideMaybe++;
-                } else {
-                    stats.excused++;
-                    if (w.side === 'عريس') stats.groomExcused++;
-                    else stats.brideExcused++;
-                }
+                const w = child.val(); w.id = child.key; allWishes.unshift(w); s.t++;
+                if (w.status === 'حاضر') { s.p++; if (w.side === 'عريس') s.gp++; else s.bp++; }
+                else if (w.status === 'ربما') { s.m++; if (w.side === 'عريس') s.gm++; else s.bm++; }
+                else { s.e++; if (w.side === 'عريس') s.ge++; else s.be++; }
             });
-
-            // Update main stats
-            document.getElementById('statTotal').textContent = stats.total;
-            document.getElementById('statPresent').textContent = stats.present;
-            document.getElementById('statMaybe').textContent = stats.maybe;
-            document.getElementById('statExcused').textContent = stats.excused;
-
-            // Update detailed stats
-            document.getElementById('statGroomPresent').textContent = stats.groomPresent;
-            document.getElementById('statBridePresent').textContent = stats.bridePresent;
-            document.getElementById('statGroomMaybe').textContent = stats.groomMaybe;
-            document.getElementById('statBrideMaybe').textContent = stats.brideMaybe;
-            document.getElementById('statGroomExcused').textContent = stats.groomExcused;
-            document.getElementById('statBrideExcused').textContent = stats.brideExcused;
-
+            document.getElementById('statTotal').textContent = s.t; document.getElementById('statPresent').textContent = s.p;
+            document.getElementById('statMaybe').textContent = s.m; document.getElementById('statExcused').textContent = s.e;
+            document.getElementById('statGroomPresent').textContent = s.gp; document.getElementById('statBridePresent').textContent = s.bp;
+            document.getElementById('statGroomMaybe').textContent = s.gm; document.getElementById('statBrideMaybe').textContent = s.bm;
+            document.getElementById('statGroomExcused').textContent = s.ge; document.getElementById('statBrideExcused').textContent = s.be;
             renderWishes();
-            if (document.getElementById('adminPanel').style.display === 'block') {
-                renderAdminGuests();
-            }
+            if (document.getElementById('adminPanel').style.display === 'block') renderAdminGuests();
         });
 
-        // ============ AI COUNTDOWN SYSTEM ============
         function updateCountdown() {
-            const now = Date.now();
-            const diff = targetDate - now;
-
-            if (diff <= 0) {
-                ['countDays', 'countHours', 'countMinutes', 'countSeconds'].forEach(id => {
-                    document.getElementById(id).textContent = '00';
-                });
-
-                if (Math.abs(diff) < 8000 && diff > -12000) {
-                    launchAIConfetti();
-                    document.querySelectorAll('.countdown-item').forEach(item => {
-                        item.classList.add('count-highlight');
-                        setTimeout(() => item.classList.remove('count-highlight'), 600);
-                    });
-                }
-                return;
-            }
-
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-            document.getElementById('countDays').textContent = String(days).padStart(2, '0');
-            document.getElementById('countHours').textContent = String(hours).padStart(2, '0');
-            document.getElementById('countMinutes').textContent = String(minutes).padStart(2, '0');
-            document.getElementById('countSeconds').textContent = String(seconds).padStart(2, '0');
-
-            // AI: Random count highlights
-            if (seconds === 0 && Math.random() > 0.6) {
-                const box = document.getElementById('countMinutesBox');
-                box.classList.add('count-highlight');
-                setTimeout(() => box.classList.remove('count-highlight'), 500);
-            }
+            const diff = targetDate - Date.now();
+            if (diff <= 0) { ['countDays','countHours','countMinutes','countSeconds'].forEach(id => document.getElementById(id).textContent = '00'); if (Math.abs(diff) < 8000) launchAIConfetti(); return; }
+            document.getElementById('countDays').textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
+            document.getElementById('countHours').textContent = String(Math.floor((diff % 86400000) / 3600000)).padStart(2, '0');
+            document.getElementById('countMinutes').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+            document.getElementById('countSeconds').textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+            if (seconds === 0 && Math.random() > 0.5) { const b = document.getElementById('countMinutesBox'); b.classList.add('count-highlight'); setTimeout(() => b.classList.remove('count-highlight'), 500); }
         }
 
-        // AI: Periodic random count highlights
         setInterval(() => {
-            const boxes = ['countDaysBox', 'countHoursBox', 'countMinutesBox', 'countSecondsBox'];
-            const randomBox = document.getElementById(boxes[Math.floor(Math.random() * 4)]);
-            randomBox.classList.add('count-highlight');
-            setTimeout(() => randomBox.classList.remove('count-highlight'), 500);
-        }, 4000);
+            const boxes = ['countDaysBox','countHoursBox','countMinutesBox','countSecondsBox'];
+            const el = document.getElementById(boxes[Math.floor(Math.random() * 4)]);
+            el.classList.add('count-highlight'); setTimeout(() => el.classList.remove('count-highlight'), 500);
+        }, 3500);
 
-        // ============ INITIALIZATION ============
         function init() {
             createAIFloralBackground();
             initAIParticles();
-            createEnvelopeSparkles();
-            initInteractiveEnvelope();
-            setInterval(updateCountdown, 1000);
-            updateCountdown();
-            
-            console.log('%c✨ AI-Powered Save The Date System Activated ✨', 'font-size:16px;color:#e8a0b4;');
-            console.log('%cAll systems running with advanced AI control', 'color:#999;');
+            initAICursorFollower();
+            initAIHearts();
+            init3DEnvelope();
+            setInterval(updateCountdown, 1000); updateCountdown();
+            console.log('%c✨ AI Save The Date System Active ✨', 'font-size:16px;color:#e8a0b4;');
         }
-
         init();
     </script>
 </body>
