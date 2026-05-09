@@ -1159,6 +1159,7 @@
             }
         }
         
+        // ============ SUBMIT RSVP (المعدلة) ============
         function submitRSVP() {
             const name = document.getElementById('guestName').value.trim();
             const status = document.getElementById('guestStatus').value;
@@ -1169,19 +1170,48 @@
                 return;
             }
             
+            // تعطيل الزر أثناء الإرسال
+            const submitBtn = document.querySelector('.royal-submit');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'جاري الإرسال...';
+            
             db.ref('wishes').push({
-                name, side: selectedSide, status, message,
+                name: name,
+                side: selectedSide,
+                status: status,
+                message: message,
                 timestamp: firebase.database.ServerValue.TIMESTAMP
             }).then(() => {
                 const responseMessage = getResponseMessage(name, status, selectedSide);
                 showModal('تم الإرسال', responseMessage, '💝');
+                
+                // تفريغ الحقول
                 document.getElementById('guestName').value = '';
                 document.getElementById('guestMessage').value = '';
                 document.querySelectorAll('.royal-side-btn').forEach(btn => btn.classList.remove('active'));
                 selectedSide = '';
-                createRoyalSparkle(window.innerWidth/2, window.innerHeight/2, 20);
-                canvasConfetti({ particleCount: 400, spread: 150, origin: { y: 0.6 }, colors: ['#e8c97a', '#ffb7c5', '#c94f6b'] });
-            }).catch(() => showModal('خطأ', 'حدث خطأ، حاول مرة أخرى', '❌'));
+                
+                // مؤثرات احتفالية
+                createRoyalSparkle(window.innerWidth/2, window.innerHeight/2, 25);
+                canvasConfetti({ 
+                    particleCount: 500, 
+                    spread: 180, 
+                    origin: { y: 0.6 }, 
+                    colors: ['#e8c97a', '#ffb7c5', '#c94f6b', '#ff8da3'] 
+                });
+                setTimeout(() => {
+                    canvasConfetti({ particleCount: 300, spread: 120, origin: { y: 0.4, x: 0.3 }, colors: ['#e8c97a', '#ffb7c5'] });
+                    canvasConfetti({ particleCount: 300, spread: 120, origin: { y: 0.4, x: 0.7 }, colors: ['#c94f6b', '#ff8da3'] });
+                }, 200);
+                
+            }).catch((error) => {
+                console.error('Firebase Error:', error);
+                showModal('خطأ', 'حدث خطأ في الاتصال، يرجى المحاولة مرة أخرى', '❌');
+            }).finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            });
         }
         
         // ============ WISHES RENDERING ============
