@@ -34,12 +34,9 @@
             --pink-deep: #ff8da3;
             --pink-dark: #d46b81;
             --pink-royal: #c94f6b;
-            --pink-glow: rgba(255,183,197,0.6);
             --gold: #e8c97a;
             --gold-dark: #c9a84c;
-            --gold-glow: rgba(232,201,122,0.5);
             --white: #ffffff;
-            --cream: #fff9f7;
             --dark: #2a1a1f;
             --shadow-royal: 0 30px 60px rgba(0,0,0,0.15);
             --gradient-royal: linear-gradient(135deg, #ffb7c5 0%, #ff8da3 25%, #e8c97a 50%, #ff8da3 75%, #ffb7c5 100%);
@@ -67,11 +64,11 @@
             height: 100%;
             object-fit: cover;
             opacity: 0.55;
-            animation: slowZoom 10s ease-in-out infinite alternate;
+            animation: slowZoom 5s ease-in-out infinite alternate;
         }
         @keyframes slowZoom {
             0% { transform: scale(1); }
-            100% { transform: scale(1.08); }
+            100% { transform: scale(1.1); }
         }
         .royal-bg-overlay {
             position: absolute;
@@ -261,7 +258,7 @@
             margin: 20px auto;
         }
 
-        /* تفاصيل - تحت بعض */
+        /* تفاصيل */
         .royal-details {
             display: flex;
             flex-direction: column;
@@ -316,18 +313,18 @@
             color: var(--gold-light);
         }
 
-        /* كاونتر */
+        /* كاونتر - معدل للشاشات الصغيرة */
         .royal-countdown {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            gap: 12px;
             margin: 30px 0;
         }
         .royal-count-item {
             background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(255,249,247,0.9));
             backdrop-filter: blur(10px);
-            padding: 22px 12px;
-            border-radius: 35px;
+            padding: 16px 8px;
+            border-radius: 28px;
             text-align: center;
             cursor: pointer;
             transition: all 0.4s;
@@ -335,7 +332,7 @@
         }
         .royal-count-number {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 2.8rem;
+            font-size: 2.2rem;
             font-weight: 800;
             background: linear-gradient(135deg, #c94f6b, #e8c97a);
             -webkit-background-clip: text;
@@ -344,12 +341,12 @@
             display: block;
         }
         .royal-count-label {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             text-transform: uppercase;
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             color: var(--gold-dark);
             font-weight: 700;
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
         /* فورم */
@@ -462,99 +459,6 @@
         .royal-comment-name { font-weight: 800; color: var(--pink-dark); margin-left: 12px; }
         .royal-comment-status { font-size: 0.7rem; color: var(--gold-dark); margin-right: 10px; }
         .royal-comment-message { color: #555; font-size: 0.9rem; margin-top: 10px; }
-        .royal-comment-delete { float: left; background: none; border: none; color: #c94f6b; cursor: pointer; padding: 5px 10px; border-radius: 20px; }
-
-        /* لوحة تحكم */
-        .royal-admin {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.96);
-            backdrop-filter: blur(20px);
-            z-index: 100000;
-            display: none;
-            overflow-y: auto;
-            padding: 30px;
-            align-items: center;
-            justify-content: center;
-        }
-        .royal-admin.active { display: flex; }
-        .royal-admin-card {
-            background: linear-gradient(145deg, #1a0e12, #2a1a1f);
-            border-radius: 60px;
-            padding: 45px 35px;
-            max-width: 700px;
-            width: 100%;
-            border: 1px solid rgba(232,201,122,0.3);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .royal-admin-card::-webkit-scrollbar { width: 5px; }
-        .royal-admin-card::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
-        .royal-admin-title { color: var(--gold); font-size: 1.8rem; text-align: center; margin-bottom: 30px; }
-        .royal-admin-label { color: rgba(255,255,255,0.6); font-size: 0.7rem; display: block; margin-bottom: 5px; }
-        .royal-admin-input {
-            width: 100%;
-            padding: 14px 18px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 30px;
-            color: white;
-            margin-bottom: 15px;
-            outline: none;
-        }
-        .royal-admin-btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 35px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-bottom: 12px;
-        }
-        .royal-admin-btn-primary { background: linear-gradient(135deg, #e8c97a, #c9a84c); color: #1a0e12; }
-        .royal-admin-btn-danger { background: linear-gradient(135deg, #c94f6b, #a8324b); color: white; }
-
-        /* إحصائيات */
-        .royal-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-        .royal-stat-card {
-            background: rgba(255,255,255,0.1);
-            border-radius: 25px;
-            padding: 15px;
-            text-align: center;
-        }
-        .royal-stat-number { font-size: 1.8rem; font-weight: 800; color: var(--gold); display: block; }
-        .royal-stat-label { font-size: 0.6rem; color: rgba(255,255,255,0.7); }
-
-        /* فلاتر لوحة التحكم */
-        .admin-filter-btns {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-        .admin-filter-btn {
-            padding: 6px 12px;
-            background: rgba(255,255,255,0.1);
-            border: none;
-            border-radius: 20px;
-            color: white;
-            font-size: 0.7rem;
-            cursor: pointer;
-        }
-        .admin-filter-btn.active { background: var(--gradient-gold); color: #1a0e12; }
-
-        /* كاونتر في الاعدادات */
-        .countdown-settings {
-            background: rgba(255,255,255,0.08);
-            border-radius: 30px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
 
         /* مودال */
         .royal-modal {
@@ -585,120 +489,35 @@
             font-size: 0.7rem;
         }
 
-        /* تأثير الظهور للرسالة */
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            20% { opacity: 1; transform: translateX(-50%) translateY(0); }
-            80% { opacity: 1; transform: translateX(-50%) translateY(0); }
-            100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+        /* شاشات صغيرة جداً */
+        @media (max-width: 500px) {
+            .royal-container { padding: 15px 12px 60px; }
+            .royal-card { padding: 30px 18px 40px; border-radius: 50px; }
+            .royal-groom, .royal-bride { font-size: 2.2rem; }
+            .royal-and { font-size: 1.8rem; }
+            .royal-countdown { gap: 8px; }
+            .royal-count-item { padding: 12px 5px; border-radius: 22px; }
+            .royal-count-number { font-size: 1.6rem; }
+            .royal-count-label { font-size: 0.5rem; letter-spacing: 2px; }
+            .royal-detail { max-width: 100%; padding: 6px 12px; }
+            .royal-detail-icon { width: 36px; height: 36px; font-size: 1rem; }
+            .royal-detail-text { font-size: 0.85rem; }
+            .royal-form, .royal-comments { padding: 28px 18px; }
+            .royal-form-title, .royal-comments-title { font-size: 1.5rem; }
         }
 
-        @media (max-width: 550px) {
-            .royal-container { padding: 15px 15px 60px; }
-            .royal-card { padding: 35px 20px 45px; }
-            .royal-groom, .royal-bride { font-size: 2.5rem; }
-            .royal-count-number { font-size: 2rem; }
-            .royal-detail { max-width: 100%; }
+        @media (max-width: 380px) {
+            .royal-count-number { font-size: 1.3rem; }
+            .royal-count-label { font-size: 0.45rem; letter-spacing: 1px; }
+            .royal-count-item { padding: 10px 4px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ============ الصوت أول حاجة في الكود - بأقوى طريقة ============ -->
-    <!-- عنصر الصوت المخفي -->
-    <audio id="bgMusic" preload="auto" loop style="position:fixed;top:-100px;left:-100px;width:1px;height:1px;opacity:0;pointer-events:none;">
-        <source src="https://res.cloudinary.com/dsuv6suzb/video/upload/v1/wedding-audio/adkhly_omry_complete" type="audio/mpeg">
-    </audio>
-    
-    <!-- فيلم وهمي لتشغيل الصوت (الحل السحري) -->
-    <iframe id="musicIframe" style="position:fixed;top:-100px;left:-100px;width:1px;height:1px;opacity:0;pointer-events:none;" allow="autoplay"></iframe>
-    
-    <script>
-        // ============ أقوى كود لتشغيل الصوت فوراً ============
-        (function() {
-            const musicUrl = "https://res.cloudinary.com/dsuv6suzb/video/upload/v1/wedding-audio/adkhly_omry_complete";
-            const music = document.getElementById('bgMusic');
-            const iframe = document.getElementById('musicIframe');
-            
-            // ضبط مستوى الصوت
-            music.volume = 0.7;
-            music.load();
-            
-            // الطريقة الأولى: محاولة التشغيل المباشر
-            function tryDirectPlay() {
-                music.play().then(() => {
-                    console.log('✅ Music playing - Direct method');
-                }).catch(e => {
-                    console.log('Direct play blocked, trying fallback...');
-                    tryFallbackPlay();
-                });
-            }
-            
-            // الطريقة الثانية: استخدام iframe (تخدع المتصفح)
-            function tryFallbackPlay() {
-                iframe.srcdoc = `
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <script>
-                            window.onload = function() {
-                                var audio = new Audio();
-                                audio.src = "${musicUrl}";
-                                audio.loop = true;
-                                audio.volume = 0.7;
-                                audio.play();
-                                window.parent.postMessage('music_started', '*');
-                            };
-                        <\/script>
-                    </head>
-                    <body></body>
-                    </html>
-                `;
-            }
-            
-            // الطريقة الثالثة: تشغيل عند أي تفاعل (نسخة احتياطية)
-            function playOnInteraction() {
-                if (music.paused) {
-                    music.play().catch(() => {});
-                }
-                document.body.removeEventListener('click', playOnInteraction);
-                document.body.removeEventListener('touchstart', playOnInteraction);
-                document.body.removeEventListener('keydown', playOnInteraction);
-            }
-            
-            // استقبال رسالة من iframe
-            window.addEventListener('message', function(e) {
-                if (e.data === 'music_started') {
-                    console.log('✅ Music playing - Iframe method');
-                }
-            });
-            
-            // بدء المحاولات
-            tryDirectPlay();
-            
-            // محاولة إضافية بعد 0.5 ثانية
-            setTimeout(tryDirectPlay, 500);
-            
-            // الريبيت التلقائي
-            music.addEventListener('ended', () => {
-                music.currentTime = 0;
-                music.play().catch(() => {});
-            });
-            
-            // تسجيل المستمعين للنسخة الاحتياطية
-            document.body.addEventListener('click', playOnInteraction);
-            document.body.addEventListener('touchstart', playOnInteraction);
-            document.body.addEventListener('keydown', playOnInteraction);
-            
-            console.log('🎵 Audio system initialized with multiple fallbacks');
-        })();
-    </script>
-    
-    <!-- ============ باقي التصميم ============ -->
-
     <!-- خلفية -->
     <div class="royal-bg">
-        <img class="royal-bg-image" id="globalBgImage" src="https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg" alt="">
+        <img class="royal-bg-image" id="globalBgImage" src="" alt="">
         <div class="royal-bg-overlay"></div>
         <div class="royal-bg-particles"></div>
     </div>
@@ -718,17 +537,17 @@
     <!-- حاوية رئيسية -->
     <div class="royal-container" id="mainContainer">
         <div class="royal-card" id="heroCard">
-            <div class="royal-frame"><img id="coupleImage" src="https://via.placeholder.com/160" alt="Couple"></div>
+            <div class="royal-frame"><img id="coupleImage" src="" alt="Couple"></div>
             <div class="royal-names">
-                <div class="royal-groom" id="groomName">Mahmoud</div>
+                <div class="royal-groom" id="groomName"></div>
                 <div class="royal-and">&</div>
-                <div class="royal-bride" id="brideName">Eman</div>
+                <div class="royal-bride" id="brideName"></div>
             </div>
-            <div style="text-align: center;"><span class="royal-badge" id="eventLabel">We're Getting Married!</span></div>
+            <div style="text-align: center;"><span class="royal-badge" id="eventLabel"></span></div>
             <div class="royal-details">
-                <div class="royal-detail"><span class="royal-detail-icon">📅</span><span class="royal-detail-text" id="eventDate">08 . 08 . 2026</span></div>
-                <div class="royal-detail"><span class="royal-detail-icon">🕖</span><span class="royal-detail-text" id="eventTime">7:00 PM</span></div>
-                <div class="royal-detail"><span class="royal-detail-icon">📍</span><span class="royal-detail-text" id="eventVenue">Diva Hall</span></div>
+                <div class="royal-detail"><span class="royal-detail-icon">📅</span><span class="royal-detail-text" id="eventDate"></span></div>
+                <div class="royal-detail"><span class="royal-detail-icon">🕖</span><span class="royal-detail-text" id="eventTime"></span></div>
+                <div class="royal-detail"><span class="royal-detail-icon">📍</span><span class="royal-detail-text" id="eventVenue"></span></div>
             </div>
             <div style="text-align: center;">
                 <a href="#" id="locationLink" target="_blank" class="royal-location-btn">📍 تحديد موقع القاعة</a>
@@ -771,90 +590,6 @@
         <div class="royal-footer">جميع الحقوق محفوظة لنقابة تكنولوجيا المعلومات والبرمجيات المصرية 2026</div>
     </div>
 
-    <!-- لوحة تحكم -->
-    <div class="royal-admin" id="adminPanel">
-        <div class="royal-admin-card">
-            <div class="royal-admin-title">لوحة التحكم الملكية</div>
-            
-            <label class="royal-admin-label">🎵 تحميل الأغنية (ادخلي عمري)</label>
-            <input type="text" id="adminMusicUrl" class="royal-admin-input" placeholder="رابط الأغنية من Cloudinary">
-            <button class="royal-admin-btn royal-admin-btn-primary" onclick="uploadMusic()">📤 رفع أغنية جديدة</button>
-            <button class="royal-admin-btn" onclick="resetMusic()" style="background:#444;">↺ استعادة الأغنية الافتراضية</button>
-            
-            <div style="height: 15px;"></div>
-            
-            <label class="royal-admin-label">🌹 خلفية الموقع</label>
-            <input type="text" id="adminBgUrl" class="royal-admin-input">
-            <button class="royal-admin-btn royal-admin-btn-primary" onclick="uploadGlobalBg()">📤 رفع خلفية جديدة</button>
-            <button class="royal-admin-btn" onclick="resetGlobalBg()" style="background:#444;">↺ استعادة الافتراضية</button>
-            
-            <div style="height: 15px;"></div>
-            
-            <label class="royal-admin-label">🖼️ صورة العروسين</label>
-            <input type="text" id="adminCoupleImg" class="royal-admin-input">
-            <button class="royal-admin-btn royal-admin-btn-primary" onclick="uploadCoupleImage()">📤 رفع صورة العروسين</button>
-            
-            <div style="height: 15px;"></div>
-            
-            <!-- اعدادات الكاونتر -->
-            <div class="countdown-settings">
-                <label class="royal-admin-label">⚙️ إعدادات الكاونتر</label>
-                <label class="royal-admin-label">تاريخ المناسبة</label>
-                <input type="datetime-local" id="adminCountdownDate" class="royal-admin-input">
-                <button class="royal-admin-btn royal-admin-btn-primary" onclick="saveCountdownSettings()">حفظ تاريخ الكاونتر</button>
-            </div>
-            
-            <div style="height: 15px;"></div>
-            
-            <!-- إحصائيات -->
-            <div class="royal-stats-grid">
-                <div class="royal-stat-card"><span class="royal-stat-number" id="statTotal">0</span><span class="royal-stat-label">إجمالي</span></div>
-                <div class="royal-stat-card"><span class="royal-stat-number" id="statPresent">0</span><span class="royal-stat-label">حاضرون</span></div>
-                <div class="royal-stat-card"><span class="royal-stat-number" id="statMaybe">0</span><span class="royal-stat-label">سيحاولون</span></div>
-                <div class="royal-stat-card"><span class="royal-stat-number" id="statExcused">0</span><span class="royal-stat-label">معتذرون</span></div>
-                <div class="royal-stat-card"><span class="royal-stat-number" id="statGroom">0</span><span class="royal-stat-label">من العريس</span></div>
-                <div class="royal-stat-card"><span class="royal-stat-number" id="statBride">0</span><span class="royal-stat-label">من العروسة</span></div>
-            </div>
-            
-            <div class="admin-filter-btns" id="adminFilterBtns">
-                <button class="admin-filter-btn active" onclick="filterAdmin('all', this)">الكل</button>
-                <button class="admin-filter-btn" onclick="filterAdmin('حاضر', this)">حاضرون</button>
-                <button class="admin-filter-btn" onclick="filterAdmin('ربما', this)">سيحاولون</button>
-                <button class="admin-filter-btn" onclick="filterAdmin('معتذر', this)">معتذرون</button>
-                <button class="admin-filter-btn" onclick="filterAdmin('عريس', this)">عريس</button>
-                <button class="admin-filter-btn" onclick="filterAdmin('عروسة', this)">عروسة</button>
-                <button class="admin-filter-btn" onclick="filterAdmin('حاضر_عريس', this)">حاضر + عريس</button>
-                <button class="admin-filter-btn" onclick="filterAdmin('حاضر_عروسة', this)">حاضر + عروسة</button>
-                <button class="admin-filter-btn" onclick="filterAdmin('ربما_عريس', this)">سيحاول + عريس</button>
-                <button class="admin-filter-btn" onclick="filterAdmin('ربما_عروسة', this)">سيحاول + عروسة</button>
-                <button class="admin-filter-btn" onclick="filterAdmin('معتذر_عريس', this)">معتذر + عريس</button>
-                <button class="admin-filter-btn" onclick="filterAdmin('معتذر_عروسة', this)">معتذر + عروسة</button>
-            </div>
-            
-            <div class="royal-comments-list" id="adminCommentsList" style="max-height: 250px;"></div>
-            
-            <div style="height: 15px;"></div>
-            
-            <label class="royal-admin-label">👑 اسم العريس</label>
-            <input type="text" id="adminGroom" class="royal-admin-input">
-            <label class="royal-admin-label">👑 اسم العروسة</label>
-            <input type="text" id="adminBride" class="royal-admin-input">
-            <label class="royal-admin-label">🏷️ النص التعريفي</label>
-            <input type="text" id="adminEventLabel" class="royal-admin-input">
-            <label class="royal-admin-label">📅 التاريخ</label>
-            <input type="text" id="adminDate" class="royal-admin-input">
-            <label class="royal-admin-label">🕖 الوقت</label>
-            <input type="text" id="adminTime" class="royal-admin-input">
-            <label class="royal-admin-label">📍 القاعة</label>
-            <input type="text" id="adminVenue" class="royal-admin-input">
-            <label class="royal-admin-label">🔗 رابط تحديد موقع القاعة</label>
-            <input type="text" id="adminLocationLink" class="royal-admin-input">
-            
-            <button class="royal-admin-btn royal-admin-btn-primary" onclick="saveAllSettings()">💾 حفظ جميع الإعدادات</button>
-            <button class="royal-admin-btn royal-admin-btn-danger" onclick="closeAdminPanel()">❌ إغلاق</button>
-        </div>
-    </div>
-
     <!-- مودال -->
     <div class="royal-modal" id="royalModal">
         <div class="royal-modal-content">
@@ -864,6 +599,9 @@
             <button class="royal-submit" onclick="closeModal()">حسناً</button>
         </div>
     </div>
+
+    <!-- صوت -->
+    <audio id="bgMusic" preload="auto" loop style="position:fixed;top:-100px;left:-100px;width:1px;height:1px;opacity:0;pointer-events:none;"></audio>
 
     <script>
         // ============ FIREBASE ============
@@ -879,94 +617,116 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // ============ CLOUDINARY ============
-        const CLOUD_NAME = 'dsuv6suzb';
-        const UPLOAD_PRESET = 'wedding_upload';
-
         // ============ STATE ============
         let selectedSide = '';
         let allWishes = [];
         let currentFilter = 'all';
-        let currentAdminFilter = 'all';
-        let targetDate = new Date(2026, 7, 8, 19, 0, 0).getTime();
-        let adminClicks = 0;
+        let targetDate = new Date().getTime() + 86400000;
+        let musicStarted = false;
         
         // ============ ELEMENTS ============
         const globalBg = document.getElementById('globalBgImage');
         const coupleImage = document.getElementById('coupleImage');
-        const mainContainer = document.getElementById('mainContainer');
         const music = document.getElementById('bgMusic');
         
-        // ============ MUSIC UPLOAD FUNCTIONS ============
-        function uploadMusic() {
-            cloudinary.openUploadWidget({ 
-                cloudName: CLOUD_NAME, 
-                uploadPreset: UPLOAD_PRESET, 
-                sources: ['local', 'url'],
-                resourceType: 'video',
-                folder: 'wedding-audio'
-            }, (err, res) => {
-                if (res && res.event === 'success') {
-                    const url = res.info.secure_url;
-                    document.getElementById('adminMusicUrl').value = url;
-                    music.src = url;
-                    music.load();
-                    music.play().catch(() => {});
-                    db.ref('mainSettings/musicUrl').set(url);
-                    showModal('تم الرفع', 'تم رفع الأغنية بنجاح', '🎵');
-                    createRoyalSparkle(window.innerWidth/2, window.innerHeight/2, 10);
+        // ============ MUSIC SETUP ============
+        function setupMusic() {
+            music.volume = 0.7;
+            
+            function playMusic() {
+                if (!musicStarted) {
+                    music.play().then(() => {
+                        musicStarted = true;
+                        console.log('✅ Music started');
+                    }).catch(() => {});
                 }
+            }
+            
+            document.body.addEventListener('click', playMusic);
+            document.body.addEventListener('touchstart', playMusic);
+            
+            music.addEventListener('ended', () => {
+                music.currentTime = 0;
+                music.play().catch(() => {});
             });
         }
         
-        function resetMusic() {
-            const defaultMusic = 'https://res.cloudinary.com/dsuv6suzb/video/upload/v1/wedding-audio/adkhly_omry_complete';
-            music.src = defaultMusic;
-            music.load();
-            document.getElementById('adminMusicUrl').value = defaultMusic;
-            db.ref('mainSettings/musicUrl').set(defaultMusic);
-            music.play().catch(() => {});
-            showModal('تم الاستعادة', 'تم استعادة الأغنية الافتراضية', '🎵');
+        // ============ LOAD ALL DATA FROM FIREBASE ============
+        function loadAllData() {
+            // تحميل إعدادات الصفحة الرئيسية
+            db.ref('mainSettings').on('value', (snap) => {
+                const data = snap.val();
+                if (data) {
+                    // الأسماء
+                    document.getElementById('groomName').textContent = data.groom || 'Mahmoud';
+                    document.getElementById('brideName').textContent = data.bride || 'Eman';
+                    document.getElementById('eventLabel').textContent = data.eventLabel || 'We\'re Getting Married!';
+                    
+                    // التاريخ والوقت والمكان
+                    document.getElementById('eventDate').textContent = data.eventDate || '08 . 08 . 2026';
+                    document.getElementById('eventTime').textContent = data.eventTime || '7:00 PM';
+                    document.getElementById('eventVenue').textContent = data.venue || 'Diva Hall';
+                    document.getElementById('locationLink').href = data.locationLink || '#';
+                    
+                    // الصور
+                    if (data.globalBg) globalBg.src = data.globalBg;
+                    if (data.coupleImage) coupleImage.src = data.coupleImage;
+                    
+                    // الموسيقى
+                    if (data.musicUrl && data.musicUrl !== music.src) {
+                        music.src = data.musicUrl;
+                        music.load();
+                    }
+                    
+                    // الكاونتر
+                    if (data.countdownDate) {
+                        const countdownDate = new Date(data.countdownDate);
+                        if (!isNaN(countdownDate.getTime())) {
+                            targetDate = countdownDate.getTime();
+                            updateCountdown();
+                        }
+                    }
+                }
+            });
+            
+            // تحميل التعليقات
+            db.ref('wishes').orderByChild('timestamp').on('value', (snap) => {
+                allWishes = [];
+                snap.forEach(child => {
+                    allWishes.unshift({ id: child.key, ...child.val() });
+                });
+                renderWishes();
+                updateStats();
+            });
         }
         
-        // ============ PAGE FLIP EFFECT ============
-        function startPageFlipEffect() {
-            const flipOverlay = document.getElementById('flipOverlay');
-            const flipEffect = document.getElementById('flipEffect');
-            const flipCard = document.getElementById('flipCard');
-            
-            flipOverlay.style.opacity = '1';
-            flipEffect.style.opacity = '1';
-            
-            gsap.fromTo(flipCard, 
-                { rotationY: -180, scale: 0.5, opacity: 0 },
-                { rotationY: 0, scale: 1, opacity: 1, duration: 1.2, ease: 'back.out(1.5)', onComplete: () => {
-                    gsap.to(flipCard, { scale: 1.2, opacity: 0, duration: 0.5, delay: 0.3 });
-                    gsap.to(flipOverlay, { opacity: 0, duration: 0.5, delay: 0.5 });
-                    gsap.to(flipEffect, { opacity: 0, duration: 0.5, delay: 0.5 });
-                    gsap.to(mainContainer, { opacity: 1, duration: 0.8, delay: 0.3 });
-                }}
-            );
-            
-            for (let i = 0; i < 80; i++) {
-                setTimeout(() => {
-                    createRoyalFlower(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
-                    createRoyalHeart(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
-                    createRoyalSparkle(Math.random() * window.innerWidth, Math.random() * window.innerHeight, 2);
-                }, i * 40);
+        // ============ COUNTDOWN ============
+        function updateCountdown() {
+            const diff = targetDate - Date.now();
+            if (diff <= 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                return;
             }
+            document.getElementById('days').textContent = String(Math.floor(diff / 86400000)).padStart(2,'0');
+            document.getElementById('hours').textContent = String(Math.floor((diff % 86400000) / 3600000)).padStart(2,'0');
+            document.getElementById('minutes').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0');
+            document.getElementById('seconds').textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2,'0');
             
-            canvasConfetti({ particleCount: 600, spread: 200, origin: { y: 0.5 }, colors: ['#ffb7c5', '#ff8da3', '#e8c97a', '#c94f6b'], startVelocity: 30 });
-            setTimeout(() => {
-                canvasConfetti({ particleCount: 400, spread: 150, origin: { y: 0.4, x: 0.3 }, colors: ['#ffb7c5', '#e8c97a'] });
-                canvasConfetti({ particleCount: 400, spread: 150, origin: { y: 0.4, x: 0.7 }, colors: ['#ff8da3', '#c94f6b'] });
-            }, 400);
-            setTimeout(() => {
-                canvasConfetti({ particleCount: 300, spread: 100, origin: { y: 0.6 }, colors: ['#ffb7c5', '#e8c97a', '#ff8da3'] });
-            }, 800);
+            // أنيميشن عشوائي للكاونتر
+            if (Math.random() > 0.85) {
+                const boxes = ['daysBox', 'hoursBox', 'minutesBox', 'secondsBox'];
+                const box = document.getElementById(boxes[Math.floor(Math.random() * 4)]);
+                if (box) {
+                    gsap.to(box, { scale: 1.05, duration: 0.2, yoyo: true, repeat: 1, ease: 'power2.out' });
+                }
+            }
         }
+        setInterval(updateCountdown, 1000);
         
-        // ============ AI PARTICLES ============
+        // ============ PARTICLES ============
         const canvas = document.getElementById('royalParticlesCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -978,14 +738,14 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
         
-        for (let i = 0; i < 180; i++) {
+        for (let i = 0; i < 150; i++) {
             particles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                size: Math.random() * 5 + 1,
-                speedX: (Math.random() - 0.5) * 0.35,
-                speedY: (Math.random() - 0.5) * 0.25,
-                color: `rgba(${Math.random() > 0.5 ? '232,201,122' : '255,183,197'}, ${Math.random() * 0.35 + 0.1})`,
+                size: Math.random() * 4 + 1,
+                speedX: (Math.random() - 0.5) * 0.3,
+                speedY: (Math.random() - 0.5) * 0.2,
+                color: `rgba(${Math.random() > 0.5 ? '232,201,122' : '255,183,197'}, ${Math.random() * 0.3 + 0.1})`,
                 phase: Math.random() * Math.PI * 2
             });
         }
@@ -993,9 +753,9 @@
         function animateParticles() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => {
-                p.x += p.speedX + Math.sin(p.phase) * 0.06;
-                p.y += p.speedY + Math.cos(p.phase) * 0.04;
-                p.phase += 0.012;
+                p.x += p.speedX + Math.sin(p.phase) * 0.05;
+                p.y += p.speedY + Math.cos(p.phase) * 0.05;
+                p.phase += 0.01;
                 if (p.x < -50) p.x = canvas.width + 50;
                 if (p.x > canvas.width + 50) p.x = -50;
                 if (p.y < -50) p.y = canvas.height + 50;
@@ -1014,28 +774,28 @@
             const heart = document.createElement('div');
             heart.className = 'royal-heart';
             heart.innerHTML = ['❤️', '💖', '💗', '💕', '💘', '💝'][Math.floor(Math.random() * 6)];
-            heart.style.cssText = `left: ${x}px; font-size: ${Math.random() * 30 + 20}px; --dur: ${Math.random() * 5 + 4}s; --dx: ${(Math.random() - 0.5) * 200}px; --dxe: ${(Math.random() - 0.5) * 140}px; --rot: ${(Math.random() - 0.5) * 200}deg; --sc: ${Math.random() * 0.6 + 0.7};`;
+            heart.style.cssText = `left: ${x}px; font-size: ${Math.random() * 25 + 18}px; --dur: ${Math.random() * 4 + 4}s; --dx: ${(Math.random() - 0.5) * 180}px; --dxe: ${(Math.random() - 0.5) * 120}px; --rot: ${(Math.random() - 0.5) * 200}deg; --sc: ${Math.random() * 0.6 + 0.7};`;
             document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 9000);
+            setTimeout(() => heart.remove(), 8000);
         }
         
         function createRoyalFlower(x, y) {
             const flower = document.createElement('div');
             flower.className = 'royal-flower';
             flower.innerHTML = ['🌸', '🌹', '💮', '🏵️', '🌺', '🌼'][Math.floor(Math.random() * 6)];
-            flower.style.cssText = `left: ${x}px; font-size: ${Math.random() * 26 + 18}px; --dur: ${Math.random() * 5 + 4}s; --dx: ${(Math.random() - 0.5) * 170}px; --dxe: ${(Math.random() - 0.5) * 110}px; --rot: ${(Math.random() - 0.5) * 360}deg; --sc: ${Math.random() * 0.5 + 0.6};`;
+            flower.style.cssText = `left: ${x}px; font-size: ${Math.random() * 24 + 16}px; --dur: ${Math.random() * 4 + 4}s; --dx: ${(Math.random() - 0.5) * 150}px; --dxe: ${(Math.random() - 0.5) * 100}px; --rot: ${(Math.random() - 0.5) * 360}deg; --sc: ${Math.random() * 0.5 + 0.6};`;
             document.body.appendChild(flower);
-            setTimeout(() => flower.remove(), 9000);
+            setTimeout(() => flower.remove(), 8000);
         }
         
-        function createRoyalSparkle(x, y, count = 3) {
+        function createRoyalSparkle(x, y, count = 2) {
             for (let i = 0; i < count; i++) {
                 const s = document.createElement('div');
                 s.className = 'royal-sparkle';
-                s.innerHTML = ['✨', '⭐', '🌟', '💫', '⚜️', '👑'][Math.floor(Math.random() * 6)];
-                s.style.cssText = `left: ${x + (Math.random() - 0.5) * 120}px; top: ${y + (Math.random() - 0.5) * 120}px; font-size: ${Math.random() * 22 + 14}px; --dur: ${Math.random() * 1.2 + 0.8}s;`;
+                s.innerHTML = ['✨', '⭐', '🌟', '💫', '⚜️'][Math.floor(Math.random() * 5)];
+                s.style.cssText = `left: ${x + (Math.random() - 0.5) * 100}px; top: ${y + (Math.random() - 0.5) * 100}px; font-size: ${Math.random() * 18 + 10}px; --dur: ${Math.random() * 1 + 0.8}s;`;
                 document.body.appendChild(s);
-                setTimeout(() => s.remove(), 2000);
+                setTimeout(() => s.remove(), 1500);
             }
         }
         
@@ -1045,56 +805,72 @@
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
             cursor.classList.add('active');
-            if (Math.random() > 0.96) {
+            if (Math.random() > 0.98) {
                 createRoyalHeart(e.clientX, e.clientY);
-                createRoyalSparkle(e.clientX, e.clientY, 1);
             }
         });
         document.addEventListener('mouseleave', () => cursor.classList.remove('active'));
         
         setInterval(() => {
-            if (Math.random() > 0.55) createRoyalHeart(Math.random() * window.innerWidth, window.innerHeight - 30);
-        }, 500);
+            if (Math.random() > 0.7) {
+                createRoyalHeart(Math.random() * window.innerWidth, window.innerHeight - 30);
+            }
+        }, 800);
+        
         setInterval(() => {
-            if (Math.random() > 0.65) createRoyalFlower(Math.random() * window.innerWidth, window.innerHeight - 50);
-        }, 700);
-        setInterval(() => {
-            if (Math.random() > 0.7) createRoyalSparkle(Math.random() * window.innerWidth, Math.random() * window.innerHeight, 2);
+            if (Math.random() > 0.8) {
+                createRoyalFlower(Math.random() * window.innerWidth, window.innerHeight - 50);
+            }
         }, 1000);
         
-        // ============ COUNTDOWN ============
-        function updateCountdown() {
-            const diff = targetDate - Date.now();
-            if (diff <= 0) {
-                ['days','hours','minutes','seconds'].forEach(id => document.getElementById(id).textContent = '00');
-                return;
+        setInterval(() => {
+            if (Math.random() > 0.85) {
+                createRoyalSparkle(Math.random() * window.innerWidth, Math.random() * window.innerHeight, 1);
             }
-            document.getElementById('days').textContent = String(Math.floor(diff / 86400000)).padStart(2,'0');
-            document.getElementById('hours').textContent = String(Math.floor((diff % 86400000) / 3600000)).padStart(2,'0');
-            document.getElementById('minutes').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0');
-            document.getElementById('seconds').textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2,'0');
+        }, 1200);
+        
+        // ============ PAGE ENTRANCE EFFECT ============
+        function startPageFlipEffect() {
+            const flipOverlay = document.getElementById('flipOverlay');
+            const flipEffect = document.getElementById('flipEffect');
+            const flipCard = document.getElementById('flipCard');
+            const mainContainer = document.getElementById('mainContainer');
             
-            if (Math.random() > 0.8) {
-                const boxes = ['daysBox', 'hoursBox', 'minutesBox', 'secondsBox'];
-                const box = document.getElementById(boxes[Math.floor(Math.random() * 4)]);
-                gsap.to(box, { scale: 1.08, duration: 0.2, yoyo: true, repeat: 1, ease: 'power2.out' });
+            flipOverlay.style.opacity = '1';
+            flipEffect.style.opacity = '1';
+            
+            gsap.fromTo(flipCard, 
+                { rotationY: -180, scale: 0.5, opacity: 0 },
+                { rotationY: 0, scale: 1, opacity: 1, duration: 1.2, ease: 'back.out(1.5)', onComplete: () => {
+                    gsap.to(flipCard, { scale: 1.2, opacity: 0, duration: 0.5, delay: 0.3 });
+                    gsap.to(flipOverlay, { opacity: 0, duration: 0.5, delay: 0.5 });
+                    gsap.to(flipEffect, { opacity: 0, duration: 0.5, delay: 0.5 });
+                    gsap.to(mainContainer, { opacity: 1, duration: 0.8, delay: 0.3 });
+                }}
+            );
+            
+            for (let i = 0; i < 60; i++) {
+                setTimeout(() => {
+                    createRoyalFlower(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
+                    createRoyalHeart(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
+                }, i * 50);
             }
-        }
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-        
-        // ============ COUNTDOWN SETTINGS ============
-        function saveCountdownSettings() {
-            const dateTime = document.getElementById('adminCountdownDate').value;
-            if (dateTime) {
-                targetDate = new Date(dateTime).getTime();
-                db.ref('mainSettings/countdownDate').set(dateTime);
-                showModal('تم الحفظ', 'تم حفظ تاريخ الكاونتر بنجاح', '⚙️');
-                updateCountdown();
-            }
+            
+            canvasConfetti({ particleCount: 500, spread: 180, origin: { y: 0.5 }, colors: ['#ffb7c5', '#ff8da3', '#e8c97a', '#c94f6b'], startVelocity: 25 });
+            setTimeout(() => {
+                canvasConfetti({ particleCount: 300, spread: 120, origin: { y: 0.4, x: 0.3 }, colors: ['#ffb7c5', '#e8c97a'] });
+                canvasConfetti({ particleCount: 300, spread: 120, origin: { y: 0.4, x: 0.7 }, colors: ['#ff8da3', '#c94f6b'] });
+            }, 500);
         }
         
-        // ============ RSVP MESSAGES ============
+        // ============ RSVP FUNCTIONS ============
+        function selectSide(side, el) {
+            selectedSide = side;
+            document.querySelectorAll('.royal-side-btn').forEach(btn => btn.classList.remove('active'));
+            el.classList.add('active');
+            createRoyalSparkle(el.getBoundingClientRect().left + el.offsetWidth/2, el.getBoundingClientRect().top + el.offsetHeight/2, 3);
+        }
+        
         function getResponseMessage(name, status, side) {
             const sideText = side === 'عريس' ? 'العريس' : 'العروسة';
             if (status === 'حاضر') {
@@ -1104,189 +880,6 @@
             } else {
                 return `💐 تسلم يا ${name}!\n\nقدرنا ظروفك وغيابك عن خطوبتنا هيكون له أثر\nمن طرف ${sideText}\nمحبتك في قلوبنا دايمًا\nوإن شاء الله في مناسبة قريبة نتقابل`;
             }
-        }
-        
-        // ============ ADMIN PANEL ============
-        document.getElementById('secondsBox').addEventListener('click', () => {
-            adminClicks++;
-            setTimeout(() => { if (adminClicks < 10) adminClicks = 0; }, 3000);
-            if (adminClicks >= 10) {
-                document.getElementById('adminPanel').classList.add('active');
-                loadSettingsToAdmin();
-                adminClicks = 0;
-                createRoyalSparkle(window.innerWidth/2, window.innerHeight/2, 20);
-            }
-        });
-        
-        function loadSettingsToAdmin() {
-            document.getElementById('adminGroom').value = document.getElementById('groomName').textContent;
-            document.getElementById('adminBride').value = document.getElementById('brideName').textContent;
-            document.getElementById('adminEventLabel').value = document.getElementById('eventLabel').textContent;
-            document.getElementById('adminDate').value = document.getElementById('eventDate').textContent;
-            document.getElementById('adminTime').value = document.getElementById('eventTime').textContent;
-            document.getElementById('adminVenue').value = document.getElementById('eventVenue').textContent;
-            document.getElementById('adminLocationLink').value = document.getElementById('locationLink').href;
-            document.getElementById('adminBgUrl').value = globalBg.src;
-            document.getElementById('adminCoupleImg').value = coupleImage.src;
-            document.getElementById('adminMusicUrl').value = music.src;
-            renderAdminComments();
-        }
-        
-        function closeAdminPanel() {
-            document.getElementById('adminPanel').classList.remove('active');
-        }
-        
-        // ============ UPLOAD ============
-        function uploadGlobalBg() {
-            cloudinary.openUploadWidget({ cloudName: CLOUD_NAME, uploadPreset: UPLOAD_PRESET, sources: ['local', 'url'] }, (err, res) => {
-                if (res && res.event === 'success') {
-                    globalBg.src = res.info.secure_url;
-                    document.getElementById('adminBgUrl').value = res.info.secure_url;
-                    db.ref('mainSettings/globalBg').set(res.info.secure_url);
-                    createRoyalSparkle(window.innerWidth/2, window.innerHeight/2, 10);
-                }
-            });
-        }
-        
-        function uploadCoupleImage() {
-            cloudinary.openUploadWidget({ cloudName: CLOUD_NAME, uploadPreset: UPLOAD_PRESET, sources: ['local', 'url'] }, (err, res) => {
-                if (res && res.event === 'success') {
-                    coupleImage.src = res.info.secure_url;
-                    document.getElementById('adminCoupleImg').value = res.info.secure_url;
-                    db.ref('mainSettings/coupleImage').set(res.info.secure_url);
-                }
-            });
-        }
-        
-        function resetGlobalBg() {
-            const def = 'https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg';
-            globalBg.src = def;
-            document.getElementById('adminBgUrl').value = def;
-            db.ref('mainSettings/globalBg').set(def);
-        }
-        
-        // ============ ADMIN FILTER ============
-        function filterAdmin(filter, btn) {
-            currentAdminFilter = filter;
-            document.querySelectorAll('#adminFilterBtns .admin-filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderAdminComments();
-        }
-        
-        function renderAdminComments() {
-            let filtered = [...allWishes];
-            if (currentAdminFilter === 'حاضر') filtered = allWishes.filter(w => w.status === 'حاضر');
-            else if (currentAdminFilter === 'ربما') filtered = allWishes.filter(w => w.status === 'ربما');
-            else if (currentAdminFilter === 'معتذر') filtered = allWishes.filter(w => w.status === 'معتذر');
-            else if (currentAdminFilter === 'عريس') filtered = allWishes.filter(w => w.side === 'عريس');
-            else if (currentAdminFilter === 'عروسة') filtered = allWishes.filter(w => w.side === 'عروسة');
-            else if (currentAdminFilter === 'حاضر_عريس') filtered = allWishes.filter(w => w.status === 'حاضر' && w.side === 'عريس');
-            else if (currentAdminFilter === 'حاضر_عروسة') filtered = allWishes.filter(w => w.status === 'حاضر' && w.side === 'عروسة');
-            else if (currentAdminFilter === 'ربما_عريس') filtered = allWishes.filter(w => w.status === 'ربما' && w.side === 'عريس');
-            else if (currentAdminFilter === 'ربما_عروسة') filtered = allWishes.filter(w => w.status === 'ربما' && w.side === 'عروسة');
-            else if (currentAdminFilter === 'معتذر_عريس') filtered = allWishes.filter(w => w.status === 'معتذر' && w.side === 'عريس');
-            else if (currentAdminFilter === 'معتذر_عروسة') filtered = allWishes.filter(w => w.status === 'معتذر' && w.side === 'عروسة');
-            
-            const list = document.getElementById('adminCommentsList');
-            if (filtered.length === 0) {
-                list.innerHTML = '<div style="text-align:center;padding:30px;color:#888;">لا توجد بيانات</div>';
-                return;
-            }
-            list.innerHTML = filtered.map(w => `
-                <div class="royal-comment" style="margin-bottom:10px;padding:12px;">
-                    <span class="royal-comment-badge">${w.side === 'عريس' ? 'عريس' : 'عروسة'}</span>
-                    <span class="royal-comment-name">${escapeHtml(w.name)}</span>
-                    <span class="royal-comment-status">${w.status === 'حاضر' ? 'حاضر' : w.status === 'ربما' ? 'سيحاول' : 'معتذر'}</span>
-                    <button class="royal-comment-delete" onclick="deleteWish('${w.id}')">🗑</button>
-                    ${w.message ? `<div class="royal-comment-message">${escapeHtml(w.message)}</div>` : ''}
-                </div>
-            `).join('');
-        }
-        
-        function deleteWish(id) {
-            if (confirm('هل أنت متأكد من حذف هذه التهنئة؟')) {
-                db.ref('wishes/' + id).remove();
-                showModal('تم الحذف', 'تم حذف التهنئة بنجاح', '🗑️');
-            }
-        }
-        
-        function updateStats() {
-            document.getElementById('statTotal').textContent = allWishes.length;
-            document.getElementById('statPresent').textContent = allWishes.filter(w => w.status === 'حاضر').length;
-            document.getElementById('statMaybe').textContent = allWishes.filter(w => w.status === 'ربما').length;
-            document.getElementById('statExcused').textContent = allWishes.filter(w => w.status === 'معتذر').length;
-            document.getElementById('statGroom').textContent = allWishes.filter(w => w.side === 'عريس').length;
-            document.getElementById('statBride').textContent = allWishes.filter(w => w.side === 'عروسة').length;
-        }
-        
-        // ============ SAVE SETTINGS ============
-        function saveAllSettings() {
-            const settings = {
-                groom: document.getElementById('adminGroom').value,
-                bride: document.getElementById('adminBride').value,
-                eventLabel: document.getElementById('adminEventLabel').value,
-                eventDate: document.getElementById('adminDate').value,
-                eventTime: document.getElementById('adminTime').value,
-                venue: document.getElementById('adminVenue').value,
-                locationLink: document.getElementById('adminLocationLink').value,
-                globalBg: globalBg.src,
-                coupleImage: coupleImage.src,
-                musicUrl: music.src
-            };
-            
-            document.getElementById('groomName').textContent = settings.groom;
-            document.getElementById('brideName').textContent = settings.bride;
-            document.getElementById('eventLabel').textContent = settings.eventLabel;
-            document.getElementById('eventDate').textContent = settings.eventDate;
-            document.getElementById('eventTime').textContent = settings.eventTime;
-            document.getElementById('eventVenue').textContent = settings.venue;
-            document.getElementById('locationLink').href = settings.locationLink;
-            
-            db.ref('mainSettings').set(settings);
-            showModal('تم الحفظ', 'تم حفظ جميع الإعدادات بنجاح', '💾');
-            createRoyalSparkle(window.innerWidth/2, window.innerHeight/2, 15);
-            canvasConfetti({ particleCount: 300, spread: 120, origin: { y: 0.6 }, colors: ['#e8c97a', '#ffb7c5'] });
-        }
-        
-        // ============ LOAD FROM FIREBASE ============
-        db.ref('mainSettings').on('value', (snap) => {
-            const data = snap.val();
-            if (data) {
-                if (data.groom) document.getElementById('groomName').textContent = data.groom;
-                if (data.bride) document.getElementById('brideName').textContent = data.bride;
-                if (data.eventLabel) document.getElementById('eventLabel').textContent = data.eventLabel;
-                if (data.eventDate) document.getElementById('eventDate').textContent = data.eventDate;
-                if (data.eventTime) document.getElementById('eventTime').textContent = data.eventTime;
-                if (data.venue) document.getElementById('eventVenue').textContent = data.venue;
-                if (data.locationLink) document.getElementById('locationLink').href = data.locationLink;
-                if (data.globalBg) globalBg.src = data.globalBg;
-                if (data.coupleImage) coupleImage.src = data.coupleImage;
-                if (data.musicUrl && data.musicUrl !== music.src) {
-                    music.src = data.musicUrl;
-                    music.load();
-                    music.play().catch(() => {});
-                }
-                if (data.countdownDate) {
-                    targetDate = new Date(data.countdownDate).getTime();
-                    updateCountdown();
-                }
-            }
-        });
-        
-        db.ref('envelopeSettings').on('value', (snap) => {
-            const data = snap.val();
-            if (data) {
-                if (data.groomName) document.getElementById('groomName').textContent = data.groomName;
-                if (data.brideName) document.getElementById('brideName').textContent = data.brideName;
-            }
-        });
-        
-        // ============ RSVP ============
-        function selectSide(side, el) {
-            selectedSide = side;
-            document.querySelectorAll('.royal-side-btn').forEach(btn => btn.classList.remove('active'));
-            el.classList.add('active');
-            createRoyalSparkle(el.getBoundingClientRect().left + el.offsetWidth/2, el.getBoundingClientRect().top + el.offsetHeight/2, 3);
         }
         
         function submitRSVP() {
@@ -1309,28 +902,12 @@
                 document.getElementById('guestMessage').value = '';
                 document.querySelectorAll('.royal-side-btn').forEach(btn => btn.classList.remove('active'));
                 selectedSide = '';
-                createRoyalSparkle(window.innerWidth/2, window.innerHeight/2, 25);
-                canvasConfetti({ particleCount: 500, spread: 150, origin: { y: 0.6 }, colors: ['#e8c97a', '#ffb7c5', '#c94f6b', '#ff8da3'] });
-                setTimeout(() => {
-                    canvasConfetti({ particleCount: 300, spread: 100, origin: { y: 0.4, x: 0.3 }, colors: ['#e8c97a', '#ffb7c5'] });
-                    canvasConfetti({ particleCount: 300, spread: 100, origin: { y: 0.4, x: 0.7 }, colors: ['#c94f6b', '#ff8da3'] });
-                }, 200);
+                createRoyalSparkle(window.innerWidth/2, window.innerHeight/2, 20);
+                canvasConfetti({ particleCount: 400, spread: 150, origin: { y: 0.6 }, colors: ['#e8c97a', '#ffb7c5', '#c94f6b'] });
             }).catch(() => showModal('خطأ', 'حدث خطأ، حاول مرة أخرى', '❌'));
         }
         
-        // ============ WISHES ============
-        db.ref('wishes').orderByChild('timestamp').on('value', (snap) => {
-            allWishes = [];
-            snap.forEach(child => {
-                allWishes.unshift({ id: child.key, ...child.val() });
-            });
-            renderWishes();
-            updateStats();
-            if (document.getElementById('adminPanel').classList.contains('active')) {
-                renderAdminComments();
-            }
-        });
-        
+        // ============ WISHES RENDERING ============
         function filterWishes(type, el) {
             currentFilter = type;
             document.querySelectorAll('.royal-filter').forEach(f => f.classList.remove('active'));
@@ -1355,6 +932,29 @@
             `).join('');
         }
         
+        function updateStats() {
+            const total = allWishes.length;
+            const present = allWishes.filter(w => w.status === 'حاضر').length;
+            const maybe = allWishes.filter(w => w.status === 'ربما').length;
+            const excused = allWishes.filter(w => w.status === 'معتذر').length;
+            const groom = allWishes.filter(w => w.side === 'عريس').length;
+            const bride = allWishes.filter(w => w.side === 'عروسة').length;
+            
+            const statTotal = document.getElementById('statTotal');
+            const statPresent = document.getElementById('statPresent');
+            const statMaybe = document.getElementById('statMaybe');
+            const statExcused = document.getElementById('statExcused');
+            const statGroom = document.getElementById('statGroom');
+            const statBride = document.getElementById('statBride');
+            
+            if (statTotal) statTotal.textContent = total;
+            if (statPresent) statPresent.textContent = present;
+            if (statMaybe) statMaybe.textContent = maybe;
+            if (statExcused) statExcused.textContent = excused;
+            if (statGroom) statGroom.textContent = groom;
+            if (statBride) statBride.textContent = bride;
+        }
+        
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
@@ -1376,24 +976,20 @@
         gsap.registerPlugin(ScrollTrigger);
         document.querySelectorAll('.royal-card, .royal-countdown, .royal-form, .royal-comments').forEach(el => {
             gsap.fromTo(el, 
-                { opacity: 0, y: 70, scale: 0.95 },
-                { opacity: 1, y: 0, scale: 1, duration: 0.9, scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' } }
+                { opacity: 0, y: 50, scale: 0.96 },
+                { opacity: 1, y: 0, scale: 1, duration: 0.8, scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' } }
             );
         });
         
-        gsap.fromTo('.royal-count-item', 
-            { scale: 0, rotationY: -90, opacity: 0 },
-            { scale: 1, rotationY: 0, opacity: 1, duration: 0.7, stagger: 0.12, delay: 1.2, ease: 'back.out(1.2)' }
-        );
-        
         // ============ INIT ============
+        setupMusic();
+        loadAllData();
         setTimeout(() => {
             startPageFlipEffect();
-        }, 100);
+        }, 200);
         
-        console.log('%c👑 ROYAL INVITATION SYSTEM ACTIVATED 👑', 'color: #e8c97a; font-size: 22px; font-weight: bold;');
-        console.log('%c🎵 Music: TRIPLE FALLBACK METHOD (Audio + Iframe + User Interaction)', 'color: #ffb7c5; font-size: 14px;');
-        console.log('%c⚙️ Admin Panel: 10 clicks on SECONDS box', 'color: #ff8da3; font-size: 12px;');
+        console.log('%c👑 ROYAL MAIN PAGE - FULLY CONNECTED TO FIREBASE 👑', 'color: #e8c97a; font-size: 18px; font-weight: bold;');
+        console.log('%c🎵 Countdown reads from Firebase | No local data', 'color: #ffb7c5; font-size: 14px;');
     </script>
 </body>
 </html>
