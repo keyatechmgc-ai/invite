@@ -12,7 +12,10 @@
     <!-- Cloudinary -->
     <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
     
     <style>
         * {
@@ -29,7 +32,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
         }
 
@@ -51,7 +54,7 @@
             color: rgba(255,255,255,0.6);
         }
 
-        /* tabs */
+        /* تابات */
         .tabs {
             display: flex;
             gap: 10px;
@@ -81,15 +84,22 @@
             background: rgba(232,201,122,0.2);
         }
 
-        /* cards */
+        /* محتوى التابات */
         .tab-content {
             display: none;
         }
 
         .tab-content.active {
             display: block;
+            animation: fadeIn 0.5s ease;
         }
 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* بطاقات */
         .card {
             background: rgba(255,255,255,0.08);
             backdrop-filter: blur(10px);
@@ -107,6 +117,182 @@
             padding-right: 15px;
         }
 
+        .card h3 {
+            color: rgba(255,255,255,0.8);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        /* شبكة الإحصائيات */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #e8c97a;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.7);
+            margin-top: 5px;
+        }
+
+        /* إحصائيات مفصلة */
+        .details-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .detail-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+            border-right: 3px solid;
+        }
+
+        .detail-card.present-groom { border-right-color: #4caf50; }
+        .detail-card.present-bride { border-right-color: #2196f3; }
+        .detail-card.maybe-groom { border-right-color: #ff9800; }
+        .detail-card.maybe-bride { border-right-color: #ff5722; }
+        .detail-card.excused-groom { border-right-color: #f44336; }
+        .detail-card.excused-bride { border-right-color: #9c27b0; }
+
+        .detail-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #e8c97a;
+            display: block;
+        }
+
+        .detail-label {
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* فلاتر */
+        .filter-btns {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #e8c97a, #c9a84c);
+            color: #1a0e12;
+        }
+
+        /* قائمة التعليقات */
+        .comments-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .comment-item {
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .comment-item:hover {
+            background: rgba(255,255,255,0.12);
+        }
+
+        .comment-info {
+            flex: 1;
+        }
+
+        .comment-name {
+            font-weight: 800;
+            color: #ffb7c5;
+        }
+
+        .comment-side {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-right: 10px;
+        }
+
+        .comment-side.groom { background: rgba(76, 175, 80, 0.3); color: #4caf50; }
+        .comment-side.bride { background: rgba(33, 150, 243, 0.3); color: #2196f3; }
+
+        .comment-status {
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+
+        .comment-status.present { background: rgba(76, 175, 80, 0.2); color: #4caf50; }
+        .comment-status.maybe { background: rgba(255, 152, 0, 0.2); color: #ff9800; }
+        .comment-status.excused { background: rgba(244, 67, 54, 0.2); color: #f44336; }
+
+        .comment-message {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
+            margin-top: 5px;
+        }
+
+        .delete-btn {
+            background: rgba(244, 67, 54, 0.2);
+            border: none;
+            color: #f44336;
+            padding: 8px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.8rem;
+        }
+
+        .delete-btn:hover {
+            background: #f44336;
+            color: white;
+        }
+
+        /* نماذج الإدخال */
         .form-group {
             margin-bottom: 20px;
         }
@@ -132,7 +318,7 @@
             transition: all 0.3s;
         }
 
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+        .form-group input:focus, .form-group select:focus {
             border-color: #e8c97a;
             box-shadow: 0 0 0 3px rgba(232,201,122,0.1);
         }
@@ -172,8 +358,8 @@
         .btn-group {
             display: flex;
             gap: 15px;
-            margin-top: 20px;
             flex-wrap: wrap;
+            margin-top: 20px;
         }
 
         .image-preview {
@@ -188,24 +374,6 @@
             height: 100px;
             object-fit: cover;
             border-radius: 10px;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            margin-left: 10px;
-        }
-
-        .status-saved {
-            background: rgba(76, 175, 80, 0.2);
-            color: #4caf50;
-        }
-
-        .status-pending {
-            background: rgba(255, 193, 7, 0.2);
-            color: #ffc107;
         }
 
         .log-area {
@@ -231,7 +399,7 @@
         @media (max-width: 768px) {
             .card { padding: 20px; }
             .header h1 { font-size: 1.8rem; }
-            .form-row { grid-template-columns: 1fr; }
+            .details-stats { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
@@ -239,22 +407,75 @@
     <div class="container">
         <div class="header">
             <h1>👑 لوحة التحكم المركزية 👑</h1>
-            <p>إدارة كاملة لإعدادات صفحات الدعوة (المين + الانديكس)</p>
+            <p>إدارة كاملة لإعدادات صفحات الدعوة والإحصائيات</p>
         </div>
 
         <!-- Tabs -->
         <div class="tabs">
-            <button class="tab-btn active" onclick="showTab('main')">🏠 الصفحة الرئيسية (المين)</button>
-            <button class="tab-btn" onclick="showTab('envelope')">✉️ صفحة الظرف (الانديكس)</button>
-            <button class="tab-btn" onclick="showTab('countdown')">⏱️ الكاونتر والتاريخ</button>
+            <button class="tab-btn active" onclick="showTab('stats')">📊 الإحصائيات</button>
+            <button class="tab-btn" onclick="showTab('comments')">💬 إدارة التعليقات</button>
+            <button class="tab-btn" onclick="showTab('main')">🏠 إعدادات المين</button>
+            <button class="tab-btn" onclick="showTab('envelope')">✉️ إعدادات الظرف</button>
             <button class="tab-btn" onclick="showTab('media')">🖼️ الصور والموسيقى</button>
-            <button class="tab-btn" onclick="showTab('actions')">⚡ إجراءات سريعة</button>
         </div>
 
-        <!-- ============ TAB 1: MAIN SETTINGS ============ -->
-        <div id="tab-main" class="tab-content active">
+        <!-- ============ TAB 1: STATS ============ -->
+        <div id="tab-stats" class="tab-content active">
             <div class="card">
-                <h2>📋 بيانات العروسين</h2>
+                <h2>📈 إحصائيات الحضور</h2>
+                <div class="stats-grid">
+                    <div class="stat-card"><span class="stat-number" id="statTotal">0</span><span class="stat-label">إجمالي المدعوين</span></div>
+                    <div class="stat-card"><span class="stat-number" id="statPresent">0</span><span class="stat-label">حاضرون</span></div>
+                    <div class="stat-card"><span class="stat-number" id="statMaybe">0</span><span class="stat-label">سيحاولون الحضور</span></div>
+                    <div class="stat-card"><span class="stat-number" id="statExcused">0</span><span class="stat-label">معتذرون</span></div>
+                    <div class="stat-card"><span class="stat-number" id="statGroom">0</span><span class="stat-label">من طرف العريس</span></div>
+                    <div class="stat-card"><span class="stat-number" id="statBride">0</span><span class="stat-label">من طرف العروسة</span></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📋 تفاصيل الحضور</h2>
+                <div class="details-stats">
+                    <div class="detail-card present-groom"><span class="detail-number" id="detailPresentGroom">0</span><span class="detail-label">حاضرين - عريس</span></div>
+                    <div class="detail-card present-bride"><span class="detail-number" id="detailPresentBride">0</span><span class="detail-label">حاضرات - عروسة</span></div>
+                    <div class="detail-card maybe-groom"><span class="detail-number" id="detailMaybeGroom">0</span><span class="detail-label">سيحاولون - عريس</span></div>
+                    <div class="detail-card maybe-bride"><span class="detail-number" id="detailMaybeBride">0</span><span class="detail-label">ستحاول - عروسة</span></div>
+                    <div class="detail-card excused-groom"><span class="detail-number" id="detailExcusedGroom">0</span><span class="detail-label">معتذرين - عريس</span></div>
+                    <div class="detail-card excused-bride"><span class="detail-number" id="detailExcusedBride">0</span><span class="detail-label">معتذرات - عروسة</span></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🔄 تحديث الإحصائيات</h2>
+                <div class="btn-group">
+                    <button class="btn" onclick="refreshStats()">🔄 تحديث الآن</button>
+                    <button class="btn btn-secondary" onclick="exportStats()">📥 تصدير التقرير (JSON)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ TAB 2: COMMENTS ============ -->
+        <div id="tab-comments" class="tab-content">
+            <div class="card">
+                <h2>💬 إدارة التهاني والبركات</h2>
+                
+                <div class="filter-btns" id="commentFilters">
+                    <button class="filter-btn active" onclick="filterComments('all', this)">الكل</button>
+                    <button class="filter-btn" onclick="filterComments('حاضر', this)">حاضرون</button>
+                    <button class="filter-btn" onclick="filterComments('ربما', this)">سيحاولون</button>
+                    <button class="filter-btn" onclick="filterComments('معتذر', this)">معتذرون</button>
+                    <button class="filter-btn" onclick="filterComments('عريس', this)">العريس</button>
+                    <button class="filter-btn" onclick="filterComments('عروسة', this)">العروسة</button>
+                </div>
+                
+                <div class="comments-list" id="commentsList"></div>
+            </div>
+        </div>
+
+        <!-- ============ TAB 3: MAIN SETTINGS ============ -->
+        <div id="tab-main" class="tab-content">
+            <div class="card">
+                <h2>🏠 إعدادات الصفحة الرئيسية (المين)</h2>
                 <div class="form-row">
                     <div class="form-group">
                         <label>اسم العريس</label>
@@ -266,34 +487,38 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>النص التعريفي (الموجود تحت الأسماء)</label>
-                    <input type="text" id="mainEventLabel" placeholder="We're Getting Married!">
+                    <label>رسالة الترحيب (تظهر في شاشة الكتابة)</label>
+                    <input type="text" id="mainEventLabel" placeholder="✨ فرحة عمرنا ✨">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>تاريخ المناسبة</label>
-                        <input type="text" id="mainEventDate" placeholder="08 . 08 . 2026">
+                        <input type="text" id="mainEventDate" placeholder="الجمعة 8 أغسطس 2026">
                     </div>
                     <div class="form-group">
                         <label>وقت المناسبة</label>
-                        <input type="text" id="mainEventTime" placeholder="7:00 PM">
+                        <input type="text" id="mainEventTime" placeholder="الساعة 7:00 مساءً">
                     </div>
                 </div>
                 <div class="form-group">
                     <label>اسم القاعة</label>
-                    <input type="text" id="mainVenue" placeholder="Diva Hall">
+                    <input type="text" id="mainVenue" placeholder="قاعة ديفا هول - القاهرة">
                 </div>
                 <div class="form-group">
-                    <label>رابط تحديد موقع القاعة (Google Maps)</label>
+                    <label>رابط تحديد موقع القاعة (خرائط جوجل)</label>
                     <input type="url" id="mainLocationLink" placeholder="https://maps.google.com/...">
+                </div>
+                <div class="form-group">
+                    <label>📅 تاريخ الكاونتر (YYYY-MM-DDTHH:MM)</label>
+                    <input type="datetime-local" id="mainCountdownDate">
                 </div>
             </div>
         </div>
 
-        <!-- ============ TAB 2: ENVELOPE SETTINGS ============ -->
+        <!-- ============ TAB 4: ENVELOPE SETTINGS ============ -->
         <div id="tab-envelope" class="tab-content">
             <div class="card">
-                <h2>✉️ إعدادات صفحة الظرف (الانديكس)</h2>
+                <h2>✉️ إعدادات صفحة الظرف</h2>
                 <div class="form-row">
                     <div class="form-group">
                         <label>اسم العريس في الظرف</label>
@@ -308,73 +533,52 @@
                     <label>تاريخ المناسبة في الظرف</label>
                     <input type="text" id="envDate" placeholder="08.08.2026">
                 </div>
-            </div>
-        </div>
-
-        <!-- ============ TAB 3: COUNTDOWN SETTINGS ============ -->
-        <div id="tab-countdown" class="tab-content">
-            <div class="card">
-                <h2>⏱️ إعدادات الكاونتر</h2>
                 <div class="form-group">
-                    <label>📅 تاريخ ووقت المناسبة (يستخدم لحساب العد التنازلي)</label>
-                    <input type="datetime-local" id="countdownDate">
-                </div>
-                <div class="form-group">
-                    <label>⚠️ ملاحظة: هذا التاريخ هو اللي يتحكم في الكاونتر</label>
-                    <small style="color: rgba(255,255,255,0.5);">عند تغيير هذا التاريخ، الكاونتر في الصفحة الرئيسية يتغير تلقائياً</small>
+                    <label>🌹 خلفية الظرف (باك جراوند صفحة الظرف)</label>
+                    <input type="text" id="envBgUrl" class="royal-admin-input" placeholder="رابط الصورة">
+                    <button class="btn btn-secondary" onclick="uploadEnvBg()" style="margin-top:10px;">📤 رفع خلفية الظرف</button>
+                    <button class="btn btn-secondary" onclick="resetEnvBg()" style="margin-top:5px;">↺ استعادة خلفية الظرف الافتراضية</button>
+                    <div class="image-preview" id="envBgPreview"></div>
                 </div>
             </div>
         </div>
 
-        <!-- ============ TAB 4: MEDIA SETTINGS ============ -->
+        <!-- ============ TAB 5: MEDIA ============ -->
         <div id="tab-media" class="tab-content">
             <div class="card">
                 <h2>🖼️ الصور والموسيقى</h2>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>🌍 خلفية الموقع العامة (باك جراوند الصفحة الرئيسية)</label>
+                        <label>🌍 خلفية موقع المين</label>
                         <input type="text" id="globalBg" placeholder="رابط الصورة">
-                        <button class="btn btn-secondary btn-block" onclick="uploadToCloudinary('globalBg')">📤 رفع صورة خلفية</button>
+                        <button class="btn btn-secondary" onclick="uploadGlobalBg()" style="margin-top:10px;">📤 رفع خلفية المين</button>
                         <div class="image-preview" id="globalBgPreview"></div>
                     </div>
                     <div class="form-group">
-                        <label>🖼️ صورة العروسين (الدائرية)</label>
+                        <label>🖼️ صورة العروسين</label>
                         <input type="text" id="coupleImage" placeholder="رابط الصورة">
-                        <button class="btn btn-secondary btn-block" onclick="uploadToCloudinary('coupleImage')">📤 رفع صورة العروسين</button>
+                        <button class="btn btn-secondary" onclick="uploadCoupleImage()" style="margin-top:10px;">📤 رفع صورة العروسين</button>
                         <div class="image-preview" id="coupleImagePreview"></div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>🎵 خلفية الموقع (أغنية ادخلي عمري)</label>
+                    <label>🎵 أغنية الخلفية (ادخلي عمري)</label>
                     <input type="text" id="musicUrl" placeholder="رابط الأغنية من Cloudinary">
-                    <button class="btn btn-secondary" onclick="uploadMusicToCloudinary()">📤 رفع أغنية جديدة</button>
-                    <button class="btn btn-secondary" onclick="resetDefaultMusic()">↺ استعادة الأغنية الافتراضية</button>
+                    <button class="btn btn-secondary" onclick="uploadMusic()" style="margin-top:10px;">📤 رفع أغنية جديدة</button>
+                    <button class="btn btn-secondary" onclick="resetMusic()" style="margin-top:5px;">↺ استعادة الأغنية الافتراضية</button>
                 </div>
             </div>
         </div>
 
-        <!-- ============ TAB 5: ACTIONS ============ -->
-        <div id="tab-actions" class="tab-content">
-            <div class="card">
-                <h2>⚡ إجراءات سريعة</h2>
-                <div class="btn-group">
-                    <button class="btn" onclick="saveAllSettings()">💾 حفظ جميع الإعدادات</button>
-                    <button class="btn btn-secondary" onclick="loadFromFirebase()">🔄 تحميل من Firebase</button>
-                    <button class="btn btn-secondary" onclick="resetToDefault()">↺ استعادة الإعدادات الافتراضية</button>
-                    <button class="btn btn-secondary" onclick="exportSettings()">📥 تصدير الإعدادات (JSON)</button>
-                </div>
+        <!-- أزرار الحفظ العامة -->
+        <div class="card" style="margin-top:20px;">
+            <div class="btn-group">
+                <button class="btn" onclick="saveAllSettings()">💾 حفظ جميع الإعدادات</button>
+                <button class="btn btn-secondary" onclick="loadAllSettings()">🔄 تحميل من Firebase</button>
+                <button class="btn btn-secondary" onclick="resetAllSettings()">↺ استعادة الإعدادات الافتراضية</button>
             </div>
-            
-            <div class="card">
-                <h2>📊 حالة قاعدة البيانات</h2>
-                <div id="dbStatus"></div>
-            </div>
-            
-            <div class="card">
-                <h2>📝 سجل العمليات</h2>
-                <div class="log-area" id="logArea">
-                    <div class="log-entry">✨ جاهز للعمل...</div>
-                </div>
+            <div class="log-area" id="logArea">
+                <div class="log-entry">✨ جاهز للعمل...</div>
             </div>
         </div>
     </div>
@@ -397,24 +601,15 @@
         const CLOUD_NAME = 'dsuv6suzb';
         const UPLOAD_PRESET = 'wedding_upload';
 
-        // ============ DEFAULT VALUES ============
-        const DEFAULTS = {
-            mainGroom: "Mahmoud",
-            mainBride: "Eman",
-            mainEventLabel: "We're Getting Married!",
-            mainEventDate: "08 . 08 . 2026",
-            mainEventTime: "7:00 PM",
-            mainVenue: "Diva Hall",
-            mainLocationLink: "#",
-            envGroom: "Mahmoud",
-            envBride: "Eman",
-            envDate: "08.08.2026",
-            countdownDate: "2026-08-08T19:00",
-            globalBg: "https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg",
-            coupleImage: "https://via.placeholder.com/160",
-            musicUrl: "https://res.cloudinary.com/dsuv6suzb/video/upload/v1/wedding-audio/adkhly_omry_complete"
-        };
-
+        // ============ STATE ============
+        let allWishes = [];
+        let currentCommentFilter = 'all';
+        
+        // ============ ELEMENTS ============
+        const globalBg = document.getElementById('globalBg');
+        const coupleImage = document.getElementById('coupleImage');
+        const envBgUrl = document.getElementById('envBgUrl');
+        
         // ============ UTILITIES ============
         function addLog(message, type = 'info') {
             const logArea = document.getElementById('logArea');
@@ -427,77 +622,203 @@
             entry.innerHTML = `[${time}] ${icon} ${message}`;
             logArea.appendChild(entry);
             logArea.scrollTop = logArea.scrollHeight;
+            
+            setTimeout(() => {
+                if (logArea.children.length > 20) {
+                    logArea.removeChild(logArea.children[0]);
+                }
+            }, 100);
         }
-
+        
         function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`tab-${tabName}`).classList.add('active');
             event.target.classList.add('active');
         }
-
+        
         function updateImagePreview(inputId, previewId) {
             const url = document.getElementById(inputId).value;
             const preview = document.getElementById(previewId);
-            if (url) {
+            if (url && url.startsWith('http')) {
                 preview.innerHTML = `<img src="${url}" alt="Preview" style="width:100%;height:100px;object-fit:cover;border-radius:10px;">`;
             } else {
                 preview.innerHTML = '';
             }
         }
-
-        // ============ CLOUDINARY UPLOAD ============
-        function uploadToCloudinary(targetInputId) {
-            cloudinary.openUploadWidget({
-                cloudName: CLOUD_NAME,
-                uploadPreset: UPLOAD_PRESET,
-                sources: ['local', 'url', 'camera'],
-                folder: 'wedding-images'
-            }, (error, result) => {
-                if (error) {
-                    addLog('خطأ في رفع الصورة: ' + error, 'error');
-                    return;
+        
+        // ============ UPDATE STATS ============
+        function updateStats() {
+            const total = allWishes.length;
+            const present = allWishes.filter(w => w.status === 'حاضر').length;
+            const maybe = allWishes.filter(w => w.status === 'ربما').length;
+            const excused = allWishes.filter(w => w.status === 'معتذر').length;
+            const groom = allWishes.filter(w => w.side === 'عريس').length;
+            const bride = allWishes.filter(w => w.side === 'عروسة').length;
+            
+            const presentGroom = allWishes.filter(w => w.status === 'حاضر' && w.side === 'عريس').length;
+            const presentBride = allWishes.filter(w => w.status === 'حاضر' && w.side === 'عروسة').length;
+            const maybeGroom = allWishes.filter(w => w.status === 'ربما' && w.side === 'عريس').length;
+            const maybeBride = allWishes.filter(w => w.status === 'ربما' && w.side === 'عروسة').length;
+            const excusedGroom = allWishes.filter(w => w.status === 'معتذر' && w.side === 'عريس').length;
+            const excusedBride = allWishes.filter(w => w.status === 'معتذر' && w.side === 'عروسة').length;
+            
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statPresent').textContent = present;
+            document.getElementById('statMaybe').textContent = maybe;
+            document.getElementById('statExcused').textContent = excused;
+            document.getElementById('statGroom').textContent = groom;
+            document.getElementById('statBride').textContent = bride;
+            
+            document.getElementById('detailPresentGroom').textContent = presentGroom;
+            document.getElementById('detailPresentBride').textContent = presentBride;
+            document.getElementById('detailMaybeGroom').textContent = maybeGroom;
+            document.getElementById('detailMaybeBride').textContent = maybeBride;
+            document.getElementById('detailExcusedGroom').textContent = excusedGroom;
+            document.getElementById('detailExcusedBride').textContent = excusedBride;
+        }
+        
+        function refreshStats() {
+            addLog('تم تحديث الإحصائيات', 'success');
+            updateStats();
+        }
+        
+        function exportStats() {
+            const stats = {
+                exportDate: new Date().toISOString(),
+                total: allWishes.length,
+                present: allWishes.filter(w => w.status === 'حاضر').length,
+                maybe: allWishes.filter(w => w.status === 'ربما').length,
+                excused: allWishes.filter(w => w.status === 'معتذر').length,
+                groom: allWishes.filter(w => w.side === 'عريس').length,
+                bride: allWishes.filter(w => w.side === 'عروسة').length,
+                details: {
+                    presentGroom: allWishes.filter(w => w.status === 'حاضر' && w.side === 'عريس').length,
+                    presentBride: allWishes.filter(w => w.status === 'حاضر' && w.side === 'عروسة').length,
+                    maybeGroom: allWishes.filter(w => w.status === 'ربما' && w.side === 'عريس').length,
+                    maybeBride: allWishes.filter(w => w.status === 'ربما' && w.side === 'عروسة').length,
+                    excusedGroom: allWishes.filter(w => w.status === 'معتذر' && w.side === 'عريس').length,
+                    excusedBride: allWishes.filter(w => w.status === 'معتذر' && w.side === 'عروسة').length
                 }
-                if (result && result.event === 'success') {
-                    const url = result.info.secure_url;
-                    document.getElementById(targetInputId).value = url;
-                    if (targetInputId === 'globalBg') updateImagePreview('globalBg', 'globalBgPreview');
-                    if (targetInputId === 'coupleImage') updateImagePreview('coupleImage', 'coupleImagePreview');
-                    addLog('تم رفع الصورة بنجاح', 'success');
+            };
+            const dataStr = JSON.stringify(stats, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `wedding_stats_${new Date().toISOString().slice(0,19)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            addLog('تم تصدير التقرير بنجاح', 'success');
+        }
+        
+        // ============ COMMENTS ============
+        function filterComments(type, btn) {
+            currentCommentFilter = type;
+            document.querySelectorAll('#commentFilters .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderComments();
+        }
+        
+        function renderComments() {
+            const list = document.getElementById('commentsList');
+            let filtered = [...allWishes];
+            
+            if (currentCommentFilter === 'حاضر') filtered = allWishes.filter(w => w.status === 'حاضر');
+            else if (currentCommentFilter === 'ربما') filtered = allWishes.filter(w => w.status === 'ربما');
+            else if (currentCommentFilter === 'معتذر') filtered = allWishes.filter(w => w.status === 'معتذر');
+            else if (currentCommentFilter === 'عريس') filtered = allWishes.filter(w => w.side === 'عريس');
+            else if (currentCommentFilter === 'عروسة') filtered = allWishes.filter(w => w.side === 'عروسة');
+            
+            if (filtered.length === 0) {
+                list.innerHTML = '<div style="text-align:center;padding:40px;color:#888;">لا توجد تعليقات</div>';
+                return;
+            }
+            
+            list.innerHTML = filtered.map(w => `
+                <div class="comment-item">
+                    <div class="comment-info">
+                        <span class="comment-name">${escapeHtml(w.name)}</span>
+                        <span class="comment-side ${w.side === 'عريس' ? 'groom' : 'bride'}">${w.side === 'عريس' ? 'عريس' : 'عروسة'}</span>
+                        <span class="comment-status ${w.status === 'حاضر' ? 'present' : (w.status === 'ربما' ? 'maybe' : 'excused')}">
+                            ${w.status === 'حاضر' ? 'حاضر' : (w.status === 'ربما' ? 'سيحاول' : 'معتذر')}
+                        </span>
+                        ${w.message ? `<div class="comment-message">"${escapeHtml(w.message)}"</div>` : ''}
+                    </div>
+                    <button class="delete-btn" onclick="deleteComment('${w.id}')">🗑 حذف</button>
+                </div>
+            `).join('');
+        }
+        
+        function deleteComment(id) {
+            if (confirm('هل أنت متأكد من حذف هذه التهنئة؟')) {
+                db.ref('wishes/' + id).remove();
+                addLog('تم حذف التهنئة', 'success');
+                canvasConfetti({ particleCount: 100, spread: 70, origin: { y: 0.5 }, colors: ['#f44336'] });
+            }
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // ============ UPLOAD FUNCTIONS ============
+        function uploadGlobalBg() {
+            cloudinary.openUploadWidget({ cloudName: CLOUD_NAME, uploadPreset: UPLOAD_PRESET, sources: ['local', 'url'] }, (err, res) => {
+                if (res && res.event === 'success') {
+                    document.getElementById('globalBg').value = res.info.secure_url;
+                    updateImagePreview('globalBg', 'globalBgPreview');
+                    addLog('تم رفع خلفية المين', 'success');
                 }
             });
         }
-
-        function uploadMusicToCloudinary() {
-            cloudinary.openUploadWidget({
-                cloudName: CLOUD_NAME,
-                uploadPreset: UPLOAD_PRESET,
-                sources: ['local', 'url'],
-                resourceType: 'video',
-                folder: 'wedding-audio'
-            }, (error, result) => {
-                if (error) {
-                    addLog('خطأ في رفع الأغنية: ' + error, 'error');
-                    return;
-                }
-                if (result && result.event === 'success') {
-                    const url = result.info.secure_url;
-                    document.getElementById('musicUrl').value = url;
-                    addLog('تم رفع الأغنية بنجاح', 'success');
+        
+        function uploadCoupleImage() {
+            cloudinary.openUploadWidget({ cloudName: CLOUD_NAME, uploadPreset: UPLOAD_PRESET, sources: ['local', 'url'] }, (err, res) => {
+                if (res && res.event === 'success') {
+                    document.getElementById('coupleImage').value = res.info.secure_url;
+                    updateImagePreview('coupleImage', 'coupleImagePreview');
+                    addLog('تم رفع صورة العروسين', 'success');
                 }
             });
         }
-
-        function resetDefaultMusic() {
-            document.getElementById('musicUrl').value = DEFAULTS.musicUrl;
+        
+        function uploadEnvBg() {
+            cloudinary.openUploadWidget({ cloudName: CLOUD_NAME, uploadPreset: UPLOAD_PRESET, sources: ['local', 'url'] }, (err, res) => {
+                if (res && res.event === 'success') {
+                    document.getElementById('envBgUrl').value = res.info.secure_url;
+                    updateImagePreview('envBgUrl', 'envBgPreview');
+                    addLog('تم رفع خلفية الظرف', 'success');
+                }
+            });
+        }
+        
+        function resetEnvBg() {
+            const def = 'https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg';
+            document.getElementById('envBgUrl').value = def;
+            updateImagePreview('envBgUrl', 'envBgPreview');
+            addLog('تم استعادة خلفية الظرف الافتراضية', 'success');
+        }
+        
+        function uploadMusic() {
+            cloudinary.openUploadWidget({ cloudName: CLOUD_NAME, uploadPreset: UPLOAD_PRESET, sources: ['local', 'url'], resourceType: 'video', folder: 'wedding-audio' }, (err, res) => {
+                if (res && res.event === 'success') {
+                    document.getElementById('musicUrl').value = res.info.secure_url;
+                    addLog('تم رفع الأغنية', 'success');
+                }
+            });
+        }
+        
+        function resetMusic() {
+            const def = 'https://res.cloudinary.com/dsuv6suzb/video/upload/v1/wedding-audio/adkhly_omry_complete';
+            document.getElementById('musicUrl').value = def;
             addLog('تم استعادة الأغنية الافتراضية', 'success');
         }
-
-        // ============ SAVE ALL SETTINGS TO FIREBASE ============
-        async function saveAllSettings() {
-            addLog('💾 جاري حفظ جميع الإعدادات...', 'info');
-            
-            // جمع البيانات من جميع التابات
+        
+        // ============ SAVE ALL SETTINGS ============
+        function saveAllSettings() {
             const mainSettings = {
                 groom: document.getElementById('mainGroom').value,
                 bride: document.getElementById('mainBride').value,
@@ -506,10 +827,10 @@
                 eventTime: document.getElementById('mainEventTime').value,
                 venue: document.getElementById('mainVenue').value,
                 locationLink: document.getElementById('mainLocationLink').value,
+                countdownDate: document.getElementById('mainCountdownDate').value,
                 globalBg: document.getElementById('globalBg').value,
                 coupleImage: document.getElementById('coupleImage').value,
                 musicUrl: document.getElementById('musicUrl').value,
-                countdownDate: document.getElementById('countdownDate').value,
                 updatedAt: firebase.database.ServerValue.TIMESTAMP
             };
             
@@ -517,178 +838,99 @@
                 groomName: document.getElementById('envGroom').value,
                 brideName: document.getElementById('envBride').value,
                 eventDate: document.getElementById('envDate').value,
-                bgUrl: document.getElementById('globalBg').value,
+                bgUrl: document.getElementById('envBgUrl').value,
                 updatedAt: firebase.database.ServerValue.TIMESTAMP
             };
             
-            try {
-                // حفظ mainSettings
-                await db.ref('mainSettings').set(mainSettings);
-                addLog('✅ تم حفظ mainSettings بنجاح', 'success');
-                
-                // حفظ envelopeSettings
-                await db.ref('envelopeSettings').set(envelopeSettings);
-                addLog('✅ تم حفظ envelopeSettings بنجاح', 'success');
-                
-                // حفظ countdown date بشكل منفصل للتأكد
-                await db.ref('countdown').set({
-                    targetDate: document.getElementById('countdownDate').value,
-                    updatedAt: firebase.database.ServerValue.TIMESTAMP
-                });
-                
-                addLog('🎉 تم حفظ جميع الإعدادات في Firebase بنجاح!', 'success');
-                updateDBStatus();
-                
-            } catch (error) {
-                addLog('❌ خطأ في الحفظ: ' + error.message, 'error');
-            }
-        }
-        
-        // ============ LOAD FROM FIREBASE ============
-        async function loadFromFirebase() {
-            addLog('🔄 جاري تحميل الإعدادات من Firebase...', 'info');
+            db.ref('mainSettings').set(mainSettings);
+            db.ref('envelopeSettings').set(envelopeSettings);
             
-            try {
-                const mainSnapshot = await db.ref('mainSettings').once('value');
-                const envelopeSnapshot = await db.ref('envelopeSettings').once('value');
-                const countdownSnapshot = await db.ref('countdown').once('value');
-                
-                if (mainSnapshot.exists()) {
-                    const data = mainSnapshot.val();
-                    document.getElementById('mainGroom').value = data.groom || DEFAULTS.mainGroom;
-                    document.getElementById('mainBride').value = data.bride || DEFAULTS.mainBride;
-                    document.getElementById('mainEventLabel').value = data.eventLabel || DEFAULTS.mainEventLabel;
-                    document.getElementById('mainEventDate').value = data.eventDate || DEFAULTS.mainEventDate;
-                    document.getElementById('mainEventTime').value = data.eventTime || DEFAULTS.mainEventTime;
-                    document.getElementById('mainVenue').value = data.venue || DEFAULTS.mainVenue;
-                    document.getElementById('mainLocationLink').value = data.locationLink || DEFAULTS.mainLocationLink;
-                    document.getElementById('globalBg').value = data.globalBg || DEFAULTS.globalBg;
-                    document.getElementById('coupleImage').value = data.coupleImage || DEFAULTS.coupleImage;
-                    document.getElementById('musicUrl').value = data.musicUrl || DEFAULTS.musicUrl;
-                    addLog('✅ تم تحميل mainSettings', 'success');
-                }
-                
-                if (envelopeSnapshot.exists()) {
-                    const data = envelopeSnapshot.val();
-                    document.getElementById('envGroom').value = data.groomName || DEFAULTS.envGroom;
-                    document.getElementById('envBride').value = data.brideName || DEFAULTS.envBride;
-                    document.getElementById('envDate').value = data.eventDate || DEFAULTS.envDate;
-                    addLog('✅ تم تحميل envelopeSettings', 'success');
-                }
-                
-                if (countdownSnapshot.exists()) {
-                    const data = countdownSnapshot.val();
-                    if (data.targetDate) {
-                        document.getElementById('countdownDate').value = data.targetDate;
-                    }
-                    addLog('✅ تم تحميل تاريخ الكاونتر', 'success');
-                } else if (mainSnapshot.exists() && mainSnapshot.val().countdownDate) {
-                    document.getElementById('countdownDate').value = mainSnapshot.val().countdownDate;
-                }
-                
-                // تحديث المعاينات
-                updateImagePreview('globalBg', 'globalBgPreview');
-                updateImagePreview('coupleImage', 'coupleImagePreview');
-                
-                addLog('🎉 تم تحميل جميع الإعدادات بنجاح!', 'success');
-                
-            } catch (error) {
-                addLog('❌ خطأ في التحميل: ' + error.message, 'error');
-            }
+            addLog('تم حفظ جميع الإعدادات في Firebase', 'success');
+            canvasConfetti({ particleCount: 300, spread: 120, origin: { y: 0.6 }, colors: ['#e8c97a', '#ffb7c5'] });
         }
         
-        // ============ RESET TO DEFAULT ============
-        async function resetToDefault() {
+        function loadAllSettings() {
+            db.ref('mainSettings').once('value').then(snap => {
+                const data = snap.val();
+                if (data) {
+                    document.getElementById('mainGroom').value = data.groom || '';
+                    document.getElementById('mainBride').value = data.bride || '';
+                    document.getElementById('mainEventLabel').value = data.eventLabel || '';
+                    document.getElementById('mainEventDate').value = data.eventDate || '';
+                    document.getElementById('mainEventTime').value = data.eventTime || '';
+                    document.getElementById('mainVenue').value = data.venue || '';
+                    document.getElementById('mainLocationLink').value = data.locationLink || '';
+                    document.getElementById('mainCountdownDate').value = data.countdownDate || '';
+                    document.getElementById('globalBg').value = data.globalBg || '';
+                    document.getElementById('coupleImage').value = data.coupleImage || '';
+                    document.getElementById('musicUrl').value = data.musicUrl || '';
+                    updateImagePreview('globalBg', 'globalBgPreview');
+                    updateImagePreview('coupleImage', 'coupleImagePreview');
+                }
+            });
+            
+            db.ref('envelopeSettings').once('value').then(snap => {
+                const data = snap.val();
+                if (data) {
+                    document.getElementById('envGroom').value = data.groomName || '';
+                    document.getElementById('envBride').value = data.brideName || '';
+                    document.getElementById('envDate').value = data.eventDate || '';
+                    document.getElementById('envBgUrl').value = data.bgUrl || '';
+                    updateImagePreview('envBgUrl', 'envBgPreview');
+                }
+            });
+            
+            addLog('تم تحميل الإعدادات من Firebase', 'success');
+        }
+        
+        function resetAllSettings() {
             if (!confirm('⚠️ هل أنت متأكد؟ هذا الإجراء سيعيد جميع الإعدادات إلى القيم الافتراضية.')) return;
             
-            addLog('🔄 جاري استعادة الإعدادات الافتراضية...', 'info');
+            document.getElementById('mainGroom').value = 'Mahmoud';
+            document.getElementById('mainBride').value = 'Eman';
+            document.getElementById('mainEventLabel').value = '✨ فرحة عمرنا ✨';
+            document.getElementById('mainEventDate').value = 'الجمعة 8 أغسطس 2026';
+            document.getElementById('mainEventTime').value = 'الساعة 7:00 مساءً';
+            document.getElementById('mainVenue').value = 'قاعة ديفا هول - القاهرة';
+            document.getElementById('mainLocationLink').value = '#';
+            document.getElementById('mainCountdownDate').value = '2026-08-08T19:00';
             
-            document.getElementById('mainGroom').value = DEFAULTS.mainGroom;
-            document.getElementById('mainBride').value = DEFAULTS.mainBride;
-            document.getElementById('mainEventLabel').value = DEFAULTS.mainEventLabel;
-            document.getElementById('mainEventDate').value = DEFAULTS.mainEventDate;
-            document.getElementById('mainEventTime').value = DEFAULTS.mainEventTime;
-            document.getElementById('mainVenue').value = DEFAULTS.mainVenue;
-            document.getElementById('mainLocationLink').value = DEFAULTS.mainLocationLink;
-            document.getElementById('envGroom').value = DEFAULTS.envGroom;
-            document.getElementById('envBride').value = DEFAULTS.envBride;
-            document.getElementById('envDate').value = DEFAULTS.envDate;
-            document.getElementById('countdownDate').value = DEFAULTS.countdownDate;
-            document.getElementById('globalBg').value = DEFAULTS.globalBg;
-            document.getElementById('coupleImage').value = DEFAULTS.coupleImage;
-            document.getElementById('musicUrl').value = DEFAULTS.musicUrl;
+            document.getElementById('envGroom').value = 'Mahmoud';
+            document.getElementById('envBride').value = 'Eman';
+            document.getElementById('envDate').value = '08.08.2026';
+            document.getElementById('envBgUrl').value = 'https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg';
+            
+            document.getElementById('globalBg').value = 'https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg';
+            document.getElementById('coupleImage').value = 'https://via.placeholder.com/160';
+            document.getElementById('musicUrl').value = 'https://res.cloudinary.com/dsuv6suzb/video/upload/v1/wedding-audio/adkhly_omry_complete';
             
             updateImagePreview('globalBg', 'globalBgPreview');
             updateImagePreview('coupleImage', 'coupleImagePreview');
+            updateImagePreview('envBgUrl', 'envBgPreview');
             
-            addLog('✅ تم استعادة جميع الإعدادات الافتراضية', 'success');
-            await saveAllSettings();
+            addLog('تم استعادة جميع الإعدادات الافتراضية', 'success');
         }
         
-        // ============ EXPORT SETTINGS ============
-        async function exportSettings() {
-            addLog('📥 جاري تصدير الإعدادات...', 'info');
-            
-            try {
-                const mainSnapshot = await db.ref('mainSettings').once('value');
-                const envelopeSnapshot = await db.ref('envelopeSettings').once('value');
-                const countdownSnapshot = await db.ref('countdown').once('value');
-                
-                const exportData = {
-                    exportDate: new Date().toISOString(),
-                    mainSettings: mainSnapshot.val() || {},
-                    envelopeSettings: envelopeSnapshot.val() || {},
-                    countdown: countdownSnapshot.val() || {}
-                };
-                
-                const dataStr = JSON.stringify(exportData, null, 2);
-                const blob = new Blob([dataStr], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `wedding_settings_${new Date().toISOString().slice(0,19)}.json`;
-                a.click();
-                URL.revokeObjectURL(url);
-                
-                addLog('✅ تم تصدير الإعدادات بنجاح', 'success');
-            } catch (error) {
-                addLog('❌ خطأ في التصدير: ' + error.message, 'error');
-            }
-        }
+        // ============ LOAD WISHES FROM FIREBASE ============
+        db.ref('wishes').orderByChild('timestamp').on('value', (snap) => {
+            allWishes = [];
+            snap.forEach(child => {
+                allWishes.unshift({ id: child.key, ...child.val() });
+            });
+            updateStats();
+            renderComments();
+        });
         
-        // ============ UPDATE DB STATUS ============
-        async function updateDBStatus() {
-            const statusDiv = document.getElementById('dbStatus');
-            
-            try {
-                const mainExists = (await db.ref('mainSettings').once('value')).exists();
-                const envelopeExists = (await db.ref('envelopeSettings').once('value')).exists();
-                
-                statusDiv.innerHTML = `
-                    <div style="display:flex;gap:15px;flex-wrap:wrap;margin-top:15px;">
-                        <div style="background:rgba(76,175,80,0.2);padding:10px 20px;border-radius:15px;">
-                            ✅ mainSettings: ${mainExists ? 'محفوظة' : 'غير محفوظة'}
-                        </div>
-                        <div style="background:rgba(76,175,80,0.2);padding:10px 20px;border-radius:15px;">
-                            ✅ envelopeSettings: ${envelopeExists ? 'محفوظة' : 'غير محفوظة'}
-                        </div>
-                    </div>
-                `;
-            } catch (error) {
-                statusDiv.innerHTML = '<div style="color:#f44346;">❌ خطأ في الاتصال بقاعدة البيانات</div>';
-            }
-        }
-        
-        // ============ INITIAL LOAD ============
+        // ============ INIT ============
         window.addEventListener('load', () => {
-            loadFromFirebase();
-            updateDBStatus();
+            loadAllSettings();
             addLog('✨ لوحة التحكم المركزية جاهزة', 'success');
-            addLog('📌 قم بتعديل الإعدادات ثم اضغط "حفظ جميع الإعدادات"', 'info');
+            addLog('📊 يمكنك مراقبة الإحصائيات وإدارة التعليقات', 'info');
             
             // معاينات الصور
             document.getElementById('globalBg').addEventListener('input', () => updateImagePreview('globalBg', 'globalBgPreview'));
             document.getElementById('coupleImage').addEventListener('input', () => updateImagePreview('coupleImage', 'coupleImagePreview'));
+            document.getElementById('envBgUrl').addEventListener('input', () => updateImagePreview('envBgUrl', 'envBgPreview'));
         });
     </script>
 </body>
