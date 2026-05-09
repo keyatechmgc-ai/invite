@@ -297,7 +297,7 @@
             text-align: right;
         }
 
-        .royal-invite-link {
+        .royal-location-btn {
             display: inline-flex;
             align-items: center;
             gap: 12px;
@@ -308,6 +308,12 @@
             text-decoration: none;
             border-radius: 50px;
             font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        .royal-location-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            color: var(--gold-light);
         }
 
         /* كاونتر */
@@ -624,7 +630,9 @@
                 <div class="royal-detail"><span class="royal-detail-icon">🕖</span><span class="royal-detail-text" id="eventTime">7:00 PM</span></div>
                 <div class="royal-detail"><span class="royal-detail-icon">📍</span><span class="royal-detail-text" id="eventVenue">Diva Hall</span></div>
             </div>
-            <div style="text-align: center;"><a href="#" id="locationLink" target="_blank" class="royal-invite-link">Formal Invitation</a></div>
+            <div style="text-align: center;">
+                <a href="#" id="locationLink" target="_blank" class="royal-location-btn">📍 تحديد موقع القاعة</a>
+            </div>
         </div>
 
         <div class="royal-countdown" id="countdownWrapper">
@@ -668,16 +676,23 @@
         <div class="royal-admin-card">
             <div class="royal-admin-title">لوحة التحكم الملكية</div>
             
-            <label class="royal-admin-label">خلفية الموقع</label>
-            <input type="text" id="adminBgUrl" class="royal-admin-input">
-            <button class="royal-admin-btn royal-admin-btn-primary" onclick="uploadGlobalBg()">رفع خلفية جديدة</button>
-            <button class="royal-admin-btn" onclick="resetGlobalBg()" style="background:#444;">استعادة الافتراضية</button>
+            <label class="royal-admin-label">🎵 تحميل الأغنية (ادخلي عمري)</label>
+            <input type="text" id="adminMusicUrl" class="royal-admin-input" placeholder="رابط الأغنية من Cloudinary">
+            <button class="royal-admin-btn royal-admin-btn-primary" onclick="uploadMusic()">📤 رفع أغنية جديدة</button>
+            <button class="royal-admin-btn" onclick="resetMusic()" style="background:#444;">↺ استعادة الأغنية الافتراضية</button>
             
             <div style="height: 15px;"></div>
             
-            <label class="royal-admin-label">صورة العروسين</label>
+            <label class="royal-admin-label">🌹 خلفية الموقع</label>
+            <input type="text" id="adminBgUrl" class="royal-admin-input">
+            <button class="royal-admin-btn royal-admin-btn-primary" onclick="uploadGlobalBg()">📤 رفع خلفية جديدة</button>
+            <button class="royal-admin-btn" onclick="resetGlobalBg()" style="background:#444;">↺ استعادة الافتراضية</button>
+            
+            <div style="height: 15px;"></div>
+            
+            <label class="royal-admin-label">🖼️ صورة العروسين</label>
             <input type="text" id="adminCoupleImg" class="royal-admin-input">
-            <button class="royal-admin-btn royal-admin-btn-primary" onclick="uploadCoupleImage()">رفع صورة العروسين</button>
+            <button class="royal-admin-btn royal-admin-btn-primary" onclick="uploadCoupleImage()">📤 رفع صورة العروسين</button>
             
             <div style="height: 15px;"></div>
             
@@ -720,23 +735,23 @@
             
             <div style="height: 15px;"></div>
             
-            <label class="royal-admin-label">اسم العريس</label>
+            <label class="royal-admin-label">👑 اسم العريس</label>
             <input type="text" id="adminGroom" class="royal-admin-input">
-            <label class="royal-admin-label">اسم العروسة</label>
+            <label class="royal-admin-label">👑 اسم العروسة</label>
             <input type="text" id="adminBride" class="royal-admin-input">
-            <label class="royal-admin-label">النص التعريفي</label>
+            <label class="royal-admin-label">🏷️ النص التعريفي</label>
             <input type="text" id="adminEventLabel" class="royal-admin-input">
-            <label class="royal-admin-label">التاريخ</label>
+            <label class="royal-admin-label">📅 التاريخ</label>
             <input type="text" id="adminDate" class="royal-admin-input">
-            <label class="royal-admin-label">الوقت</label>
+            <label class="royal-admin-label">🕖 الوقت</label>
             <input type="text" id="adminTime" class="royal-admin-input">
-            <label class="royal-admin-label">القاعة</label>
+            <label class="royal-admin-label">📍 القاعة</label>
             <input type="text" id="adminVenue" class="royal-admin-input">
-            <label class="royal-admin-label">رابط الموقع</label>
+            <label class="royal-admin-label">🔗 رابط تحديد موقع القاعة</label>
             <input type="text" id="adminLocationLink" class="royal-admin-input">
             
-            <button class="royal-admin-btn royal-admin-btn-primary" onclick="saveAllSettings()">حفظ جميع الإعدادات</button>
-            <button class="royal-admin-btn royal-admin-btn-danger" onclick="closeAdminPanel()">إغلاق</button>
+            <button class="royal-admin-btn royal-admin-btn-primary" onclick="saveAllSettings()">💾 حفظ جميع الإعدادات</button>
+            <button class="royal-admin-btn royal-admin-btn-danger" onclick="closeAdminPanel()">❌ إغلاق</button>
         </div>
     </div>
 
@@ -786,10 +801,9 @@
         const globalBg = document.getElementById('globalBgImage');
         const coupleImage = document.getElementById('coupleImage');
         const mainContainer = document.getElementById('mainContainer');
-        
-        // ============ MUSIC ============
         const music = document.getElementById('bgMusic');
         
+        // ============ MUSIC FUNCTIONS ============
         function startMusic() {
             if (!musicStarted) {
                 music.play().catch(e => console.log('Auto-play prevented:', e));
@@ -805,6 +819,37 @@
         document.addEventListener('click', startMusic);
         document.addEventListener('touchstart', startMusic);
         
+        function uploadMusic() {
+            cloudinary.openUploadWidget({ 
+                cloudName: CLOUD_NAME, 
+                uploadPreset: UPLOAD_PRESET, 
+                sources: ['local', 'url'],
+                resourceType: 'video',
+                folder: 'wedding-audio'
+            }, (err, res) => {
+                if (res && res.event === 'success') {
+                    const url = res.info.secure_url;
+                    document.getElementById('adminMusicUrl').value = url;
+                    music.src = url;
+                    music.load();
+                    if (musicStarted) music.play();
+                    db.ref('mainSettings/musicUrl').set(url);
+                    showModal('تم الرفع', 'تم رفع الأغنية بنجاح', '🎵');
+                    createRoyalSparkle(window.innerWidth/2, window.innerHeight/2, 10);
+                }
+            });
+        }
+        
+        function resetMusic() {
+            const defaultMusic = 'https://res.cloudinary.com/dsuv6suzb/video/upload/v1/wedding-audio/adkhly_omry_complete';
+            music.src = defaultMusic;
+            music.load();
+            document.getElementById('adminMusicUrl').value = defaultMusic;
+            db.ref('mainSettings/musicUrl').set(defaultMusic);
+            if (musicStarted) music.play();
+            showModal('تم الاستعادة', 'تم استعادة الأغنية الافتراضية', '🎵');
+        }
+        
         // ============ PAGE FLIP EFFECT ============
         function startPageFlipEffect() {
             const flipOverlay = document.getElementById('flipOverlay');
@@ -814,7 +859,6 @@
             flipOverlay.style.opacity = '1';
             flipEffect.style.opacity = '1';
             
-            // انيميشن الورقة
             gsap.fromTo(flipCard, 
                 { rotationY: -180, scale: 0.5, opacity: 0 },
                 { rotationY: 0, scale: 1, opacity: 1, duration: 1.2, ease: 'back.out(1.5)', onComplete: () => {
@@ -825,7 +869,6 @@
                 }}
             );
             
-            // ورد وقلوب بكثافة
             for (let i = 0; i < 80; i++) {
                 setTimeout(() => {
                     createRoyalFlower(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
@@ -834,7 +877,6 @@
                 }, i * 40);
             }
             
-            // كونفيتي
             canvasConfetti({ particleCount: 600, spread: 200, origin: { y: 0.5 }, colors: ['#ffb7c5', '#ff8da3', '#e8c97a', '#c94f6b'], startVelocity: 30 });
             setTimeout(() => {
                 canvasConfetti({ particleCount: 400, spread: 150, origin: { y: 0.4, x: 0.3 }, colors: ['#ffb7c5', '#e8c97a'] });
@@ -931,21 +973,14 @@
         });
         document.addEventListener('mouseleave', () => cursor.classList.remove('active'));
         
-        // Ambient effects
         setInterval(() => {
-            if (Math.random() > 0.55) {
-                createRoyalHeart(Math.random() * window.innerWidth, window.innerHeight - 30);
-            }
+            if (Math.random() > 0.55) createRoyalHeart(Math.random() * window.innerWidth, window.innerHeight - 30);
         }, 500);
         setInterval(() => {
-            if (Math.random() > 0.65) {
-                createRoyalFlower(Math.random() * window.innerWidth, window.innerHeight - 50);
-            }
+            if (Math.random() > 0.65) createRoyalFlower(Math.random() * window.innerWidth, window.innerHeight - 50);
         }, 700);
         setInterval(() => {
-            if (Math.random() > 0.7) {
-                createRoyalSparkle(Math.random() * window.innerWidth, Math.random() * window.innerHeight, 2);
-            }
+            if (Math.random() > 0.7) createRoyalSparkle(Math.random() * window.innerWidth, Math.random() * window.innerHeight, 2);
         }, 1000);
         
         // ============ COUNTDOWN ============
@@ -975,7 +1010,7 @@
             if (dateTime) {
                 targetDate = new Date(dateTime).getTime();
                 db.ref('mainSettings/countdownDate').set(dateTime);
-                showModal('تم الحفظ', 'تم حفظ تاريخ الكاونتر بنجاح');
+                showModal('تم الحفظ', 'تم حفظ تاريخ الكاونتر بنجاح', '⚙️');
                 updateCountdown();
             }
         }
@@ -1014,6 +1049,7 @@
             document.getElementById('adminLocationLink').value = document.getElementById('locationLink').href;
             document.getElementById('adminBgUrl').value = globalBg.src;
             document.getElementById('adminCoupleImg').value = coupleImage.src;
+            document.getElementById('adminMusicUrl').value = music.src;
             renderAdminComments();
         }
         
@@ -1115,7 +1151,8 @@
                 venue: document.getElementById('adminVenue').value,
                 locationLink: document.getElementById('adminLocationLink').value,
                 globalBg: globalBg.src,
-                coupleImage: coupleImage.src
+                coupleImage: coupleImage.src,
+                musicUrl: music.src
             };
             
             document.getElementById('groomName').textContent = settings.groom;
@@ -1145,6 +1182,10 @@
                 if (data.locationLink) document.getElementById('locationLink').href = data.locationLink;
                 if (data.globalBg) globalBg.src = data.globalBg;
                 if (data.coupleImage) coupleImage.src = data.coupleImage;
+                if (data.musicUrl) {
+                    music.src = data.musicUrl;
+                    music.load();
+                }
                 if (data.countdownDate) {
                     targetDate = new Date(data.countdownDate).getTime();
                     updateCountdown();
@@ -1271,7 +1312,7 @@
         }, 100);
         
         console.log('%c👑 ROYAL INVITATION SYSTEM ACTIVATED 👑', 'color: #e8c97a; font-size: 22px; font-weight: bold;');
-        console.log('%c🎵 Music: Adkhly Omry (Auto-loop) | 🎨 AI Effects: Active', 'color: #ffb7c5; font-size: 14px;');
+        console.log('%c🎵 Music: Upload from Cloudinary | 🎨 AI Effects: Active', 'color: #ffb7c5; font-size: 14px;');
         console.log('%c⚙️ Admin Panel: 10 clicks on SECONDS box', 'color: #ff8da3; font-size: 12px;');
     </script>
 </body>
