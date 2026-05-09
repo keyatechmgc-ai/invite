@@ -774,11 +774,28 @@
     </div>
 
     <!-- صوت -->
-    <audio id="bgMusic" preload="auto" loop crossorigin="anonymous">
+    <audio id="bgMusic" preload="auto" loop crossorigin="anonymous" autoplay>
         <source src="https://res.cloudinary.com/dsuv6suzb/video/upload/v1/wedding-audio/adkhly_omry_complete" type="audio/mpeg">
     </audio>
 
     <script>
+        // ============ تشغيل الصوت فوراً ============
+        (function playAudioImmediately() {
+            const musicElement = document.getElementById('bgMusic');
+            musicElement.volume = 0.7;
+            
+            // محاولة التشغيل فوراً
+            musicElement.play().then(() => {
+                console.log('✅ Music started immediately');
+            }).catch(e => {
+                console.log('⚠️ Auto-play blocked, will retry:', e);
+                // محاولة مرة ثانية بعد 100ms
+                setTimeout(() => {
+                    musicElement.play().catch(() => {});
+                }, 100);
+            });
+        })();
+
         // ============ FIREBASE ============
         const firebaseConfig = {
             apiKey: "AIzaSyCF-kh6JgAbhroue7cKRdMZjwYV8m2c6Uw",
@@ -811,7 +828,7 @@
         const music = document.getElementById('bgMusic');
         
         // ============ MUSIC FUNCTIONS (محسن للتشغيل الفوري) ============
-        let musicStarted = false;
+        let musicStarted = true; // Changed to true because we started already
         let musicPlayAttempts = 0;
 
         function forcePlayMusic() {
@@ -829,22 +846,6 @@
                 }
             });
         }
-
-        // تجهيز الصوت ومحاولة التشغيل فوراً
-        music.load();
-        music.volume = 0.7;
-        forcePlayMusic();
-
-        // ضمان التشغيل عند أول تفاعل من المستخدم
-        const playOnInteraction = () => {
-            if (!musicStarted) {
-                music.play();
-                musicStarted = true;
-                createRoyalSparkle(window.innerWidth/2, window.innerHeight/2, 5);
-            }
-        };
-        document.body.addEventListener('click', playOnInteraction, { once: true });
-        document.body.addEventListener('touchstart', playOnInteraction, { once: true });
 
         // الريبيت التلقائي
         music.addEventListener('ended', () => {
@@ -866,7 +867,7 @@
                     document.getElementById('adminMusicUrl').value = url;
                     music.src = url;
                     music.load();
-                    forcePlayMusic();
+                    music.play().catch(() => {});
                     db.ref('mainSettings/musicUrl').set(url);
                     showModal('تم الرفع', 'تم رفع الأغنية بنجاح', '🎵');
                     createRoyalSparkle(window.innerWidth/2, window.innerHeight/2, 10);
@@ -880,7 +881,7 @@
             music.load();
             document.getElementById('adminMusicUrl').value = defaultMusic;
             db.ref('mainSettings/musicUrl').set(defaultMusic);
-            forcePlayMusic();
+            music.play().catch(() => {});
             showModal('تم الاستعادة', 'تم استعادة الأغنية الافتراضية', '🎵');
         }
         
@@ -922,21 +923,21 @@
         }
         
         // ============ AI PARTICLES ============
-        const canvas = document.getElementById('royalParticlesCanvas');
-        const ctx = canvas.getContext('2d');
+        const canvasEl = document.getElementById('royalParticlesCanvas');
+        const ctxEl = canvasEl.getContext('2d');
         let particles = [];
         
         function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            canvasEl.width = window.innerWidth;
+            canvasEl.height = window.innerHeight;
         }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
         
         for (let i = 0; i < 180; i++) {
             particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
+                x: Math.random() * canvasEl.width,
+                y: Math.random() * canvasEl.height,
                 size: Math.random() * 5 + 1,
                 speedX: (Math.random() - 0.5) * 0.35,
                 speedY: (Math.random() - 0.5) * 0.25,
@@ -946,19 +947,19 @@
         }
         
         function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctxEl.clearRect(0, 0, canvasEl.width, canvasEl.height);
             particles.forEach(p => {
                 p.x += p.speedX + Math.sin(p.phase) * 0.06;
                 p.y += p.speedY + Math.cos(p.phase) * 0.04;
                 p.phase += 0.012;
-                if (p.x < -50) p.x = canvas.width + 50;
-                if (p.x > canvas.width + 50) p.x = -50;
-                if (p.y < -50) p.y = canvas.height + 50;
-                if (p.y > canvas.height + 50) p.y = -50;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fillStyle = p.color;
-                ctx.fill();
+                if (p.x < -50) p.x = canvasEl.width + 50;
+                if (p.x > canvasEl.width + 50) p.x = -50;
+                if (p.y < -50) p.y = canvasEl.height + 50;
+                if (p.y > canvasEl.height + 50) p.y = -50;
+                ctxEl.beginPath();
+                ctxEl.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctxEl.fillStyle = p.color;
+                ctxEl.fill();
             });
             requestAnimationFrame(animateParticles);
         }
@@ -1219,7 +1220,7 @@
                 if (data.musicUrl && data.musicUrl !== music.src) {
                     music.src = data.musicUrl;
                     music.load();
-                    forcePlayMusic();
+                    music.play().catch(() => {});
                 }
                 if (data.countdownDate) {
                     targetDate = new Date(data.countdownDate).getTime();
