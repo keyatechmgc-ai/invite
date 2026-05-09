@@ -182,7 +182,7 @@
             transform-style: preserve-3d;
         }
 
-        /* حاوية رئيسية */
+        /* حاوية رئيسية - hidden في البداية */
         .royal-container {
             position: relative;
             z-index: 10;
@@ -195,9 +195,109 @@
             opacity: 1;
         }
 
-        /* بطاقة */
-        .royal-card {
-            background: linear-gradient(145deg, rgba(255,255,255,0.96) 0%, rgba(255,249,247,0.92) 100%);
+        /* بطاقة مؤقتة للترحيب */
+        .welcome-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(255,249,247,0.92));
+            backdrop-filter: blur(20px);
+            border-radius: 80px;
+            padding: 60px 30px;
+            margin: 40px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-royal), 0 0 0 2px rgba(255,255,255,0.3), 0 0 0 6px rgba(232,201,122,0.2);
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .welcome-card.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .welcome-card .royal-names {
+            margin-bottom: 30px;
+        }
+        .welcome-card .royal-groom, 
+        .welcome-card .royal-bride {
+            font-size: 3rem;
+        }
+
+        /* كاتبة اليد - Typewriter effect */
+        .typewriter-container {
+            margin: 30px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .typewriter-text {
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.2rem;
+            color: var(--pink-dark);
+            background: rgba(255,255,255,0.3);
+            padding: 12px 24px;
+            border-radius: 50px;
+            display: inline-block;
+            min-width: 200px;
+            text-align: center;
+            letter-spacing: 1px;
+            border-right: 3px solid var(--gold);
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .cursor-blink {
+            display: inline-block;
+            width: 3px;
+            height: 1.2rem;
+            background-color: var(--gold);
+            margin-right: 5px;
+            animation: blink 0.8s infinite;
+            vertical-align: middle;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        /* السهم الكيوت */
+        .magic-arrow {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ffb7c5, #e8c97a);
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 5px 20px rgba(232,201,122,0.4);
+            opacity: 0;
+            transform: scale(0);
+        }
+        .magic-arrow.visible {
+            opacity: 1;
+            transform: scale(1);
+            animation: arrowGlow 1.5s ease-in-out infinite;
+        }
+        .magic-arrow:hover {
+            transform: scale(1.15);
+            box-shadow: 0 10px 30px rgba(232,201,122,0.7);
+        }
+        .magic-arrow span {
+            font-size: 1.8rem;
+            animation: arrowMove 0.8s ease-in-out infinite;
+        }
+        @keyframes arrowGlow {
+            0%,100% { box-shadow: 0 5px 20px rgba(232,201,122,0.4); }
+            50% { box-shadow: 0 5px 35px rgba(232,201,122,0.8), 0 0 15px rgba(255,183,197,0.5); }
+        }
+        @keyframes arrowMove {
+            0%,100% { transform: translateX(0); }
+            50% { transform: translateX(-5px); }
+        }
+
+        /* البطاقة الرئيسية (تظهر بعد الضغط على السهم) */
+        .main-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(255,249,247,0.92));
             backdrop-filter: blur(20px);
             border-radius: 80px 80px 80px 40px;
             padding: 50px 30px 60px;
@@ -205,6 +305,15 @@
             box-shadow: var(--shadow-royal), 0 0 0 2px rgba(255,255,255,0.3), 0 0 0 6px rgba(232,201,122,0.2);
             position: relative;
             overflow: hidden;
+            display: none;
+        }
+        .main-card.active {
+            display: block;
+            animation: cardReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes cardReveal {
+            from { opacity: 0; transform: translateY(50px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .royal-frame {
@@ -228,7 +337,7 @@
             border: 4px solid var(--white);
         }
 
-        .royal-names { text-align: center; margin-bottom: 10px; }
+        .royal-names { text-align: center; margin-bottom: 20px; }
         .royal-groom, .royal-bride {
             font-family: 'Great Vibes', cursive;
             font-size: 3.5rem;
@@ -246,65 +355,6 @@
             margin: 5px 0;
         }
 
-        /* الجملة المؤثرة تحت الأسماء */
-        .royal-message {
-            text-align: center;
-            margin: 20px auto;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .royal-message.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .message-text {
-            font-family: 'Cairo', sans-serif;
-            font-size: 1rem;
-            color: var(--pink-dark);
-            background: rgba(255,255,255,0.5);
-            backdrop-filter: blur(5px);
-            display: inline-block;
-            padding: 10px 25px;
-            border-radius: 50px;
-            letter-spacing: 1px;
-            font-weight: 500;
-        }
-
-        /* السهم الكيوت */
-        .sound-arrow {
-            text-align: center;
-            margin: 15px auto 25px;
-            cursor: pointer;
-            animation: arrowBounce 1.5s ease-in-out infinite;
-            display: inline-block;
-            width: 100%;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease 0.3s;
-        }
-        .sound-arrow.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .sound-arrow span {
-            display: inline-block;
-            font-size: 2rem;
-            background: linear-gradient(135deg, #ffb7c5, #e8c97a);
-            padding: 12px 20px;
-            border-radius: 60px;
-            box-shadow: 0 5px 20px rgba(232,201,122,0.3);
-            transition: all 0.3s ease;
-        }
-        .sound-arrow span:hover {
-            transform: scale(1.1);
-            box-shadow: 0 10px 30px rgba(232,201,122,0.5);
-        }
-        @keyframes arrowBounce {
-            0%,100% { transform: translateY(0); }
-            50% { transform: translateY(10px); }
-        }
-
         .royal-badge {
             display: inline-block;
             padding: 10px 32px;
@@ -314,16 +364,15 @@
             font-size: 0.75rem;
             letter-spacing: 5px;
             font-weight: 800;
-            margin: 10px auto;
+            margin: 20px auto;
         }
 
-        /* تفاصيل */
         .royal-details {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 16px;
-            margin-top: 15px;
+            margin-top: 25px;
         }
         .royal-detail {
             display: flex;
@@ -357,7 +406,7 @@
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            margin-top: 20px;
+            margin-top: 30px;
             padding: 14px 35px;
             background: linear-gradient(135deg, #2a1a1f, #3d2a30);
             color: var(--gold);
@@ -415,7 +464,17 @@
             border-radius: 55px;
             padding: 40px 28px;
             margin-bottom: 30px;
+            display: none;
         }
+        .royal-form.active, .royal-comments.active {
+            display: block;
+            animation: slideUp 0.6s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .royal-form-title, .royal-comments-title {
             font-family: 'Cormorant Garamond', serif;
             font-size: 2rem;
@@ -471,7 +530,6 @@
             cursor: pointer;
         }
 
-        /* فلاتر */
         .royal-filters {
             display: flex;
             gap: 10px;
@@ -493,7 +551,6 @@
             color: #2a1a1f;
         }
 
-        /* تعليقات */
         .royal-comments-list {
             max-height: 450px;
             overflow-y: auto;
@@ -519,7 +576,6 @@
         .royal-comment-status { font-size: 0.7rem; color: var(--gold-dark); margin-right: 10px; }
         .royal-comment-message { color: #555; font-size: 0.9rem; margin-top: 10px; }
 
-        /* مودال */
         .royal-modal {
             position: fixed;
             inset: 0;
@@ -546,20 +602,27 @@
             padding: 40px 20px;
             color: rgba(232,201,122,0.6);
             font-size: 0.7rem;
+            display: none;
+        }
+        .royal-footer.active {
+            display: block;
         }
 
-        /* شاشات صغيرة */
         @media (max-width: 500px) {
             .royal-container { padding: 15px 12px 60px; }
-            .royal-card { padding: 30px 18px 40px; border-radius: 50px; }
+            .main-card { padding: 30px 18px 40px; border-radius: 50px; }
+            .welcome-card { padding: 40px 20px; margin: 20px; }
+            .welcome-card .royal-groom, 
+            .welcome-card .royal-bride { font-size: 2.2rem; }
             .royal-groom, .royal-bride { font-size: 2.2rem; }
             .royal-and { font-size: 1.8rem; }
             .royal-countdown { gap: 8px; }
             .royal-count-item { padding: 12px 5px; border-radius: 22px; }
             .royal-count-number { font-size: 1.6rem; }
             .royal-count-label { font-size: 0.5rem; letter-spacing: 2px; }
-            .message-text { font-size: 0.8rem; padding: 8px 18px; }
-            .sound-arrow span { font-size: 1.5rem; padding: 8px 16px; }
+            .typewriter-text { font-size: 0.9rem; padding: 8px 16px; white-space: normal; }
+            .magic-arrow { width: 45px; height: 45px; }
+            .magic-arrow span { font-size: 1.4rem; }
         }
     </style>
 </head>
@@ -586,24 +649,34 @@
 
     <!-- حاوية رئيسية -->
     <div class="royal-container" id="mainContainer">
-        <div class="royal-card" id="heroCard">
+        
+        <!-- البطاقة المؤقتة للترحيب مع تأثير الكتابة -->
+        <div class="welcome-card" id="welcomeCard">
+            <div class="royal-names">
+                <div class="royal-groom" id="welcomeGroom">Mahmoud</div>
+                <div class="royal-and">&</div>
+                <div class="royal-bride" id="welcomeBride">Eman</div>
+            </div>
+            <div class="typewriter-container" id="typewriterContainer">
+                <div class="typewriter-text" id="typewriterText"></div>
+                <span class="cursor-blink" id="cursorBlink"></span>
+            </div>
+            <div class="typewriter-container">
+                <div class="magic-arrow" id="magicArrow" onclick="revealFullInvitation()">
+                    <span>👉</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- البطاقة الرئيسية (تظهر بعد الضغط على السهم) -->
+        <div class="main-card" id="mainCard">
             <div class="royal-frame"><img id="coupleImage" src="" alt="Couple"></div>
             <div class="royal-names">
                 <div class="royal-groom" id="groomName"></div>
                 <div class="royal-and">&</div>
                 <div class="royal-bride" id="brideName"></div>
             </div>
-            
-            <!-- الجملة المؤثرة تحت الأسماء -->
-            <div class="royal-message" id="royalMessage">
-                <span class="message-text" id="eventLabel"></span>
-            </div>
-            
-            <!-- السهم الكيوت لتشغيل الصوت -->
-            <div class="sound-arrow" id="soundArrow">
-                <span>👇 اضغط هنا لتشغيل الموسيقى 👇</span>
-            </div>
-            
+            <div style="text-align: center;"><span class="royal-badge" id="eventLabel"></span></div>
             <div class="royal-details">
                 <div class="royal-detail"><span class="royal-detail-icon">📅</span><span class="royal-detail-text" id="eventDate"></span></div>
                 <div class="royal-detail"><span class="royal-detail-icon">🕖</span><span class="royal-detail-text" id="eventTime"></span></div>
@@ -621,7 +694,7 @@
             <div class="royal-count-item" id="secondsBox"><span class="royal-count-number" id="seconds">00</span><span class="royal-count-label">Seconds</span></div>
         </div>
 
-        <div class="royal-form">
+        <div class="royal-form" id="royalForm">
             <div class="royal-form-title">تأكيد الحضور</div>
             <input type="text" id="guestName" class="royal-input" placeholder="الاسم الكريم">
             <div class="royal-side-btns">
@@ -637,7 +710,7 @@
             <button class="royal-submit" onclick="submitRSVP()">إرسال التهنئة</button>
         </div>
 
-        <div class="royal-comments">
+        <div class="royal-comments" id="royalComments">
             <div class="royal-comments-title">التهاني والبركات</div>
             <div class="royal-filters">
                 <button class="royal-filter active" onclick="filterWishes('all', this)">الكل</button>
@@ -647,7 +720,7 @@
             <div class="royal-comments-list" id="wishesList"></div>
         </div>
 
-        <div class="royal-footer">جميع الحقوق محفوظة لنقابة تكنولوجيا المعلومات والبرمجيات المصرية 2026</div>
+        <div class="royal-footer" id="royalFooter">جميع الحقوق محفوظة لنقابة تكنولوجيا المعلومات والبرمجيات المصرية 2026</div>
     </div>
 
     <!-- مودال -->
@@ -683,36 +756,128 @@
         let currentFilter = 'all';
         let targetDate = new Date().getTime() + 86400000;
         let musicStarted = false;
+        let fullInvitationRevealed = false;
         
         // ============ ELEMENTS ============
         const globalBg = document.getElementById('globalBgImage');
         const coupleImage = document.getElementById('coupleImage');
         const music = document.getElementById('bgMusic');
-        const soundArrow = document.getElementById('soundArrow');
-        const royalMessage = document.getElementById('royalMessage');
+        const welcomeCard = document.getElementById('welcomeCard');
+        const mainCard = document.getElementById('mainCard');
+        const countdownWrapper = document.getElementById('countdownWrapper');
+        const royalForm = document.getElementById('royalForm');
+        const royalComments = document.getElementById('royalComments');
+        const royalFooter = document.getElementById('royalFooter');
+        const mainContainer = document.getElementById('mainContainer');
+        
+        // ============ TYPEWRITER EFFECT ============
+        let typewriterInterval = null;
+        
+        function startTypewriterEffect(text) {
+            const typewriterElement = document.getElementById('typewriterText');
+            const cursorBlink = document.getElementById('cursorBlink');
+            typewriterElement.textContent = '';
+            let index = 0;
+            
+            if (typewriterInterval) clearInterval(typewriterInterval);
+            
+            typewriterInterval = setInterval(() => {
+                if (index < text.length) {
+                    typewriterElement.textContent += text[index];
+                    index++;
+                    // اهتزاز خفيف مع كل حرف
+                    if (index % 3 === 0) {
+                        gsap.to(typewriterElement, { scale: 1.02, duration: 0.05, yoyo: true, repeat: 1 });
+                        createRoyalSparkle(
+                            typewriterElement.getBoundingClientRect().left + typewriterElement.offsetWidth / 2,
+                            typewriterElement.getBoundingClientRect().top + typewriterElement.offsetHeight / 2, 
+                            1
+                        );
+                    }
+                } else {
+                    clearInterval(typewriterInterval);
+                    // إظهار السهم بعد انتهاء الكتابة
+                    setTimeout(() => {
+                        const arrow = document.getElementById('magicArrow');
+                        arrow.classList.add('visible');
+                        // تطاير قلوب وسباركلز
+                        for (let i = 0; i < 10; i++) {
+                            setTimeout(() => {
+                                createRoyalHeart(arrow.getBoundingClientRect().left + arrow.offsetWidth / 2, arrow.getBoundingClientRect().top);
+                                createRoyalSparkle(arrow.getBoundingClientRect().left + arrow.offsetWidth / 2, arrow.getBoundingClientRect().top, 2);
+                            }, i * 100);
+                        }
+                    }, 200);
+                }
+            }, 100);
+        }
+        
+        // ============ REVEAL FULL INVITATION ============
+        function revealFullInvitation() {
+            if (fullInvitationRevealed) return;
+            fullInvitationRevealed = true;
+            
+            // إخفاء السهم ومنع الضغط مرة أخرى
+            const arrow = document.getElementById('magicArrow');
+            arrow.style.pointerEvents = 'none';
+            arrow.style.opacity = '0';
+            
+            // تشغيل الموسيقى
+            music.play().then(() => {
+                musicStarted = true;
+                console.log('✅ Music started');
+            }).catch(e => console.log('Play error:', e));
+            
+            // إخفاء بطاقة الترحيب بأنيميشن
+            gsap.to(welcomeCard, {
+                scale: 0.8,
+                opacity: 0,
+                duration: 0.5,
+                ease: 'back.in(1)',
+                onComplete: () => {
+                    welcomeCard.style.display = 'none';
+                    
+                    // إظهار المحتوى الرئيسي
+                    mainCard.classList.add('active');
+                    gsap.fromTo(mainCard, 
+                        { scale: 0.9, opacity: 0, y: 50 },
+                        { scale: 1, opacity: 1, y: 0, duration: 0.6, ease: 'back.out(1.2)' }
+                    );
+                    
+                    // إظهار باقي العناصر بتأخير
+                    setTimeout(() => {
+                        countdownWrapper.style.opacity = '1';
+                        gsap.fromTo(countdownWrapper.children, 
+                            { scale: 0, rotationY: -90 },
+                            { scale: 1, rotationY: 0, duration: 0.5, stagger: 0.1, ease: 'back.out(1)' }
+                        );
+                    }, 200);
+                    
+                    setTimeout(() => {
+                        royalForm.classList.add('active');
+                        royalComments.classList.add('active');
+                        royalFooter.classList.add('active');
+                        gsap.fromTo([royalForm, royalComments], 
+                            { opacity: 0, y: 30 },
+                            { opacity: 1, y: 0, duration: 0.5, stagger: 0.15 }
+                        );
+                    }, 500);
+                    
+                    // كونفيتي وقلوب احتفالاً
+                    canvasConfetti({ particleCount: 400, spread: 150, origin: { y: 0.6 }, colors: ['#e8c97a', '#ffb7c5', '#c94f6b'] });
+                    for (let i = 0; i < 30; i++) {
+                        setTimeout(() => {
+                            createRoyalHeart(Math.random() * window.innerWidth, window.innerHeight / 2);
+                            createRoyalFlower(Math.random() * window.innerWidth, window.innerHeight / 2);
+                        }, i * 80);
+                    }
+                }
+            });
+        }
         
         // ============ MUSIC SETUP ============
         function setupMusic() {
             music.volume = 0.7;
-            
-            // تشغيل الموسيقى عند الضغط على السهم
-            soundArrow.addEventListener('click', () => {
-                if (!musicStarted) {
-                    music.play().then(() => {
-                        musicStarted = true;
-                        console.log('✅ Music started by arrow click');
-                        createRoyalSparkle(window.innerWidth/2, window.innerHeight/2, 15);
-                        canvasConfetti({ particleCount: 200, spread: 100, origin: { y: 0.7 }, colors: ['#e8c97a', '#ffb7c5'] });
-                        // إخفاء السهم بعد التشغيل مع أنيميشن
-                        soundArrow.style.opacity = '0';
-                        soundArrow.style.transform = 'translateY(20px)';
-                        setTimeout(() => {
-                            soundArrow.style.display = 'none';
-                        }, 500);
-                    }).catch(e => console.log('Play error:', e));
-                }
-            });
-            
             music.addEventListener('ended', () => {
                 music.currentTime = 0;
                 music.play().catch(() => {});
@@ -724,13 +889,24 @@
             db.ref('mainSettings').on('value', (snap) => {
                 const data = snap.val();
                 if (data) {
+                    // الأسماء في بطاقة الترحيب
+                    document.getElementById('welcomeGroom').textContent = data.groom || 'Mahmoud';
+                    document.getElementById('welcomeBride').textContent = data.bride || 'Eman';
+                    
+                    // الأسماء في البطاقة الرئيسية
                     document.getElementById('groomName').textContent = data.groom || 'Mahmoud';
                     document.getElementById('brideName').textContent = data.bride || 'Eman';
                     document.getElementById('eventLabel').textContent = data.eventLabel || '✨ فرحة عمرنا ✨';
+                    
+                    // بدء تأثير الكتابة
+                    startTypewriterEffect(data.eventLabel || '✨ فرحة عمرنا ✨');
+                    
+                    // باقي البيانات
                     document.getElementById('eventDate').textContent = data.eventDate || '08 . 08 . 2026';
                     document.getElementById('eventTime').textContent = data.eventTime || '7:00 PM';
                     document.getElementById('eventVenue').textContent = data.venue || 'Diva Hall';
                     document.getElementById('locationLink').href = data.locationLink || '#';
+                    
                     if (data.globalBg) globalBg.src = data.globalBg;
                     if (data.coupleImage) coupleImage.src = data.coupleImage;
                     if (data.musicUrl && data.musicUrl !== music.src) {
@@ -744,6 +920,8 @@
                             updateCountdown();
                         }
                     }
+                } else {
+                    startTypewriterEffect('✨ فرحة عمرنا ✨');
                 }
             });
             
@@ -753,6 +931,7 @@
                     allWishes.unshift({ id: child.key, ...child.val() });
                 });
                 renderWishes();
+                updateStats();
             });
         }
         
@@ -863,18 +1042,16 @@
         document.addEventListener('mouseleave', () => cursor.classList.remove('active'));
         
         setInterval(() => {
-            if (Math.random() > 0.7) createRoyalHeart(Math.random() * window.innerWidth, window.innerHeight - 30);
+            if (!fullInvitationRevealed && Math.random() > 0.7) {
+                createRoyalHeart(Math.random() * window.innerWidth, window.innerHeight - 30);
+            }
         }, 800);
-        setInterval(() => {
-            if (Math.random() > 0.8) createRoyalFlower(Math.random() * window.innerWidth, window.innerHeight - 50);
-        }, 1000);
         
         // ============ PAGE FLIP EFFECT ============
         function startPageFlipEffect() {
             const flipOverlay = document.getElementById('flipOverlay');
             const flipEffect = document.getElementById('flipEffect');
             const flipCard = document.getElementById('flipCard');
-            const mainContainer = document.getElementById('mainContainer');
             
             flipOverlay.style.opacity = '1';
             flipEffect.style.opacity = '1';
@@ -885,14 +1062,13 @@
                     gsap.to(flipCard, { scale: 1.2, opacity: 0, duration: 0.5, delay: 0.3 });
                     gsap.to(flipOverlay, { opacity: 0, duration: 0.5, delay: 0.5 });
                     gsap.to(flipEffect, { opacity: 0, duration: 0.5, delay: 0.5 });
-                    gsap.to(mainContainer, { opacity: 1, duration: 0.8, delay: 0.3, onComplete: () => {
-                        // إظهار الجملة بعد انتهاء تقليب الورقة
-                        royalMessage.classList.add('visible');
-                        // إظهار السهم بعد الجملة مباشرة
-                        setTimeout(() => {
-                            soundArrow.classList.add('visible');
-                        }, 300);
-                    } });
+                    
+                    // إظهار بطاقة الترحيب بعد انتهاء التقليب
+                    mainContainer.style.opacity = '1';
+                    gsap.fromTo(welcomeCard, 
+                        { scale: 0.8, opacity: 0 },
+                        { scale: 1, opacity: 1, duration: 0.6, ease: 'back.out(1.2)', delay: 0.2 }
+                    );
                 }}
             );
             
@@ -979,6 +1155,29 @@
             `).join('');
         }
         
+        function updateStats() {
+            const total = allWishes.length;
+            const present = allWishes.filter(w => w.status === 'حاضر').length;
+            const maybe = allWishes.filter(w => w.status === 'ربما').length;
+            const excused = allWishes.filter(w => w.status === 'معتذر').length;
+            const groom = allWishes.filter(w => w.side === 'عريس').length;
+            const bride = allWishes.filter(w => w.side === 'عروسة').length;
+            
+            const statTotal = document.getElementById('statTotal');
+            const statPresent = document.getElementById('statPresent');
+            const statMaybe = document.getElementById('statMaybe');
+            const statExcused = document.getElementById('statExcused');
+            const statGroom = document.getElementById('statGroom');
+            const statBride = document.getElementById('statBride');
+            
+            if (statTotal) statTotal.textContent = total;
+            if (statPresent) statPresent.textContent = present;
+            if (statMaybe) statMaybe.textContent = maybe;
+            if (statExcused) statExcused.textContent = excused;
+            if (statGroom) statGroom.textContent = groom;
+            if (statBride) statBride.textContent = bride;
+        }
+        
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
@@ -996,15 +1195,6 @@
             document.getElementById('royalModal').classList.remove('active');
         }
         
-        // ============ GSAP SCROLL ============
-        gsap.registerPlugin(ScrollTrigger);
-        document.querySelectorAll('.royal-card, .royal-countdown, .royal-form, .royal-comments').forEach(el => {
-            gsap.fromTo(el, 
-                { opacity: 0, y: 50, scale: 0.96 },
-                { opacity: 1, y: 0, scale: 1, duration: 0.8, scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' } }
-            );
-        });
-        
         // ============ INIT ============
         setupMusic();
         loadAllData();
@@ -1012,8 +1202,8 @@
             startPageFlipEffect();
         }, 100);
         
-        console.log('%c👑 ROYAL MAIN PAGE - WITH SOUND ARROW 👑', 'color: #e8c97a; font-size: 18px; font-weight: bold;');
-        console.log('%c🎵 Click the arrow to start the music', 'color: #ffb7c5; font-size: 14px;');
+        console.log('%c👑 ROYAL MAIN PAGE - WITH TYPEWRITER EFFECT 👑', 'color: #e8c97a; font-size: 18px; font-weight: bold;');
+        console.log('%c🎵 Click the arrow to reveal full invitation', 'color: #ffb7c5; font-size: 14px;');
     </script>
 </body>
 </html>
