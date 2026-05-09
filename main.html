@@ -64,7 +64,7 @@
             height: 100%;
             object-fit: cover;
             opacity: 0.55;
-            animation: slowZoom 20s ease-in-out infinite alternate;
+            animation: slowZoom 5s ease-in-out infinite alternate;
         }
         @keyframes slowZoom {
             0% { transform: scale(1); }
@@ -153,7 +153,7 @@
             opacity: 0.5;
         }
 
-        /* تأثير انقلاب الصفحة */
+        /* تأثير انقلاب الصفحة الأولي */
         .page-flip-overlay {
             position: fixed;
             inset: 0;
@@ -182,6 +182,22 @@
             transform-style: preserve-3d;
         }
 
+        /* بلور الشاشة أثناء الكتابة */
+        .blur-overlay {
+            position: fixed;
+            inset: 0;
+            backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.3);
+            z-index: 10002;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+        .blur-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
         /* حاوية رئيسية */
         .royal-container {
             position: relative;
@@ -195,77 +211,80 @@
             opacity: 1;
         }
 
-        /* بطاقة الترحيب */
-        .welcome-card {
-            background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(255,249,247,0.92));
+        /* شاشة الرسالة */
+        .message-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10005;
+            background: linear-gradient(145deg, rgba(255,255,255,0.98), rgba(255,249,247,0.96));
             backdrop-filter: blur(20px);
-            border-radius: 80px;
-            padding: 50px 30px;
-            margin: 20px;
-            text-align: center;
-            box-shadow: var(--shadow-royal), 0 0 0 2px rgba(255,255,255,0.3), 0 0 0 6px rgba(232,201,122,0.2);
-            opacity: 0;
-            transform: scale(0.9);
-            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .welcome-card.visible {
-            opacity: 1;
-            transform: scale(1);
-        }
-        .welcome-card .royal-groom, 
-        .welcome-card .royal-bride {
-            font-size: 3rem;
-        }
-
-        /* تأثير الكتابة المطور */
-        .message-container {
-            margin: 40px auto;
-            padding: 20px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 40px;
-            backdrop-filter: blur(5px);
-        }
-        .glowing-text {
-            font-family: 'Cairo', sans-serif;
-            font-size: 1.4rem;
-            color: var(--pink-dark);
-            text-align: center;
-            line-height: 1.8;
-            letter-spacing: 1px;
-        }
-        .typewriter-area {
             display: flex;
-            justify-content: center;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .word-wrapper {
-            display: inline-block;
+            justify-content: center;
+            flex-direction: column;
             opacity: 0;
-            transform: scale(0);
-            margin: 0 5px;
+            visibility: hidden;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .word-wrapper.revealed {
-            animation: wordPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        .message-screen.active {
+            opacity: 1;
+            visibility: visible;
         }
-        @keyframes wordPop {
-            0% { opacity: 0; transform: scale(0) rotate(-10deg); }
-            60% { opacity: 1; transform: scale(1.1) rotate(2deg); }
-            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        .message-screen.hide {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(1.1);
         }
-        .word-wrapper span {
+        .message-screen-content {
+            text-align: center;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+        }
+        .message-screen-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.5rem;
+            color: var(--pink-dark);
+            margin-bottom: 30px;
+        }
+        /* نوع الرايتر المحسن */
+        .typewriter-message {
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.6rem;
+            color: var(--pink-royal);
+            line-height: 1.8;
+            text-align: center;
+            direction: rtl;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .typewriter-message span {
             display: inline-block;
-            background: linear-gradient(135deg, #ffb7c5, #e8c97a);
-            padding: 8px 18px;
-            border-radius: 50px;
-            color: #2a1a1f;
-            font-weight: 600;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
-
-        /* السهم المتحرك (HTML/CSS مش ايموجي) */
-        .custom-arrow {
+        .typewriter-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1.8rem;
+            background: linear-gradient(135deg, #ffb7c5, #e8c97a);
+            margin-right: 5px;
+            animation: cursorBlink 0.8s infinite;
+            vertical-align: middle;
+        }
+        @keyframes cursorBlink {
+            0%,100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        /* السهم */
+        .message-arrow {
+            margin-top: 50px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -273,41 +292,40 @@
             opacity: 0;
             transform: scale(0);
             transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            margin-top: 20px;
         }
-        .custom-arrow.visible {
+        .message-arrow.visible {
             opacity: 1;
             transform: scale(1);
         }
-        .arrow-shape {
-            width: 70px;
-            height: 70px;
+        .arrow-circle {
+            width: 80px;
+            height: 80px;
             background: linear-gradient(135deg, #ffb7c5, #e8c97a);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 5px 25px rgba(232,201,122,0.5);
             transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(232,201,122,0.4);
-            animation: arrowPulse 1.5s ease-in-out infinite;
+            animation: arrowPulseGlow 1.5s ease-in-out infinite;
         }
-        .arrow-shape:hover {
+        .arrow-circle:hover {
             transform: scale(1.1);
-            box-shadow: 0 10px 35px rgba(232,201,122,0.7);
+            box-shadow: 0 10px 35px rgba(232,201,122,0.8);
         }
-        .arrow-shape svg {
-            width: 35px;
-            height: 35px;
+        .arrow-circle svg {
+            width: 40px;
+            height: 40px;
             stroke: white;
             stroke-width: 2.5;
             fill: none;
-            animation: arrowMove 0.8s ease-in-out infinite;
+            animation: arrowMoveSvg 0.8s ease-in-out infinite;
         }
-        @keyframes arrowPulse {
+        @keyframes arrowPulseGlow {
             0%,100% { box-shadow: 0 5px 20px rgba(232,201,122,0.4); }
-            50% { box-shadow: 0 5px 35px rgba(232,201,122,0.8), 0 0 15px rgba(255,183,197,0.5); }
+            50% { box-shadow: 0 5px 40px rgba(232,201,122,0.9), 0 0 20px rgba(255,183,197,0.6); }
         }
-        @keyframes arrowMove {
+        @keyframes arrowMoveSvg {
             0%,100% { transform: translateX(0); }
             50% { transform: translateX(-8px); }
         }
@@ -326,9 +344,9 @@
         }
         .main-card.active {
             display: block;
-            animation: cardReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: cardRevealRoyal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        @keyframes cardReveal {
+        @keyframes cardRevealRoyal {
             from { opacity: 0; transform: translateY(50px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
@@ -372,7 +390,7 @@
             margin: 5px 0;
         }
 
-        /* تفاصيل الدعوة - موسعة ومناسبة للفون */
+        /* تفاصيل الدعوة - موسعة */
         .invitation-details {
             background: rgba(255,255,255,0.4);
             border-radius: 40px;
@@ -636,13 +654,6 @@
 
         @media (max-width: 550px) {
             .royal-container { padding: 15px 12px 60px; }
-            .welcome-card { padding: 35px 20px; margin: 15px; }
-            .welcome-card .royal-groom, 
-            .welcome-card .royal-bride { font-size: 2.2rem; }
-            .glowing-text { font-size: 1.1rem; }
-            .word-wrapper span { padding: 6px 14px; font-size: 0.9rem; }
-            .arrow-shape { width: 55px; height: 55px; }
-            .arrow-shape svg { width: 28px; height: 28px; }
             .main-card { padding: 35px 20px 45px; }
             .royal-groom, .royal-bride { font-size: 2.2rem; }
             .royal-and { font-size: 1.8rem; }
@@ -654,12 +665,11 @@
             .royal-count-item { padding: 12px 5px; border-radius: 22px; }
             .royal-count-number { font-size: 1.5rem; }
             .royal-count-label { font-size: 0.5rem; letter-spacing: 2px; }
-            .royal-location-btn { padding: 10px 20px; font-size: 0.8rem; }
-        }
-
-        @media (max-width: 380px) {
-            .royal-detail-icon { width: 38px; height: 38px; font-size: 1rem; }
-            .royal-detail-text { font-size: 0.85rem; }
+            .typewriter-message { font-size: 1.2rem; }
+            .typewriter-cursor { height: 1.4rem; }
+            .arrow-circle { width: 65px; height: 65px; }
+            .arrow-circle svg { width: 32px; height: 32px; }
+            .message-screen-title { font-size: 2rem; }
         }
     </style>
 </head>
@@ -684,32 +694,27 @@
     <!-- كانفاس -->
     <canvas id="royalParticlesCanvas"></canvas>
 
-    <!-- حاوية رئيسية -->
-    <div class="royal-container" id="mainContainer">
-        
-        <!-- بطاقة الترحيب -->
-        <div class="welcome-card" id="welcomeCard">
-            <div class="royal-names">
-                <div class="royal-groom" id="welcomeGroom">Mahmoud</div>
-                <div class="royal-and">&</div>
-                <div class="royal-bride" id="welcomeBride">Eman</div>
-            </div>
-            
-            <!-- رسالة بتأثير كلمات متفرقة -->
-            <div class="message-container">
-                <div class="glowing-text" id="messageText"></div>
-            </div>
-            
-            <!-- السهم المتحرك -->
-            <div class="custom-arrow" id="customArrow" onclick="revealFullInvitation()">
-                <div class="arrow-shape">
+    <!-- بلور الشاشة -->
+    <div class="blur-overlay" id="blurOverlay"></div>
+
+    <!-- شاشة الرسالة -->
+    <div class="message-screen" id="messageScreen">
+        <div class="message-screen-content">
+            <div class="message-screen-title" id="messageTitle"></div>
+            <div class="typewriter-message" id="typewriterMessage"></div>
+            <div class="message-arrow" id="messageArrow" onclick="revealInvitationDetails()">
+                <div class="arrow-circle">
                     <svg viewBox="0 0 24 24" stroke="white" stroke-width="2" fill="none">
                         <path d="M12 5L12 19M12 19L5 12M12 19L19 12" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
             </div>
         </div>
+    </div>
 
+    <!-- حاوية رئيسية -->
+    <div class="royal-container" id="mainContainer">
+        
         <!-- البطاقة الرئيسية -->
         <div class="main-card" id="mainCard">
             <div class="royal-frame"><img id="coupleImage" src="" alt="Couple"></div>
@@ -800,100 +805,98 @@
         let currentFilter = 'all';
         let targetDate = new Date().getTime() + 86400000;
         let musicStarted = false;
-        let fullInvitationRevealed = false;
+        let invitationRevealed = false;
+        let typewriterInterval = null;
         
         // ============ ELEMENTS ============
         const globalBg = document.getElementById('globalBgImage');
         const coupleImage = document.getElementById('coupleImage');
         const music = document.getElementById('bgMusic');
-        const welcomeCard = document.getElementById('welcomeCard');
-        const mainCard = document.getElementById('mainCard');
-        const countdownWrapper = document.getElementById('countdownWrapper');
-        const royalForm = document.getElementById('royalForm');
-        const royalComments = document.getElementById('royalComments');
-        const royalFooter = document.getElementById('royalFooter');
         const mainContainer = document.getElementById('mainContainer');
-        const customArrow = document.getElementById('customArrow');
+        const messageScreen = document.getElementById('messageScreen');
+        const blurOverlay = document.getElementById('blurOverlay');
+        const messageArrow = document.getElementById('messageArrow');
+        const typewriterContainer = document.getElementById('typewriterMessage');
         
-        // ============ WORD-BY-WORD TYPEWRITER EFFECT ============
-        let wordInterval = null;
+        // ============ TYPEWRITER EFFECT (حرف حرف) ============
+        let currentText = '';
+        let currentIndex = 0;
         
-        function startWordByWordEffect(message) {
-            const container = document.getElementById('messageText');
-            container.innerHTML = '';
+        function startTypewriterEffect(message) {
+            typewriterContainer.innerHTML = '';
+            currentText = message;
+            currentIndex = 0;
             
-            // تقسيم الكلام إلى كلمات
-            const words = message.split(' ');
-            const wordWrappers = [];
+            if (typewriterInterval) clearInterval(typewriterInterval);
             
-            words.forEach((word, idx) => {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'word-wrapper';
-                const span = document.createElement('span');
-                span.textContent = word;
-                wrapper.appendChild(span);
-                container.appendChild(wrapper);
-                wordWrappers.push(wrapper);
-                
-                // إضافة مسافة بعد كل كلمة
-                if (idx < words.length - 1) {
-                    const space = document.createTextNode(' ');
-                    container.appendChild(space);
-                }
-            });
+            // إظهار الكيرسر
+            const cursorSpan = document.createElement('span');
+            cursorSpan.className = 'typewriter-cursor';
+            typewriterContainer.appendChild(cursorSpan);
             
-            let currentIndex = 0;
-            
-            if (wordInterval) clearInterval(wordInterval);
-            
-            wordInterval = setInterval(() => {
-                if (currentIndex < wordWrappers.length) {
-                    const wrapper = wordWrappers[currentIndex];
-                    wrapper.classList.add('revealed');
+            typewriterInterval = setInterval(() => {
+                if (currentIndex < currentText.length) {
+                    const char = currentText[currentIndex];
+                    const charSpan = document.createElement('span');
+                    charSpan.textContent = char;
+                    charSpan.style.opacity = '0';
+                    charSpan.style.transform = 'scale(0)';
+                    typewriterContainer.insertBefore(charSpan, cursorSpan);
                     
-                    // تأثيرات AI مع كل كلمة
-                    const rect = wrapper.getBoundingClientRect();
-                    createRoyalSparkle(rect.left + rect.width / 2, rect.top, 2);
-                    
-                    // اهتزاز خفيف
-                    gsap.to(wrapper, { 
-                        scale: 1.05, 
-                        duration: 0.1, 
-                        yoyo: true, 
-                        repeat: 1,
+                    // تأثير ظهور الحرف
+                    gsap.to(charSpan, {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.1,
+                        ease: 'back.out(1.2)',
                         onComplete: () => {
-                            gsap.to(wrapper, { scale: 1, duration: 0.1 });
+                            if (currentIndex % 5 === 0 && currentIndex > 0) {
+                                const rect = charSpan.getBoundingClientRect();
+                                createSparkleOnChar(rect.left + rect.width / 2, rect.top + rect.height / 2);
+                            }
                         }
                     });
                     
                     currentIndex++;
                 } else {
-                    clearInterval(wordInterval);
-                    // إظهار السهم بعد اكتمال الكتابة
+                    clearInterval(typewriterInterval);
+                    // إخفاء الكيرسر بعد الانتهاء
+                    cursorSpan.style.opacity = '0';
+                    // إظهار السهم
                     setTimeout(() => {
-                        customArrow.classList.add('visible');
-                        // تطاير قلوب حول السهم
-                        for (let i = 0; i < 12; i++) {
+                        messageArrow.classList.add('visible');
+                        for (let i = 0; i < 15; i++) {
                             setTimeout(() => {
-                                const arrowRect = customArrow.getBoundingClientRect();
-                                createRoyalHeart(arrowRect.left + arrowRect.width / 2, arrowRect.top);
-                                createRoyalSparkle(arrowRect.left + arrowRect.width / 2, arrowRect.top, 2);
+                                const rect = messageArrow.getBoundingClientRect();
+                                createRoyalHeart(rect.left + rect.width / 2, rect.top);
+                                createRoyalSparkle(rect.left + rect.width / 2, rect.top, 2);
                             }, i * 80);
                         }
                     }, 300);
                 }
-            }, 180);
+            }, 70);
         }
         
-        // ============ REVEAL FULL INVITATION ============
-        function revealFullInvitation() {
-            if (fullInvitationRevealed) return;
-            fullInvitationRevealed = true;
+        function createSparkleOnChar(x, y) {
+            for (let i = 0; i < 2; i++) {
+                const s = document.createElement('div');
+                s.className = 'royal-sparkle';
+                s.innerHTML = ['✨', '⭐', '🌟', '💫'][Math.floor(Math.random() * 4)];
+                s.style.cssText = `left: ${x + (Math.random() - 0.5) * 30}px; top: ${y + (Math.random() - 0.5) * 20}px; font-size: ${Math.random() * 14 + 8}px; --dur: ${Math.random() * 0.8 + 0.6}s;`;
+                document.body.appendChild(s);
+                setTimeout(() => s.remove(), 1200);
+            }
+        }
+        
+        // ============ REVEAL INVITATION DETAILS ============
+        function revealInvitationDetails() {
+            if (invitationRevealed) return;
+            invitationRevealed = true;
             
             // إخفاء السهم
-            customArrow.style.pointerEvents = 'none';
-            customArrow.style.opacity = '0';
-            customArrow.style.transform = 'scale(0)';
+            messageArrow.style.pointerEvents = 'none';
+            messageArrow.style.opacity = '0';
+            messageArrow.style.transform = 'scale(0)';
             
             // تشغيل الموسيقى
             music.play().then(() => {
@@ -901,52 +904,63 @@
                 console.log('✅ Music started');
             }).catch(e => console.log('Play error:', e));
             
-            // إخفاء بطاقة الترحيب
-            gsap.to(welcomeCard, {
-                scale: 0.8,
-                opacity: 0,
-                duration: 0.5,
-                ease: 'back.in(1)',
-                onComplete: () => {
-                    welcomeCard.style.display = 'none';
-                    
-                    // إظهار المحتوى الرئيسي
-                    mainCard.classList.add('active');
-                    gsap.fromTo(mainCard, 
-                        { scale: 0.9, opacity: 0, y: 50 },
-                        { scale: 1, opacity: 1, y: 0, duration: 0.6, ease: 'back.out(1.2)' }
+            // إخفاء شاشة الرسالة مع تأثير
+            messageScreen.classList.add('hide');
+            blurOverlay.classList.remove('active');
+            
+            setTimeout(() => {
+                messageScreen.classList.remove('active');
+                messageScreen.classList.remove('hide');
+                messageScreen.style.display = 'none';
+                
+                // إظهار المحتوى الرئيسي
+                mainContainer.style.opacity = '1';
+                document.getElementById('mainCard').classList.add('active');
+                
+                // أنيميشن البطاقة
+                gsap.fromTo('#mainCard', 
+                    { scale: 0.9, opacity: 0, y: 50 },
+                    { scale: 1, opacity: 1, y: 0, duration: 0.7, ease: 'back.out(1.2)' }
+                );
+                
+                // إظهار الكاونتر
+                setTimeout(() => {
+                    gsap.fromTo('.royal-countdown', 
+                        { opacity: 0, y: 30 },
+                        { opacity: 1, y: 0, duration: 0.5 }
                     );
-                    
-                    // إظهار الكاونتر
+                    gsap.fromTo('.royal-count-item', 
+                        { scale: 0, rotationY: -90 },
+                        { scale: 1, rotationY: 0, duration: 0.5, stagger: 0.1, ease: 'back.out(1)' }
+                    );
+                }, 200);
+                
+                // إظهار الفورم والتعليقات
+                setTimeout(() => {
+                    document.getElementById('royalForm').classList.add('active');
+                    document.getElementById('royalComments').classList.add('active');
+                    document.getElementById('royalFooter').classList.add('active');
+                    gsap.fromTo(['#royalForm', '#royalComments'], 
+                        { opacity: 0, y: 30 },
+                        { opacity: 1, y: 0, duration: 0.5, stagger: 0.15 }
+                    );
+                }, 500);
+                
+                // كونفيتي احتفالاً
+                canvasConfetti({ particleCount: 600, spread: 200, origin: { y: 0.5 }, colors: ['#e8c97a', '#ffb7c5', '#c94f6b', '#ff8da3'], startVelocity: 30 });
+                setTimeout(() => {
+                    canvasConfetti({ particleCount: 400, spread: 150, origin: { y: 0.4, x: 0.3 }, colors: ['#ffb7c5', '#e8c97a'] });
+                    canvasConfetti({ particleCount: 400, spread: 150, origin: { y: 0.4, x: 0.7 }, colors: ['#c94f6b', '#ff8da3'] });
+                }, 300);
+                
+                // قلوب وورود متطايرة
+                for (let i = 0; i < 50; i++) {
                     setTimeout(() => {
-                        countdownWrapper.style.opacity = '1';
-                        gsap.fromTo(countdownWrapper.children, 
-                            { scale: 0, rotationY: -90 },
-                            { scale: 1, rotationY: 0, duration: 0.5, stagger: 0.1, ease: 'back.out(1)' }
-                        );
-                    }, 200);
-                    
-                    // إظهار الفورم والتعليقات
-                    setTimeout(() => {
-                        royalForm.classList.add('active');
-                        royalComments.classList.add('active');
-                        royalFooter.classList.add('active');
-                        gsap.fromTo([royalForm, royalComments], 
-                            { opacity: 0, y: 30 },
-                            { opacity: 1, y: 0, duration: 0.5, stagger: 0.15 }
-                        );
-                    }, 500);
-                    
-                    // كونفيتي وقلوب احتفالاً
-                    canvasConfetti({ particleCount: 500, spread: 180, origin: { y: 0.6 }, colors: ['#e8c97a', '#ffb7c5', '#c94f6b', '#ff8da3'] });
-                    for (let i = 0; i < 40; i++) {
-                        setTimeout(() => {
-                            createRoyalHeart(Math.random() * window.innerWidth, window.innerHeight / 2);
-                            createRoyalFlower(Math.random() * window.innerWidth, window.innerHeight / 2);
-                        }, i * 60);
-                    }
+                        createRoyalHeart(Math.random() * window.innerWidth, window.innerHeight / 2);
+                        createRoyalFlower(Math.random() * window.innerWidth, window.innerHeight / 2);
+                    }, i * 60);
                 }
-            });
+            }, 600);
         }
         
         // ============ MUSIC SETUP ============
@@ -964,14 +978,13 @@
                 const data = snap.val();
                 if (data) {
                     // الأسماء
-                    document.getElementById('welcomeGroom').textContent = data.groom || 'Mahmoud';
-                    document.getElementById('welcomeBride').textContent = data.bride || 'Eman';
                     document.getElementById('groomName').textContent = data.groom || 'Mahmoud';
                     document.getElementById('brideName').textContent = data.bride || 'Eman';
+                    document.getElementById('messageTitle').textContent = `${data.groom || 'Mahmoud'} & ${data.bride || 'Eman'}`;
                     
-                    // بدء تأثير الكتابة بالكلمات
+                    // بدء تأثير الكتابة
                     const messageText = data.eventLabel || '✨ فرحة عمرنا ✨';
-                    startWordByWordEffect(messageText);
+                    startTypewriterEffect(messageText);
                     
                     // باقي البيانات
                     document.getElementById('eventDate').textContent = data.eventDate || 'الجمعة 8 أغسطس 2026';
@@ -993,7 +1006,8 @@
                         }
                     }
                 } else {
-                    startWordByWordEffect('✨ فرحة عمرنا ✨');
+                    startTypewriterEffect('✨ فرحة عمرنا ✨');
+                    document.getElementById('messageTitle').textContent = 'Mahmoud & Eman';
                 }
             });
             
@@ -1108,15 +1122,9 @@
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
             cursor.classList.add('active');
-            if (Math.random() > 0.98) createRoyalHeart(e.clientX, e.clientY);
+            if (Math.random() > 0.98 && invitationRevealed) createRoyalHeart(e.clientX, e.clientY);
         });
         document.addEventListener('mouseleave', () => cursor.classList.remove('active'));
-        
-        setInterval(() => {
-            if (!fullInvitationRevealed && Math.random() > 0.7) {
-                createRoyalHeart(Math.random() * window.innerWidth, window.innerHeight - 30);
-            }
-        }, 800);
         
         // ============ PAGE FLIP EFFECT ============
         function startPageFlipEffect() {
@@ -1134,10 +1142,12 @@
                     gsap.to(flipOverlay, { opacity: 0, duration: 0.5, delay: 0.5 });
                     gsap.to(flipEffect, { opacity: 0, duration: 0.5, delay: 0.5 });
                     
-                    mainContainer.style.opacity = '1';
-                    gsap.fromTo(welcomeCard, 
-                        { scale: 0.8, opacity: 0 },
-                        { scale: 1, opacity: 1, duration: 0.6, ease: 'back.out(1.2)', delay: 0.2 }
+                    // إظهار شاشة الرسالة مع البلور
+                    blurOverlay.classList.add('active');
+                    messageScreen.classList.add('active');
+                    gsap.fromTo(messageScreen, 
+                        { scale: 0.9, opacity: 0 },
+                        { scale: 1, opacity: 1, duration: 0.6, ease: 'back.out(1.2)' }
                     );
                 }}
             );
@@ -1249,8 +1259,8 @@
             startPageFlipEffect();
         }, 100);
         
-        console.log('%c👑 ROYAL MAIN PAGE - PREMIUM DESIGN 👑', 'color: #e8c97a; font-size: 18px; font-weight: bold;');
-        console.log('%c🎨 Word-by-word typewriter effect | Custom SVG arrow', 'color: #ffb7c5; font-size: 14px;');
+        console.log('%c👑 ROYAL MAIN PAGE - MESSAGE SCREEN WITH BLUR 👑', 'color: #e8c97a; font-size: 18px; font-weight: bold;');
+        console.log('%c📝 Typewriter effect | Click arrow to reveal invitation', 'color: #ffb7c5; font-size: 14px;');
     </script>
 </body>
 </html>
