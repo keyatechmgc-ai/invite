@@ -64,7 +64,7 @@
             height: 100%;
             object-fit: cover;
             opacity: 0.55;
-            animation: slowZoom 5s ease-in-out infinite alternate;
+            animation: slowZoom 20s ease-in-out infinite alternate;
         }
         @keyframes slowZoom {
             0% { transform: scale(1); }
@@ -228,7 +228,7 @@
             border: 4px solid var(--white);
         }
 
-        .royal-names { text-align: center; margin-bottom: 20px; }
+        .royal-names { text-align: center; margin-bottom: 10px; }
         .royal-groom, .royal-bride {
             font-family: 'Great Vibes', cursive;
             font-size: 3.5rem;
@@ -246,6 +246,65 @@
             margin: 5px 0;
         }
 
+        /* الجملة المؤثرة تحت الأسماء */
+        .royal-message {
+            text-align: center;
+            margin: 20px auto;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .royal-message.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .message-text {
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            color: var(--pink-dark);
+            background: rgba(255,255,255,0.5);
+            backdrop-filter: blur(5px);
+            display: inline-block;
+            padding: 10px 25px;
+            border-radius: 50px;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        /* السهم الكيوت */
+        .sound-arrow {
+            text-align: center;
+            margin: 15px auto 25px;
+            cursor: pointer;
+            animation: arrowBounce 1.5s ease-in-out infinite;
+            display: inline-block;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease 0.3s;
+        }
+        .sound-arrow.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .sound-arrow span {
+            display: inline-block;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #ffb7c5, #e8c97a);
+            padding: 12px 20px;
+            border-radius: 60px;
+            box-shadow: 0 5px 20px rgba(232,201,122,0.3);
+            transition: all 0.3s ease;
+        }
+        .sound-arrow span:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(232,201,122,0.5);
+        }
+        @keyframes arrowBounce {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+
         .royal-badge {
             display: inline-block;
             padding: 10px 32px;
@@ -255,7 +314,7 @@
             font-size: 0.75rem;
             letter-spacing: 5px;
             font-weight: 800;
-            margin: 20px auto;
+            margin: 10px auto;
         }
 
         /* تفاصيل */
@@ -264,7 +323,7 @@
             flex-direction: column;
             align-items: center;
             gap: 16px;
-            margin-top: 25px;
+            margin-top: 15px;
         }
         .royal-detail {
             display: flex;
@@ -298,7 +357,7 @@
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            margin-top: 30px;
+            margin-top: 20px;
             padding: 14px 35px;
             background: linear-gradient(135deg, #2a1a1f, #3d2a30);
             color: var(--gold);
@@ -313,7 +372,7 @@
             color: var(--gold-light);
         }
 
-        /* كاونتر - معدل للشاشات الصغيرة */
+        /* كاونتر */
         .royal-countdown {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -489,7 +548,7 @@
             font-size: 0.7rem;
         }
 
-        /* شاشات صغيرة جداً */
+        /* شاشات صغيرة */
         @media (max-width: 500px) {
             .royal-container { padding: 15px 12px 60px; }
             .royal-card { padding: 30px 18px 40px; border-radius: 50px; }
@@ -499,17 +558,8 @@
             .royal-count-item { padding: 12px 5px; border-radius: 22px; }
             .royal-count-number { font-size: 1.6rem; }
             .royal-count-label { font-size: 0.5rem; letter-spacing: 2px; }
-            .royal-detail { max-width: 100%; padding: 6px 12px; }
-            .royal-detail-icon { width: 36px; height: 36px; font-size: 1rem; }
-            .royal-detail-text { font-size: 0.85rem; }
-            .royal-form, .royal-comments { padding: 28px 18px; }
-            .royal-form-title, .royal-comments-title { font-size: 1.5rem; }
-        }
-
-        @media (max-width: 380px) {
-            .royal-count-number { font-size: 1.3rem; }
-            .royal-count-label { font-size: 0.45rem; letter-spacing: 1px; }
-            .royal-count-item { padding: 10px 4px; }
+            .message-text { font-size: 0.8rem; padding: 8px 18px; }
+            .sound-arrow span { font-size: 1.5rem; padding: 8px 16px; }
         }
     </style>
 </head>
@@ -543,7 +593,17 @@
                 <div class="royal-and">&</div>
                 <div class="royal-bride" id="brideName"></div>
             </div>
-            <div style="text-align: center;"><span class="royal-badge" id="eventLabel"></span></div>
+            
+            <!-- الجملة المؤثرة تحت الأسماء -->
+            <div class="royal-message" id="royalMessage">
+                <span class="message-text" id="eventLabel"></span>
+            </div>
+            
+            <!-- السهم الكيوت لتشغيل الصوت -->
+            <div class="sound-arrow" id="soundArrow">
+                <span>👇 اضغط هنا لتشغيل الموسيقى 👇</span>
+            </div>
+            
             <div class="royal-details">
                 <div class="royal-detail"><span class="royal-detail-icon">📅</span><span class="royal-detail-text" id="eventDate"></span></div>
                 <div class="royal-detail"><span class="royal-detail-icon">🕖</span><span class="royal-detail-text" id="eventTime"></span></div>
@@ -628,22 +688,30 @@
         const globalBg = document.getElementById('globalBgImage');
         const coupleImage = document.getElementById('coupleImage');
         const music = document.getElementById('bgMusic');
+        const soundArrow = document.getElementById('soundArrow');
+        const royalMessage = document.getElementById('royalMessage');
         
         // ============ MUSIC SETUP ============
         function setupMusic() {
             music.volume = 0.7;
             
-            function playMusic() {
+            // تشغيل الموسيقى عند الضغط على السهم
+            soundArrow.addEventListener('click', () => {
                 if (!musicStarted) {
                     music.play().then(() => {
                         musicStarted = true;
-                        console.log('✅ Music started');
-                    }).catch(() => {});
+                        console.log('✅ Music started by arrow click');
+                        createRoyalSparkle(window.innerWidth/2, window.innerHeight/2, 15);
+                        canvasConfetti({ particleCount: 200, spread: 100, origin: { y: 0.7 }, colors: ['#e8c97a', '#ffb7c5'] });
+                        // إخفاء السهم بعد التشغيل مع أنيميشن
+                        soundArrow.style.opacity = '0';
+                        soundArrow.style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            soundArrow.style.display = 'none';
+                        }, 500);
+                    }).catch(e => console.log('Play error:', e));
                 }
-            }
-            
-            document.body.addEventListener('click', playMusic);
-            document.body.addEventListener('touchstart', playMusic);
+            });
             
             music.addEventListener('ended', () => {
                 music.currentTime = 0;
@@ -653,32 +721,22 @@
         
         // ============ LOAD ALL DATA FROM FIREBASE ============
         function loadAllData() {
-            // تحميل إعدادات الصفحة الرئيسية
             db.ref('mainSettings').on('value', (snap) => {
                 const data = snap.val();
                 if (data) {
-                    // الأسماء
                     document.getElementById('groomName').textContent = data.groom || 'Mahmoud';
                     document.getElementById('brideName').textContent = data.bride || 'Eman';
-                    document.getElementById('eventLabel').textContent = data.eventLabel || 'We\'re Getting Married!';
-                    
-                    // التاريخ والوقت والمكان
+                    document.getElementById('eventLabel').textContent = data.eventLabel || '✨ فرحة عمرنا ✨';
                     document.getElementById('eventDate').textContent = data.eventDate || '08 . 08 . 2026';
                     document.getElementById('eventTime').textContent = data.eventTime || '7:00 PM';
                     document.getElementById('eventVenue').textContent = data.venue || 'Diva Hall';
                     document.getElementById('locationLink').href = data.locationLink || '#';
-                    
-                    // الصور
                     if (data.globalBg) globalBg.src = data.globalBg;
                     if (data.coupleImage) coupleImage.src = data.coupleImage;
-                    
-                    // الموسيقى
                     if (data.musicUrl && data.musicUrl !== music.src) {
                         music.src = data.musicUrl;
                         music.load();
                     }
-                    
-                    // الكاونتر
                     if (data.countdownDate) {
                         const countdownDate = new Date(data.countdownDate);
                         if (!isNaN(countdownDate.getTime())) {
@@ -689,14 +747,12 @@
                 }
             });
             
-            // تحميل التعليقات
             db.ref('wishes').orderByChild('timestamp').on('value', (snap) => {
                 allWishes = [];
                 snap.forEach(child => {
                     allWishes.unshift({ id: child.key, ...child.val() });
                 });
                 renderWishes();
-                updateStats();
             });
         }
         
@@ -715,13 +771,10 @@
             document.getElementById('minutes').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0');
             document.getElementById('seconds').textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2,'0');
             
-            // أنيميشن عشوائي للكاونتر
             if (Math.random() > 0.85) {
                 const boxes = ['daysBox', 'hoursBox', 'minutesBox', 'secondsBox'];
                 const box = document.getElementById(boxes[Math.floor(Math.random() * 4)]);
-                if (box) {
-                    gsap.to(box, { scale: 1.05, duration: 0.2, yoyo: true, repeat: 1, ease: 'power2.out' });
-                }
+                if (box) gsap.to(box, { scale: 1.05, duration: 0.2, yoyo: true, repeat: 1, ease: 'power2.out' });
             }
         }
         setInterval(updateCountdown, 1000);
@@ -805,31 +858,18 @@
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
             cursor.classList.add('active');
-            if (Math.random() > 0.98) {
-                createRoyalHeart(e.clientX, e.clientY);
-            }
+            if (Math.random() > 0.98) createRoyalHeart(e.clientX, e.clientY);
         });
         document.addEventListener('mouseleave', () => cursor.classList.remove('active'));
         
         setInterval(() => {
-            if (Math.random() > 0.7) {
-                createRoyalHeart(Math.random() * window.innerWidth, window.innerHeight - 30);
-            }
+            if (Math.random() > 0.7) createRoyalHeart(Math.random() * window.innerWidth, window.innerHeight - 30);
         }, 800);
-        
         setInterval(() => {
-            if (Math.random() > 0.8) {
-                createRoyalFlower(Math.random() * window.innerWidth, window.innerHeight - 50);
-            }
+            if (Math.random() > 0.8) createRoyalFlower(Math.random() * window.innerWidth, window.innerHeight - 50);
         }, 1000);
         
-        setInterval(() => {
-            if (Math.random() > 0.85) {
-                createRoyalSparkle(Math.random() * window.innerWidth, Math.random() * window.innerHeight, 1);
-            }
-        }, 1200);
-        
-        // ============ PAGE ENTRANCE EFFECT ============
+        // ============ PAGE FLIP EFFECT ============
         function startPageFlipEffect() {
             const flipOverlay = document.getElementById('flipOverlay');
             const flipEffect = document.getElementById('flipEffect');
@@ -845,7 +885,14 @@
                     gsap.to(flipCard, { scale: 1.2, opacity: 0, duration: 0.5, delay: 0.3 });
                     gsap.to(flipOverlay, { opacity: 0, duration: 0.5, delay: 0.5 });
                     gsap.to(flipEffect, { opacity: 0, duration: 0.5, delay: 0.5 });
-                    gsap.to(mainContainer, { opacity: 1, duration: 0.8, delay: 0.3 });
+                    gsap.to(mainContainer, { opacity: 1, duration: 0.8, delay: 0.3, onComplete: () => {
+                        // إظهار الجملة بعد انتهاء تقليب الورقة
+                        royalMessage.classList.add('visible');
+                        // إظهار السهم بعد الجملة مباشرة
+                        setTimeout(() => {
+                            soundArrow.classList.add('visible');
+                        }, 300);
+                    } });
                 }}
             );
             
@@ -932,29 +979,6 @@
             `).join('');
         }
         
-        function updateStats() {
-            const total = allWishes.length;
-            const present = allWishes.filter(w => w.status === 'حاضر').length;
-            const maybe = allWishes.filter(w => w.status === 'ربما').length;
-            const excused = allWishes.filter(w => w.status === 'معتذر').length;
-            const groom = allWishes.filter(w => w.side === 'عريس').length;
-            const bride = allWishes.filter(w => w.side === 'عروسة').length;
-            
-            const statTotal = document.getElementById('statTotal');
-            const statPresent = document.getElementById('statPresent');
-            const statMaybe = document.getElementById('statMaybe');
-            const statExcused = document.getElementById('statExcused');
-            const statGroom = document.getElementById('statGroom');
-            const statBride = document.getElementById('statBride');
-            
-            if (statTotal) statTotal.textContent = total;
-            if (statPresent) statPresent.textContent = present;
-            if (statMaybe) statMaybe.textContent = maybe;
-            if (statExcused) statExcused.textContent = excused;
-            if (statGroom) statGroom.textContent = groom;
-            if (statBride) statBride.textContent = bride;
-        }
-        
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
@@ -986,10 +1010,10 @@
         loadAllData();
         setTimeout(() => {
             startPageFlipEffect();
-        }, 200);
+        }, 100);
         
-        console.log('%c👑 ROYAL MAIN PAGE - FULLY CONNECTED TO FIREBASE 👑', 'color: #e8c97a; font-size: 18px; font-weight: bold;');
-        console.log('%c🎵 Countdown reads from Firebase | No local data', 'color: #ffb7c5; font-size: 14px;');
+        console.log('%c👑 ROYAL MAIN PAGE - WITH SOUND ARROW 👑', 'color: #e8c97a; font-size: 18px; font-weight: bold;');
+        console.log('%c🎵 Click the arrow to start the music', 'color: #ffb7c5; font-size: 14px;');
     </script>
 </body>
 </html>
