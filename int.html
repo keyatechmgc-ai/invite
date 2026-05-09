@@ -2,12 +2,17 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تهيئة قاعدة البيانات - نظام إدارة الدعوات</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>لوحة التحكم المركزية - نظام إدارة الدعوات</title>
     
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
+    <!-- Cloudinary -->
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         * {
@@ -15,25 +20,24 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Cairo', sans-serif;
             background: linear-gradient(135deg, #1a0e12 0%, #2a1a1f 100%);
             min-height: 100vh;
             padding: 40px 20px;
-            color: #fff;
         }
-        
+
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
         }
-        
+
         .header {
             text-align: center;
             margin-bottom: 40px;
         }
-        
+
         .header h1 {
             font-size: 2.5rem;
             background: linear-gradient(135deg, #e8c97a, #ffb7c5);
@@ -42,11 +46,50 @@
             color: transparent;
             margin-bottom: 10px;
         }
-        
+
         .header p {
             color: rgba(255,255,255,0.6);
         }
-        
+
+        /* tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            padding: 12px 28px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(232,201,122,0.3);
+            border-radius: 50px;
+            color: rgba(255,255,255,0.7);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #e8c97a, #c9a84c);
+            color: #1a0e12;
+            border-color: transparent;
+        }
+
+        .tab-btn:hover {
+            background: rgba(232,201,122,0.2);
+        }
+
+        /* cards */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         .card {
             background: rgba(255,255,255,0.08);
             backdrop-filter: blur(10px);
@@ -55,167 +98,289 @@
             margin-bottom: 25px;
             border: 1px solid rgba(232,201,122,0.2);
         }
-        
+
         .card h2 {
             color: #e8c97a;
             font-size: 1.5rem;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             border-right: 3px solid #e8c97a;
             padding-right: 15px;
         }
-        
-        .status-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+
+        .form-group {
+            margin-bottom: 20px;
         }
-        
-        .status-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
+
+        .form-group label {
+            display: block;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
         }
-        
-        .status-icon.success { background: rgba(76, 175, 80, 0.2); color: #4caf50; }
-        .status-icon.pending { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
-        .status-icon.error { background: rgba(244, 67, 54, 0.2); color: #f44336; }
-        .status-icon.info { background: rgba(33, 150, 243, 0.2); color: #2196f3; }
-        
-        .status-text {
-            flex: 1;
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(232,201,122,0.3);
+            border-radius: 20px;
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s;
         }
-        
-        .status-title {
-            font-weight: bold;
-            margin-bottom: 5px;
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #e8c97a;
+            box-shadow: 0 0 0 3px rgba(232,201,122,0.1);
         }
-        
-        .status-desc {
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.5);
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
         }
-        
-        .status-value {
-            font-family: monospace;
-            font-size: 0.8rem;
-            color: #e8c97a;
-        }
-        
+
         .btn {
             background: linear-gradient(135deg, #e8c97a, #c9a84c);
             border: none;
-            padding: 14px 30px;
+            padding: 14px 28px;
             border-radius: 50px;
             color: #1a0e12;
             font-weight: bold;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 20px;
-            width: 100%;
+            margin-top: 10px;
         }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(232,201,122,0.3);
-        }
-        
+
         .btn-secondary {
             background: rgba(255,255,255,0.1);
             color: #fff;
-            margin-top: 10px;
         }
-        
+
         .btn-secondary:hover {
             background: rgba(255,255,255,0.2);
         }
-        
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .image-preview {
+            margin-top: 10px;
+            max-width: 150px;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-left: 10px;
+        }
+
+        .status-saved {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
         .log-area {
             background: rgba(0,0,0,0.5);
             border-radius: 20px;
             padding: 20px;
             font-family: monospace;
             font-size: 0.8rem;
-            max-height: 300px;
+            max-height: 200px;
             overflow-y: auto;
             margin-top: 20px;
         }
-        
+
         .log-entry {
             padding: 5px 0;
             border-bottom: 1px solid rgba(255,255,255,0.05);
             color: #aaa;
         }
-        
+
         .log-entry.success { color: #4caf50; }
         .log-entry.error { color: #f44336; }
-        .log-entry.info { color: #2196f3; }
-        
-        .progress-bar {
-            height: 4px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 2px;
-            overflow: hidden;
-            margin: 20px 0;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #e8c97a, #ffb7c5);
-            width: 0%;
-            transition: width 0.3s ease;
-            border-radius: 2px;
-        }
-        
-        .flex-btns {
-            display: flex;
-            gap: 15px;
-        }
-        
-        @media (max-width: 600px) {
+
+        @media (max-width: 768px) {
             .card { padding: 20px; }
             .header h1 { font-size: 1.8rem; }
+            .form-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>⚙️ مدير تهيئة قاعدة البيانات ⚙️</h1>
-            <p>تهيئة وحفظ جميع إعدادات شاشات الدعوات في Firebase</p>
+            <h1>👑 لوحة التحكم المركزية 👑</h1>
+            <p>إدارة كاملة لإعدادات صفحات الدعوة (المين + الانديكس)</p>
         </div>
-        
-        <div class="card">
-            <h2>📊 هيكل قاعدة البيانات</h2>
-            <div id="dbStructure"></div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('main')">🏠 الصفحة الرئيسية (المين)</button>
+            <button class="tab-btn" onclick="showTab('envelope')">✉️ صفحة الظرف (الانديكس)</button>
+            <button class="tab-btn" onclick="showTab('countdown')">⏱️ الكاونتر والتاريخ</button>
+            <button class="tab-btn" onclick="showTab('media')">🖼️ الصور والموسيقى</button>
+            <button class="tab-btn" onclick="showTab('actions')">⚡ إجراءات سريعة</button>
         </div>
-        
-        <div class="card">
-            <h2>🎛️ إجراءات التهيئة</h2>
-            <div class="flex-btns">
-                <button class="btn" onclick="initDatabase()">🚀 تهيئة قاعدة البيانات بالكامل</button>
-                <button class="btn btn-secondary" onclick="resetDatabase()">🔄 إعادة ضبط كل شيء</button>
+
+        <!-- ============ TAB 1: MAIN SETTINGS ============ -->
+        <div id="tab-main" class="tab-content active">
+            <div class="card">
+                <h2>📋 بيانات العروسين</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>اسم العريس</label>
+                        <input type="text" id="mainGroom" placeholder="Mahmoud">
+                    </div>
+                    <div class="form-group">
+                        <label>اسم العروسة</label>
+                        <input type="text" id="mainBride" placeholder="Eman">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>النص التعريفي (الموجود تحت الأسماء)</label>
+                    <input type="text" id="mainEventLabel" placeholder="We're Getting Married!">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>تاريخ المناسبة</label>
+                        <input type="text" id="mainEventDate" placeholder="08 . 08 . 2026">
+                    </div>
+                    <div class="form-group">
+                        <label>وقت المناسبة</label>
+                        <input type="text" id="mainEventTime" placeholder="7:00 PM">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>اسم القاعة</label>
+                    <input type="text" id="mainVenue" placeholder="Diva Hall">
+                </div>
+                <div class="form-group">
+                    <label>رابط تحديد موقع القاعة (Google Maps)</label>
+                    <input type="url" id="mainLocationLink" placeholder="https://maps.google.com/...">
+                </div>
             </div>
-            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-            <button class="btn btn-secondary" onclick="exportDatabase()">📥 تصدير جميع البيانات (JSON)</button>
         </div>
-        
-        <div class="card">
-            <h2>📝 سجل العمليات</h2>
-            <div class="log-area" id="logArea">
-                <div class="log-entry info">⏳ جاهز للتهيئة...</div>
+
+        <!-- ============ TAB 2: ENVELOPE SETTINGS ============ -->
+        <div id="tab-envelope" class="tab-content">
+            <div class="card">
+                <h2>✉️ إعدادات صفحة الظرف (الانديكس)</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>اسم العريس في الظرف</label>
+                        <input type="text" id="envGroom" placeholder="Mahmoud">
+                    </div>
+                    <div class="form-group">
+                        <label>اسم العروسة في الظرف</label>
+                        <input type="text" id="envBride" placeholder="Eman">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>تاريخ المناسبة في الظرف</label>
+                    <input type="text" id="envDate" placeholder="08.08.2026">
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ TAB 3: COUNTDOWN SETTINGS ============ -->
+        <div id="tab-countdown" class="tab-content">
+            <div class="card">
+                <h2>⏱️ إعدادات الكاونتر</h2>
+                <div class="form-group">
+                    <label>📅 تاريخ ووقت المناسبة (يستخدم لحساب العد التنازلي)</label>
+                    <input type="datetime-local" id="countdownDate">
+                </div>
+                <div class="form-group">
+                    <label>⚠️ ملاحظة: هذا التاريخ هو اللي يتحكم في الكاونتر</label>
+                    <small style="color: rgba(255,255,255,0.5);">عند تغيير هذا التاريخ، الكاونتر في الصفحة الرئيسية يتغير تلقائياً</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ TAB 4: MEDIA SETTINGS ============ -->
+        <div id="tab-media" class="tab-content">
+            <div class="card">
+                <h2>🖼️ الصور والموسيقى</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>🌍 خلفية الموقع العامة (باك جراوند الصفحة الرئيسية)</label>
+                        <input type="text" id="globalBg" placeholder="رابط الصورة">
+                        <button class="btn btn-secondary btn-block" onclick="uploadToCloudinary('globalBg')">📤 رفع صورة خلفية</button>
+                        <div class="image-preview" id="globalBgPreview"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>🖼️ صورة العروسين (الدائرية)</label>
+                        <input type="text" id="coupleImage" placeholder="رابط الصورة">
+                        <button class="btn btn-secondary btn-block" onclick="uploadToCloudinary('coupleImage')">📤 رفع صورة العروسين</button>
+                        <div class="image-preview" id="coupleImagePreview"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>🎵 خلفية الموقع (أغنية ادخلي عمري)</label>
+                    <input type="text" id="musicUrl" placeholder="رابط الأغنية من Cloudinary">
+                    <button class="btn btn-secondary" onclick="uploadMusicToCloudinary()">📤 رفع أغنية جديدة</button>
+                    <button class="btn btn-secondary" onclick="resetDefaultMusic()">↺ استعادة الأغنية الافتراضية</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ TAB 5: ACTIONS ============ -->
+        <div id="tab-actions" class="tab-content">
+            <div class="card">
+                <h2>⚡ إجراءات سريعة</h2>
+                <div class="btn-group">
+                    <button class="btn" onclick="saveAllSettings()">💾 حفظ جميع الإعدادات</button>
+                    <button class="btn btn-secondary" onclick="loadFromFirebase()">🔄 تحميل من Firebase</button>
+                    <button class="btn btn-secondary" onclick="resetToDefault()">↺ استعادة الإعدادات الافتراضية</button>
+                    <button class="btn btn-secondary" onclick="exportSettings()">📥 تصدير الإعدادات (JSON)</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>📊 حالة قاعدة البيانات</h2>
+                <div id="dbStatus"></div>
+            </div>
+            
+            <div class="card">
+                <h2>📝 سجل العمليات</h2>
+                <div class="log-area" id="logArea">
+                    <div class="log-entry">✨ جاهز للعمل...</div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ============ FIREBASE CONFIG ============
+        // ============ FIREBASE ============
         const firebaseConfig = {
             apiKey: "AIzaSyCF-kh6JgAbhroue7cKRdMZjwYV8m2c6Uw",
             authDomain: "engagmen.firebaseapp.com",
@@ -225,341 +390,305 @@
             messagingSenderId: "286100738965",
             appId: "1:286100738965:web:3f5be0307dca5927e5dc9c"
         };
-        
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-        
-        let currentProgress = 0;
-        
-        // ============ DEFAULT SETTINGS ============
-        const DEFAULT_SETTINGS = {
-            // إعدادات المين (الصفحة الرئيسية)
-            mainSettings: {
-                groom: "Mahmoud",
-                bride: "Eman",
-                eventLabel: "We're Getting Married!",
-                eventDate: "08 . 08 . 2026",
-                eventTime: "7:00 PM",
-                venue: "Diva Hall",
-                locationLink: "https://maps.google.com",
-                globalBg: "https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg",
-                coupleImage: "https://via.placeholder.com/160",
-                musicUrl: "https://res.cloudinary.com/dsuv6suzb/video/upload/v1/wedding-audio/adkhly_omry_complete",
-                countdownDate: "2026-08-08T19:00",
-                updatedAt: null
-            },
-            
-            // إعدادات الظرف (الصفحة الأولى)
-            envelopeSettings: {
-                groomName: "Mahmoud",
-                brideName: "Eman",
-                eventDate: "08.08.2026",
-                bgUrl: "https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg",
-                updatedAt: null
-            },
-            
-            // التعليقات والتهاني
-            wishes: {
-                // سيتم إنشاء العقدة فقط، البيانات تأتي من المستخدمين
-            },
-            
-            // إحصائيات النظام
-            systemStats: {
-                totalVisits: 0,
-                totalWishes: 0,
-                totalPresent: 0,
-                totalMaybe: 0,
-                totalExcused: 0,
-                lastUpdated: null
-            }
+
+        // ============ CLOUDINARY ============
+        const CLOUD_NAME = 'dsuv6suzb';
+        const UPLOAD_PRESET = 'wedding_upload';
+
+        // ============ DEFAULT VALUES ============
+        const DEFAULTS = {
+            mainGroom: "Mahmoud",
+            mainBride: "Eman",
+            mainEventLabel: "We're Getting Married!",
+            mainEventDate: "08 . 08 . 2026",
+            mainEventTime: "7:00 PM",
+            mainVenue: "Diva Hall",
+            mainLocationLink: "#",
+            envGroom: "Mahmoud",
+            envBride: "Eman",
+            envDate: "08.08.2026",
+            countdownDate: "2026-08-08T19:00",
+            globalBg: "https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg",
+            coupleImage: "https://via.placeholder.com/160",
+            musicUrl: "https://res.cloudinary.com/dsuv6suzb/video/upload/v1/wedding-audio/adkhly_omry_complete"
         };
-        
+
         // ============ UTILITIES ============
         function addLog(message, type = 'info') {
             const logArea = document.getElementById('logArea');
-            const logEntry = document.createElement('div');
-            logEntry.className = `log-entry ${type}`;
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
             const time = new Date().toLocaleTimeString();
-            let icon = 'ℹ️';
+            let icon = '📌';
             if (type === 'success') icon = '✅';
             if (type === 'error') icon = '❌';
-            if (type === 'info') icon = '📌';
-            logEntry.innerHTML = `[${time}] ${icon} ${message}`;
-            logArea.appendChild(logEntry);
+            entry.innerHTML = `[${time}] ${icon} ${message}`;
+            logArea.appendChild(entry);
             logArea.scrollTop = logArea.scrollHeight;
         }
-        
-        function updateProgress(increment) {
-            currentProgress += increment;
-            const fill = document.getElementById('progressFill');
-            fill.style.width = Math.min(currentProgress, 100) + '%';
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            event.target.classList.add('active');
         }
-        
-        function resetProgress() {
-            currentProgress = 0;
-            document.getElementById('progressFill').style.width = '0%';
+
+        function updateImagePreview(inputId, previewId) {
+            const url = document.getElementById(inputId).value;
+            const preview = document.getElementById(previewId);
+            if (url) {
+                preview.innerHTML = `<img src="${url}" alt="Preview" style="width:100%;height:100px;object-fit:cover;border-radius:10px;">`;
+            } else {
+                preview.innerHTML = '';
+            }
         }
-        
-        // ============ DISPLAY DATABASE STRUCTURE ============
-        function displayDBStructure() {
-            const structure = {
-                'mainSettings': 'إعدادات الصفحة الرئيسية (الأسماء، التاريخ، الصور، الموسيقى)',
-                'envelopeSettings': 'إعدادات صفحة الظرف (الأسماء، الخلفية)',
-                'wishes': 'تهاني وردود أفعال المدعوين',
-                'systemStats': 'إحصائيات النظام'
+
+        // ============ CLOUDINARY UPLOAD ============
+        function uploadToCloudinary(targetInputId) {
+            cloudinary.openUploadWidget({
+                cloudName: CLOUD_NAME,
+                uploadPreset: UPLOAD_PRESET,
+                sources: ['local', 'url', 'camera'],
+                folder: 'wedding-images'
+            }, (error, result) => {
+                if (error) {
+                    addLog('خطأ في رفع الصورة: ' + error, 'error');
+                    return;
+                }
+                if (result && result.event === 'success') {
+                    const url = result.info.secure_url;
+                    document.getElementById(targetInputId).value = url;
+                    if (targetInputId === 'globalBg') updateImagePreview('globalBg', 'globalBgPreview');
+                    if (targetInputId === 'coupleImage') updateImagePreview('coupleImage', 'coupleImagePreview');
+                    addLog('تم رفع الصورة بنجاح', 'success');
+                }
+            });
+        }
+
+        function uploadMusicToCloudinary() {
+            cloudinary.openUploadWidget({
+                cloudName: CLOUD_NAME,
+                uploadPreset: UPLOAD_PRESET,
+                sources: ['local', 'url'],
+                resourceType: 'video',
+                folder: 'wedding-audio'
+            }, (error, result) => {
+                if (error) {
+                    addLog('خطأ في رفع الأغنية: ' + error, 'error');
+                    return;
+                }
+                if (result && result.event === 'success') {
+                    const url = result.info.secure_url;
+                    document.getElementById('musicUrl').value = url;
+                    addLog('تم رفع الأغنية بنجاح', 'success');
+                }
+            });
+        }
+
+        function resetDefaultMusic() {
+            document.getElementById('musicUrl').value = DEFAULTS.musicUrl;
+            addLog('تم استعادة الأغنية الافتراضية', 'success');
+        }
+
+        // ============ SAVE ALL SETTINGS TO FIREBASE ============
+        async function saveAllSettings() {
+            addLog('💾 جاري حفظ جميع الإعدادات...', 'info');
+            
+            // جمع البيانات من جميع التابات
+            const mainSettings = {
+                groom: document.getElementById('mainGroom').value,
+                bride: document.getElementById('mainBride').value,
+                eventLabel: document.getElementById('mainEventLabel').value,
+                eventDate: document.getElementById('mainEventDate').value,
+                eventTime: document.getElementById('mainEventTime').value,
+                venue: document.getElementById('mainVenue').value,
+                locationLink: document.getElementById('mainLocationLink').value,
+                globalBg: document.getElementById('globalBg').value,
+                coupleImage: document.getElementById('coupleImage').value,
+                musicUrl: document.getElementById('musicUrl').value,
+                countdownDate: document.getElementById('countdownDate').value,
+                updatedAt: firebase.database.ServerValue.TIMESTAMP
             };
             
-            let html = '';
-            for (const [key, value] of Object.entries(structure)) {
-                html += `
-                    <div class="status-item">
-                        <div class="status-icon info">📁</div>
-                        <div class="status-text">
-                            <div class="status-title">/${key}</div>
-                            <div class="status-desc">${value}</div>
-                        </div>
-                    </div>
-                `;
-            }
-            document.getElementById('dbStructure').innerHTML = html;
-        }
-        
-        // ============ CHECK CURRENT DATABASE STATUS ============
-        async function checkDatabaseStatus() {
-            addLog('🔍 جاري فحص حالة قاعدة البيانات...', 'info');
-            
-            const paths = ['mainSettings', 'envelopeSettings', 'wishes', 'systemStats'];
-            
-            for (const path of paths) {
-                try {
-                    const snapshot = await db.ref(path).once('value');
-                    const exists = snapshot.exists();
-                    const count = snapshot.exists() ? Object.keys(snapshot.val()).length : 0;
-                    
-                    if (exists) {
-                        addLog(`📁 ${path}: موجود (${count} عنصر)`, 'success');
-                    } else {
-                        addLog(`📁 ${path}: غير موجود (سيتم إنشاؤه)`, 'info');
-                    }
-                } catch (error) {
-                    addLog(`⚠️ خطأ في فحص ${path}: ${error.message}`, 'error');
-                }
-            }
-        }
-        
-        // ============ INITIALIZE DATABASE ============
-        async function initDatabase() {
-            resetProgress();
-            addLog('🚀 بدء تهيئة قاعدة البيانات...', 'info');
-            addLog('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
+            const envelopeSettings = {
+                groomName: document.getElementById('envGroom').value,
+                brideName: document.getElementById('envBride').value,
+                eventDate: document.getElementById('envDate').value,
+                bgUrl: document.getElementById('globalBg').value,
+                updatedAt: firebase.database.ServerValue.TIMESTAMP
+            };
             
             try {
-                // 1. تهيئة mainSettings
-                updateProgress(10);
-                addLog('📝 جاري حفظ إعدادات الصفحة الرئيسية (mainSettings)...', 'info');
-                DEFAULT_SETTINGS.mainSettings.updatedAt = firebase.database.ServerValue.TIMESTAMP;
-                await db.ref('mainSettings').set(DEFAULT_SETTINGS.mainSettings);
+                // حفظ mainSettings
+                await db.ref('mainSettings').set(mainSettings);
                 addLog('✅ تم حفظ mainSettings بنجاح', 'success');
                 
-                // 2. تهيئة envelopeSettings
-                updateProgress(20);
-                addLog('📝 جاري حفظ إعدادات صفحة الظرف (envelopeSettings)...', 'info');
-                DEFAULT_SETTINGS.envelopeSettings.updatedAt = firebase.database.ServerValue.TIMESTAMP;
-                await db.ref('envelopeSettings').set(DEFAULT_SETTINGS.envelopeSettings);
+                // حفظ envelopeSettings
+                await db.ref('envelopeSettings').set(envelopeSettings);
                 addLog('✅ تم حفظ envelopeSettings بنجاح', 'success');
                 
-                // 3. تهيئة systemStats
-                updateProgress(30);
-                addLog('📝 جاري حفظ إحصائيات النظام (systemStats)...', 'info');
-                DEFAULT_SETTINGS.systemStats.lastUpdated = firebase.database.ServerValue.TIMESTAMP;
-                await db.ref('systemStats').set(DEFAULT_SETTINGS.systemStats);
-                addLog('✅ تم حفظ systemStats بنجاح', 'success');
+                // حفظ countdown date بشكل منفصل للتأكد
+                await db.ref('countdown').set({
+                    targetDate: document.getElementById('countdownDate').value,
+                    updatedAt: firebase.database.ServerValue.TIMESTAMP
+                });
                 
-                // 4. قراءة البيانات للتأكد
-                updateProgress(50);
-                addLog('🔍 جاري التحقق من البيانات المحفوظة...', 'info');
-                
-                const mainCheck = await db.ref('mainSettings').once('value');
-                const mainData = mainCheck.val();
-                addLog(`📊 mainSettings: العريس = ${mainData.groom}, العروسة = ${mainData.bride}`, 'success');
-                
-                const envelopeCheck = await db.ref('envelopeSettings').once('value');
-                const envelopeData = envelopeCheck.val();
-                addLog(`📊 envelopeSettings: العريس = ${envelopeData.groomName}, العروسة = ${envelopeData.brideName}`, 'success');
-                
-                updateProgress(80);
-                addLog('💾 جميع البيانات محفوظة بشكل آمن في Firebase', 'success');
-                
-                // 5. عرض معلومات الاتصال
-                updateProgress(100);
-                addLog('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'success');
-                addLog('🎉 تمت تهيئة قاعدة البيانات بنجاح!', 'success');
-                addLog(`🔗 Database URL: ${firebaseConfig.databaseURL}`, 'info');
-                addLog(`📅 آخر تحديث: ${new Date().toLocaleString()}`, 'info');
+                addLog('🎉 تم حفظ جميع الإعدادات في Firebase بنجاح!', 'success');
+                updateDBStatus();
                 
             } catch (error) {
-                addLog(`❌ خطأ في تهيئة قاعدة البيانات: ${error.message}`, 'error');
-                console.error(error);
+                addLog('❌ خطأ في الحفظ: ' + error.message, 'error');
             }
         }
         
-        // ============ RESET DATABASE ============
-        async function resetDatabase() {
-            if (!confirm('⚠️ تحذير: هذا الإجراء سيحذف جميع البيانات الحالية ويستعيد الإعدادات الافتراضية!\n\nهل أنت متأكد؟')) {
-                addLog('❌ تم إلغاء عملية إعادة الضبط', 'info');
-                return;
-            }
+        // ============ LOAD FROM FIREBASE ============
+        async function loadFromFirebase() {
+            addLog('🔄 جاري تحميل الإعدادات من Firebase...', 'info');
             
-            resetProgress();
-            addLog('🔄 بدء إعادة ضبط قاعدة البيانات...', 'info');
-            addLog('⚠️ سيتم حذف جميع البيانات الموجودة', 'warning');
-            
-            try {
-                // حذف جميع العقد
-                updateProgress(10);
-                addLog('🗑️ جاري حذف البيانات القديمة...', 'info');
-                
-                await db.ref('mainSettings').remove();
-                updateProgress(30);
-                await db.ref('envelopeSettings').remove();
-                updateProgress(50);
-                await db.ref('systemStats').remove();
-                updateProgress(70);
-                // ملاحظة: wishes لا يتم حذفها تلقائياً للحفاظ على تهاني المدعوين
-                addLog('💬 تم الاحتفاظ بتهاني المدعوين (wishes)', 'info');
-                
-                // إعادة تهيئة البيانات الافتراضية
-                updateProgress(80);
-                addLog('📝 جاري إعادة تهيئة الإعدادات الافتراضية...', 'info');
-                
-                DEFAULT_SETTINGS.mainSettings.updatedAt = firebase.database.ServerValue.TIMESTAMP;
-                await db.ref('mainSettings').set(DEFAULT_SETTINGS.mainSettings);
-                
-                DEFAULT_SETTINGS.envelopeSettings.updatedAt = firebase.database.ServerValue.TIMESTAMP;
-                await db.ref('envelopeSettings').set(DEFAULT_SETTINGS.envelopeSettings);
-                
-                DEFAULT_SETTINGS.systemStats.lastUpdated = firebase.database.ServerValue.TIMESTAMP;
-                await db.ref('systemStats').set(DEFAULT_SETTINGS.systemStats);
-                
-                updateProgress(100);
-                addLog('✅ تم إعادة ضبط قاعدة البيانات بنجاح!', 'success');
-                addLog('📋 جميع الإعدادات restored to defaults', 'success');
-                
-            } catch (error) {
-                addLog(`❌ خطأ في إعادة الضبط: ${error.message}`, 'error');
-            }
-        }
-        
-        // ============ EXPORT DATABASE AS JSON ============
-        async function exportDatabase() {
-            addLog('📤 جاري تصدير قاعدة البيانات...', 'info');
-            
-            try {
-                const exports = {};
-                const paths = ['mainSettings', 'envelopeSettings', 'wishes', 'systemStats'];
-                
-                for (const path of paths) {
-                    const snapshot = await db.ref(path).once('value');
-                    exports[path] = snapshot.val() || {};
-                    addLog(`📁 تم تصدير ${path}: ${Object.keys(exports[path]).length} عنصر`, 'success');
-                }
-                
-                const dataStr = JSON.stringify(exports, null, 2);
-                const dataBlob = new Blob([dataStr], { type: 'application/json' });
-                const url = URL.createObjectURL(dataBlob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `firebase_export_${new Date().toISOString().slice(0,19)}.json`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
-                
-                addLog('✅ تم تصدير قاعدة البيانات بنجاح!', 'success');
-                addLog(`📦 حجم الملف: ${(dataBlob.size / 1024).toFixed(2)} KB`, 'info');
-                
-            } catch (error) {
-                addLog(`❌ خطأ في التصدير: ${error.message}`, 'error');
-            }
-        }
-        
-        // ============ DISPLAY SUMMARY ============
-        async function displaySummary() {
             try {
                 const mainSnapshot = await db.ref('mainSettings').once('value');
                 const envelopeSnapshot = await db.ref('envelopeSettings').once('value');
-                const wishesSnapshot = await db.ref('wishes').once('value');
-                const statsSnapshot = await db.ref('systemStats').once('value');
+                const countdownSnapshot = await db.ref('countdown').once('value');
                 
-                const wishesCount = wishesSnapshot.exists() ? Object.keys(wishesSnapshot.val()).length : 0;
+                if (mainSnapshot.exists()) {
+                    const data = mainSnapshot.val();
+                    document.getElementById('mainGroom').value = data.groom || DEFAULTS.mainGroom;
+                    document.getElementById('mainBride').value = data.bride || DEFAULTS.mainBride;
+                    document.getElementById('mainEventLabel').value = data.eventLabel || DEFAULTS.mainEventLabel;
+                    document.getElementById('mainEventDate').value = data.eventDate || DEFAULTS.mainEventDate;
+                    document.getElementById('mainEventTime').value = data.eventTime || DEFAULTS.mainEventTime;
+                    document.getElementById('mainVenue').value = data.venue || DEFAULTS.mainVenue;
+                    document.getElementById('mainLocationLink').value = data.locationLink || DEFAULTS.mainLocationLink;
+                    document.getElementById('globalBg').value = data.globalBg || DEFAULTS.globalBg;
+                    document.getElementById('coupleImage').value = data.coupleImage || DEFAULTS.coupleImage;
+                    document.getElementById('musicUrl').value = data.musicUrl || DEFAULTS.musicUrl;
+                    addLog('✅ تم تحميل mainSettings', 'success');
+                }
                 
-                const summaryHtml = `
-                    <div class="status-item">
-                        <div class="status-icon success">✅</div>
-                        <div class="status-text">
-                            <div class="status-title">الإعدادات الرئيسية</div>
-                            <div class="status-desc">${mainSnapshot.exists() ? 'محفوظة' : 'غير محفوظة'}</div>
-                        </div>
-                    </div>
-                    <div class="status-item">
-                        <div class="status-icon success">✅</div>
-                        <div class="status-text">
-                            <div class="status-title">إعدادات الظرف</div>
-                            <div class="status-desc">${envelopeSnapshot.exists() ? 'محفوظة' : 'غير محفوظة'}</div>
-                        </div>
-                    </div>
-                    <div class="status-item">
-                        <div class="status-icon info">💬</div>
-                        <div class="status-text">
-                            <div class="status-title">التهاني والبركات</div>
-                            <div class="status-desc">${wishesCount} رسالة</div>
-                        </div>
-                    </div>
-                    <div class="status-item">
-                        <div class="status-icon info">📊</div>
-                        <div class="status-text">
-                            <div class="status-title">إحصائيات النظام</div>
-                            <div class="status-desc">${statsSnapshot.exists() ? 'محفوظة' : 'غير محفوظة'}</div>
-                        </div>
-                    </div>
-                `;
+                if (envelopeSnapshot.exists()) {
+                    const data = envelopeSnapshot.val();
+                    document.getElementById('envGroom').value = data.groomName || DEFAULTS.envGroom;
+                    document.getElementById('envBride').value = data.brideName || DEFAULTS.envBride;
+                    document.getElementById('envDate').value = data.eventDate || DEFAULTS.envDate;
+                    addLog('✅ تم تحميل envelopeSettings', 'success');
+                }
                 
-                document.getElementById('dbStructure').innerHTML = summaryHtml;
+                if (countdownSnapshot.exists()) {
+                    const data = countdownSnapshot.val();
+                    if (data.targetDate) {
+                        document.getElementById('countdownDate').value = data.targetDate;
+                    }
+                    addLog('✅ تم تحميل تاريخ الكاونتر', 'success');
+                } else if (mainSnapshot.exists() && mainSnapshot.val().countdownDate) {
+                    document.getElementById('countdownDate').value = mainSnapshot.val().countdownDate;
+                }
+                
+                // تحديث المعاينات
+                updateImagePreview('globalBg', 'globalBgPreview');
+                updateImagePreview('coupleImage', 'coupleImagePreview');
+                
+                addLog('🎉 تم تحميل جميع الإعدادات بنجاح!', 'success');
                 
             } catch (error) {
-                console.error('Error displaying summary:', error);
+                addLog('❌ خطأ في التحميل: ' + error.message, 'error');
             }
         }
         
-        // ============ AUTO-LOAD SUMMARY ON PAGE LOAD ============
+        // ============ RESET TO DEFAULT ============
+        async function resetToDefault() {
+            if (!confirm('⚠️ هل أنت متأكد؟ هذا الإجراء سيعيد جميع الإعدادات إلى القيم الافتراضية.')) return;
+            
+            addLog('🔄 جاري استعادة الإعدادات الافتراضية...', 'info');
+            
+            document.getElementById('mainGroom').value = DEFAULTS.mainGroom;
+            document.getElementById('mainBride').value = DEFAULTS.mainBride;
+            document.getElementById('mainEventLabel').value = DEFAULTS.mainEventLabel;
+            document.getElementById('mainEventDate').value = DEFAULTS.mainEventDate;
+            document.getElementById('mainEventTime').value = DEFAULTS.mainEventTime;
+            document.getElementById('mainVenue').value = DEFAULTS.mainVenue;
+            document.getElementById('mainLocationLink').value = DEFAULTS.mainLocationLink;
+            document.getElementById('envGroom').value = DEFAULTS.envGroom;
+            document.getElementById('envBride').value = DEFAULTS.envBride;
+            document.getElementById('envDate').value = DEFAULTS.envDate;
+            document.getElementById('countdownDate').value = DEFAULTS.countdownDate;
+            document.getElementById('globalBg').value = DEFAULTS.globalBg;
+            document.getElementById('coupleImage').value = DEFAULTS.coupleImage;
+            document.getElementById('musicUrl').value = DEFAULTS.musicUrl;
+            
+            updateImagePreview('globalBg', 'globalBgPreview');
+            updateImagePreview('coupleImage', 'coupleImagePreview');
+            
+            addLog('✅ تم استعادة جميع الإعدادات الافتراضية', 'success');
+            await saveAllSettings();
+        }
+        
+        // ============ EXPORT SETTINGS ============
+        async function exportSettings() {
+            addLog('📥 جاري تصدير الإعدادات...', 'info');
+            
+            try {
+                const mainSnapshot = await db.ref('mainSettings').once('value');
+                const envelopeSnapshot = await db.ref('envelopeSettings').once('value');
+                const countdownSnapshot = await db.ref('countdown').once('value');
+                
+                const exportData = {
+                    exportDate: new Date().toISOString(),
+                    mainSettings: mainSnapshot.val() || {},
+                    envelopeSettings: envelopeSnapshot.val() || {},
+                    countdown: countdownSnapshot.val() || {}
+                };
+                
+                const dataStr = JSON.stringify(exportData, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `wedding_settings_${new Date().toISOString().slice(0,19)}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                addLog('✅ تم تصدير الإعدادات بنجاح', 'success');
+            } catch (error) {
+                addLog('❌ خطأ في التصدير: ' + error.message, 'error');
+            }
+        }
+        
+        // ============ UPDATE DB STATUS ============
+        async function updateDBStatus() {
+            const statusDiv = document.getElementById('dbStatus');
+            
+            try {
+                const mainExists = (await db.ref('mainSettings').once('value')).exists();
+                const envelopeExists = (await db.ref('envelopeSettings').once('value')).exists();
+                
+                statusDiv.innerHTML = `
+                    <div style="display:flex;gap:15px;flex-wrap:wrap;margin-top:15px;">
+                        <div style="background:rgba(76,175,80,0.2);padding:10px 20px;border-radius:15px;">
+                            ✅ mainSettings: ${mainExists ? 'محفوظة' : 'غير محفوظة'}
+                        </div>
+                        <div style="background:rgba(76,175,80,0.2);padding:10px 20px;border-radius:15px;">
+                            ✅ envelopeSettings: ${envelopeExists ? 'محفوظة' : 'غير محفوظة'}
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                statusDiv.innerHTML = '<div style="color:#f44346;">❌ خطأ في الاتصال بقاعدة البيانات</div>';
+            }
+        }
+        
+        // ============ INITIAL LOAD ============
         window.addEventListener('load', () => {
-            displayDBStructure();
-            checkDatabaseStatus();
-            displaySummary();
-            addLog('✨ مدير قاعدة البيانات جاهز', 'success');
-            addLog('💡 استخدم الأزرار أعلاه لتهيئة أو إعادة ضبط قاعدة البيانات', 'info');
-        });
-        
-        // ============ MONITOR REAL-TIME CHANGES ============
-        db.ref('mainSettings').on('value', (snapshot) => {
-            if (snapshot.exists()) {
-                const data = snapshot.val();
-                console.log('🔄 mainSettings updated:', data);
-            }
-        });
-        
-        db.ref('envelopeSettings').on('value', (snapshot) => {
-            if (snapshot.exists()) {
-                const data = snapshot.val();
-                console.log('🔄 envelopeSettings updated:', data);
-            }
-        });
-        
-        db.ref('systemStats').on('value', (snapshot) => {
-            if (snapshot.exists()) {
-                const data = snapshot.val();
-                console.log('🔄 systemStats updated:', data);
-            }
+            loadFromFirebase();
+            updateDBStatus();
+            addLog('✨ لوحة التحكم المركزية جاهزة', 'success');
+            addLog('📌 قم بتعديل الإعدادات ثم اضغط "حفظ جميع الإعدادات"', 'info');
+            
+            // معاينات الصور
+            document.getElementById('globalBg').addEventListener('input', () => updateImagePreview('globalBg', 'globalBgPreview'));
+            document.getElementById('coupleImage').addEventListener('input', () => updateImagePreview('coupleImage', 'coupleImagePreview'));
         });
     </script>
 </body>
