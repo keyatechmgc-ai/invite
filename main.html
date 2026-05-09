@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Mahmoud & Eman | Save Date</title>
+    <title>Mahmoud & Eman | مملكة الحب</title>
     
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -182,7 +182,7 @@
             transform-style: preserve-3d;
         }
 
-        /* حاوية رئيسية - hidden في البداية */
+        /* حاوية رئيسية */
         .royal-container {
             position: relative;
             z-index: 10;
@@ -195,13 +195,13 @@
             opacity: 1;
         }
 
-        /* بطاقة مؤقتة للترحيب */
+        /* بطاقة الترحيب */
         .welcome-card {
             background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(255,249,247,0.92));
             backdrop-filter: blur(20px);
             border-radius: 80px;
-            padding: 60px 30px;
-            margin: 40px 20px;
+            padding: 50px 30px;
+            margin: 20px;
             text-align: center;
             box-shadow: var(--shadow-royal), 0 0 0 2px rgba(255,255,255,0.3), 0 0 0 6px rgba(232,201,122,0.2);
             opacity: 0;
@@ -212,90 +212,107 @@
             opacity: 1;
             transform: scale(1);
         }
-        .welcome-card .royal-names {
-            margin-bottom: 30px;
-        }
         .welcome-card .royal-groom, 
         .welcome-card .royal-bride {
             font-size: 3rem;
         }
 
-        /* كاتبة اليد - Typewriter effect */
-        .typewriter-container {
-            margin: 30px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .typewriter-text {
-            font-family: 'Cairo', sans-serif;
-            font-size: 1.2rem;
-            color: var(--pink-dark);
+        /* تأثير الكتابة المطور */
+        .message-container {
+            margin: 40px auto;
+            padding: 20px;
             background: rgba(255,255,255,0.3);
-            padding: 12px 24px;
-            border-radius: 50px;
-            display: inline-block;
-            min-width: 200px;
+            border-radius: 40px;
+            backdrop-filter: blur(5px);
+        }
+        .glowing-text {
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.4rem;
+            color: var(--pink-dark);
             text-align: center;
+            line-height: 1.8;
             letter-spacing: 1px;
-            border-right: 3px solid var(--gold);
-            white-space: nowrap;
-            overflow: hidden;
         }
-        .cursor-blink {
+        .typewriter-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .word-wrapper {
             display: inline-block;
-            width: 3px;
-            height: 1.2rem;
-            background-color: var(--gold);
-            margin-right: 5px;
-            animation: blink 0.8s infinite;
-            vertical-align: middle;
+            opacity: 0;
+            transform: scale(0);
+            margin: 0 5px;
         }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
+        .word-wrapper.revealed {
+            animation: wordPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
-        
-        /* السهم الكيوت */
-        .magic-arrow {
+        @keyframes wordPop {
+            0% { opacity: 0; transform: scale(0) rotate(-10deg); }
+            60% { opacity: 1; transform: scale(1.1) rotate(2deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+        .word-wrapper span {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffb7c5, #e8c97a);
+            padding: 8px 18px;
+            border-radius: 50px;
+            color: #2a1a1f;
+            font-weight: 600;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        /* السهم المتحرك (HTML/CSS مش ايموجي) */
+        .custom-arrow {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #ffb7c5, #e8c97a);
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 5px 20px rgba(232,201,122,0.4);
             opacity: 0;
             transform: scale(0);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            margin-top: 20px;
         }
-        .magic-arrow.visible {
+        .custom-arrow.visible {
             opacity: 1;
             transform: scale(1);
-            animation: arrowGlow 1.5s ease-in-out infinite;
         }
-        .magic-arrow:hover {
-            transform: scale(1.15);
-            box-shadow: 0 10px 30px rgba(232,201,122,0.7);
+        .arrow-shape {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #ffb7c5, #e8c97a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(232,201,122,0.4);
+            animation: arrowPulse 1.5s ease-in-out infinite;
         }
-        .magic-arrow span {
-            font-size: 1.8rem;
+        .arrow-shape:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 35px rgba(232,201,122,0.7);
+        }
+        .arrow-shape svg {
+            width: 35px;
+            height: 35px;
+            stroke: white;
+            stroke-width: 2.5;
+            fill: none;
             animation: arrowMove 0.8s ease-in-out infinite;
         }
-        @keyframes arrowGlow {
+        @keyframes arrowPulse {
             0%,100% { box-shadow: 0 5px 20px rgba(232,201,122,0.4); }
             50% { box-shadow: 0 5px 35px rgba(232,201,122,0.8), 0 0 15px rgba(255,183,197,0.5); }
         }
         @keyframes arrowMove {
             0%,100% { transform: translateX(0); }
-            50% { transform: translateX(-5px); }
+            50% { transform: translateX(-8px); }
         }
 
-        /* البطاقة الرئيسية (تظهر بعد الضغط على السهم) */
+        /* البطاقة الرئيسية */
         .main-card {
             background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(255,249,247,0.92));
             backdrop-filter: blur(20px);
@@ -317,11 +334,11 @@
         }
 
         .royal-frame {
-            width: 160px;
-            height: 160px;
-            margin: 0 auto 30px;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 25px;
             border-radius: 50%;
-            padding: 6px;
+            padding: 5px;
             background: var(--gradient-royal);
             animation: framePulse 3s ease-in-out infinite;
         }
@@ -337,10 +354,10 @@
             border: 4px solid var(--white);
         }
 
-        .royal-names { text-align: center; margin-bottom: 20px; }
+        .royal-names { text-align: center; margin-bottom: 15px; }
         .royal-groom, .royal-bride {
             font-family: 'Great Vibes', cursive;
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: 400;
             background: linear-gradient(135deg, #c94f6b, #e8c97a, #ffb7c5);
             -webkit-background-clip: text;
@@ -350,75 +367,84 @@
         .royal-and {
             display: block;
             font-family: 'Great Vibes', cursive;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             color: var(--gold-dark);
             margin: 5px 0;
         }
 
-        .royal-badge {
-            display: inline-block;
-            padding: 10px 32px;
-            background: var(--gradient-gold);
-            color: #2a1a1f;
-            border-radius: 60px;
-            font-size: 0.75rem;
-            letter-spacing: 5px;
-            font-weight: 800;
-            margin: 20px auto;
+        /* تفاصيل الدعوة - موسعة ومناسبة للفون */
+        .invitation-details {
+            background: rgba(255,255,255,0.4);
+            border-radius: 40px;
+            padding: 20px;
+            margin: 20px 0;
         }
-
         .royal-details {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 16px;
-            margin-top: 25px;
+            align-items: stretch;
+            gap: 15px;
         }
         .royal-detail {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            width: 100%;
-            max-width: 280px;
-            gap: 15px;
-            color: var(--dark);
-            font-size: 1rem;
-            padding: 8px 16px;
-            background: rgba(255,255,255,0.5);
-            border-radius: 50px;
+            gap: 18px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 60px;
+            padding: 16px 22px;
+            transition: all 0.3s ease;
+        }
+        .royal-detail:hover {
+            transform: translateX(-5px);
+            background: white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
         }
         .royal-detail-icon {
-            width: 44px;
-            height: 44px;
+            width: 55px;
+            height: 55px;
             background: linear-gradient(135deg, #ffb7c5, #ff8da3);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
+            flex-shrink: 0;
         }
         .royal-detail-text {
             flex: 1;
             text-align: right;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .royal-badge {
+            display: inline-block;
+            padding: 10px 25px;
+            background: var(--gradient-gold);
+            color: #2a1a1f;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            font-weight: 800;
+            margin: 15px auto 0;
         }
 
         .royal-location-btn {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            margin-top: 30px;
-            padding: 14px 35px;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 14px 30px;
             background: linear-gradient(135deg, #2a1a1f, #3d2a30);
             color: var(--gold);
             text-decoration: none;
             border-radius: 50px;
             font-weight: 700;
             transition: all 0.3s ease;
-        }
-        .royal-location-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            color: var(--gold-light);
+            font-size: 0.9rem;
         }
 
         /* كاونتر */
@@ -462,8 +488,8 @@
             background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(255,249,247,0.92));
             backdrop-filter: blur(20px);
             border-radius: 55px;
-            padding: 40px 28px;
-            margin-bottom: 30px;
+            padding: 35px 25px;
+            margin-bottom: 25px;
             display: none;
         }
         .royal-form.active, .royal-comments.active {
@@ -477,35 +503,35 @@
 
         .royal-form-title, .royal-comments-title {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 2rem;
+            font-size: 1.8rem;
             text-align: center;
             background: linear-gradient(135deg, #c94f6b, #e8c97a);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .royal-input, .royal-select, .royal-textarea {
             width: 100%;
-            padding: 16px 22px;
+            padding: 14px 18px;
             border: 2px solid rgba(232,201,122,0.2);
             border-radius: 35px;
             font-family: 'Cairo', sans-serif;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             background: white;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             outline: none;
         }
 
         .royal-side-btns {
             display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 18px;
         }
         .royal-side-btn {
             flex: 1;
-            padding: 14px;
+            padding: 12px;
             border: 2px solid rgba(232,201,122,0.3);
             border-radius: 40px;
             background: white;
@@ -521,7 +547,7 @@
 
         .royal-submit {
             width: 100%;
-            padding: 18px;
+            padding: 16px;
             background: linear-gradient(135deg, #c94f6b, #e8c97a);
             border: none;
             border-radius: 50px;
@@ -532,17 +558,17 @@
 
         .royal-filters {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
             justify-content: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         .royal-filter {
-            padding: 10px 24px;
+            padding: 8px 20px;
             border: 2px solid rgba(232,201,122,0.3);
             border-radius: 40px;
             background: white;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 700;
             cursor: pointer;
         }
@@ -552,29 +578,29 @@
         }
 
         .royal-comments-list {
-            max-height: 450px;
+            max-height: 400px;
             overflow-y: auto;
         }
         .royal-comment {
             background: rgba(255,255,255,0.7);
-            padding: 20px;
-            border-radius: 35px;
-            margin-bottom: 15px;
-            border-right: 5px solid var(--gold);
+            padding: 16px;
+            border-radius: 30px;
+            margin-bottom: 12px;
+            border-right: 4px solid var(--gold);
         }
         .royal-comment-badge {
             display: inline-block;
-            padding: 5px 15px;
+            padding: 4px 12px;
             background: linear-gradient(135deg, #e8c97a, #c9a84c);
             color: #2a1a1f;
             border-radius: 30px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 800;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
-        .royal-comment-name { font-weight: 800; color: var(--pink-dark); margin-left: 12px; }
-        .royal-comment-status { font-size: 0.7rem; color: var(--gold-dark); margin-right: 10px; }
-        .royal-comment-message { color: #555; font-size: 0.9rem; margin-top: 10px; }
+        .royal-comment-name { font-weight: 800; color: var(--pink-dark); margin-left: 10px; }
+        .royal-comment-status { font-size: 0.65rem; color: var(--gold-dark); margin-right: 8px; }
+        .royal-comment-message { color: #555; font-size: 0.85rem; margin-top: 8px; }
 
         .royal-modal {
             position: fixed;
@@ -591,38 +617,49 @@
         .royal-modal-content {
             background: linear-gradient(145deg, #fff, #fff9f7);
             border-radius: 70px;
-            padding: 50px 40px;
+            padding: 40px 30px;
             text-align: center;
-            max-width: 380px;
+            max-width: 350px;
             width: 100%;
         }
 
         .royal-footer {
             text-align: center;
-            padding: 40px 20px;
+            padding: 30px 20px;
             color: rgba(232,201,122,0.6);
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             display: none;
         }
         .royal-footer.active {
             display: block;
         }
 
-        @media (max-width: 500px) {
+        @media (max-width: 550px) {
             .royal-container { padding: 15px 12px 60px; }
-            .main-card { padding: 30px 18px 40px; border-radius: 50px; }
-            .welcome-card { padding: 40px 20px; margin: 20px; }
+            .welcome-card { padding: 35px 20px; margin: 15px; }
             .welcome-card .royal-groom, 
             .welcome-card .royal-bride { font-size: 2.2rem; }
+            .glowing-text { font-size: 1.1rem; }
+            .word-wrapper span { padding: 6px 14px; font-size: 0.9rem; }
+            .arrow-shape { width: 55px; height: 55px; }
+            .arrow-shape svg { width: 28px; height: 28px; }
+            .main-card { padding: 35px 20px 45px; }
             .royal-groom, .royal-bride { font-size: 2.2rem; }
             .royal-and { font-size: 1.8rem; }
+            .invitation-details { padding: 15px; }
+            .royal-detail { padding: 12px 16px; gap: 12px; }
+            .royal-detail-icon { width: 45px; height: 45px; font-size: 1.2rem; }
+            .royal-detail-text { font-size: 0.95rem; }
             .royal-countdown { gap: 8px; }
             .royal-count-item { padding: 12px 5px; border-radius: 22px; }
-            .royal-count-number { font-size: 1.6rem; }
+            .royal-count-number { font-size: 1.5rem; }
             .royal-count-label { font-size: 0.5rem; letter-spacing: 2px; }
-            .typewriter-text { font-size: 0.9rem; padding: 8px 16px; white-space: normal; }
-            .magic-arrow { width: 45px; height: 45px; }
-            .magic-arrow span { font-size: 1.4rem; }
+            .royal-location-btn { padding: 10px 20px; font-size: 0.8rem; }
+        }
+
+        @media (max-width: 380px) {
+            .royal-detail-icon { width: 38px; height: 38px; font-size: 1rem; }
+            .royal-detail-text { font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -650,25 +687,30 @@
     <!-- حاوية رئيسية -->
     <div class="royal-container" id="mainContainer">
         
-        <!-- البطاقة المؤقتة للترحيب مع تأثير الكتابة -->
+        <!-- بطاقة الترحيب -->
         <div class="welcome-card" id="welcomeCard">
             <div class="royal-names">
                 <div class="royal-groom" id="welcomeGroom">Mahmoud</div>
                 <div class="royal-and">&</div>
                 <div class="royal-bride" id="welcomeBride">Eman</div>
             </div>
-            <div class="typewriter-container" id="typewriterContainer">
-                <div class="typewriter-text" id="typewriterText"></div>
-                <span class="cursor-blink" id="cursorBlink"></span>
+            
+            <!-- رسالة بتأثير كلمات متفرقة -->
+            <div class="message-container">
+                <div class="glowing-text" id="messageText"></div>
             </div>
-            <div class="typewriter-container">
-                <div class="magic-arrow" id="magicArrow" onclick="revealFullInvitation()">
-                    <span>👉</span>
+            
+            <!-- السهم المتحرك -->
+            <div class="custom-arrow" id="customArrow" onclick="revealFullInvitation()">
+                <div class="arrow-shape">
+                    <svg viewBox="0 0 24 24" stroke="white" stroke-width="2" fill="none">
+                        <path d="M12 5L12 19M12 19L5 12M12 19L19 12" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </div>
             </div>
         </div>
 
-        <!-- البطاقة الرئيسية (تظهر بعد الضغط على السهم) -->
+        <!-- البطاقة الرئيسية -->
         <div class="main-card" id="mainCard">
             <div class="royal-frame"><img id="coupleImage" src="" alt="Couple"></div>
             <div class="royal-names">
@@ -676,14 +718,16 @@
                 <div class="royal-and">&</div>
                 <div class="royal-bride" id="brideName"></div>
             </div>
-            <div style="text-align: center;"><span class="royal-badge" id="eventLabel"></span></div>
-            <div class="royal-details">
-                <div class="royal-detail"><span class="royal-detail-icon">📅</span><span class="royal-detail-text" id="eventDate"></span></div>
-                <div class="royal-detail"><span class="royal-detail-icon">🕖</span><span class="royal-detail-text" id="eventTime"></span></div>
-                <div class="royal-detail"><span class="royal-detail-icon">📍</span><span class="royal-detail-text" id="eventVenue"></span></div>
-            </div>
-            <div style="text-align: center;">
-                <a href="#" id="locationLink" target="_blank" class="royal-location-btn">📍 تحديد موقع القاعة</a>
+            
+            <div class="invitation-details">
+                <div class="royal-details">
+                    <div class="royal-detail"><span class="royal-detail-icon">📅</span><span class="royal-detail-text" id="eventDate"></span></div>
+                    <div class="royal-detail"><span class="royal-detail-icon">🕖</span><span class="royal-detail-text" id="eventTime"></span></div>
+                    <div class="royal-detail"><span class="royal-detail-icon">📍</span><span class="royal-detail-text" id="eventVenue"></span></div>
+                </div>
+                <div style="text-align: center;">
+                    <a href="#" id="locationLink" target="_blank" class="royal-location-btn">📍 تحديد موقع القاعة</a>
+                </div>
             </div>
         </div>
 
@@ -769,47 +813,76 @@
         const royalComments = document.getElementById('royalComments');
         const royalFooter = document.getElementById('royalFooter');
         const mainContainer = document.getElementById('mainContainer');
+        const customArrow = document.getElementById('customArrow');
         
-        // ============ TYPEWRITER EFFECT ============
-        let typewriterInterval = null;
+        // ============ WORD-BY-WORD TYPEWRITER EFFECT ============
+        let wordInterval = null;
         
-        function startTypewriterEffect(text) {
-            const typewriterElement = document.getElementById('typewriterText');
-            const cursorBlink = document.getElementById('cursorBlink');
-            typewriterElement.textContent = '';
-            let index = 0;
+        function startWordByWordEffect(message) {
+            const container = document.getElementById('messageText');
+            container.innerHTML = '';
             
-            if (typewriterInterval) clearInterval(typewriterInterval);
+            // تقسيم الكلام إلى كلمات
+            const words = message.split(' ');
+            const wordWrappers = [];
             
-            typewriterInterval = setInterval(() => {
-                if (index < text.length) {
-                    typewriterElement.textContent += text[index];
-                    index++;
-                    // اهتزاز خفيف مع كل حرف
-                    if (index % 3 === 0) {
-                        gsap.to(typewriterElement, { scale: 1.02, duration: 0.05, yoyo: true, repeat: 1 });
-                        createRoyalSparkle(
-                            typewriterElement.getBoundingClientRect().left + typewriterElement.offsetWidth / 2,
-                            typewriterElement.getBoundingClientRect().top + typewriterElement.offsetHeight / 2, 
-                            1
-                        );
-                    }
-                } else {
-                    clearInterval(typewriterInterval);
-                    // إظهار السهم بعد انتهاء الكتابة
-                    setTimeout(() => {
-                        const arrow = document.getElementById('magicArrow');
-                        arrow.classList.add('visible');
-                        // تطاير قلوب وسباركلز
-                        for (let i = 0; i < 10; i++) {
-                            setTimeout(() => {
-                                createRoyalHeart(arrow.getBoundingClientRect().left + arrow.offsetWidth / 2, arrow.getBoundingClientRect().top);
-                                createRoyalSparkle(arrow.getBoundingClientRect().left + arrow.offsetWidth / 2, arrow.getBoundingClientRect().top, 2);
-                            }, i * 100);
-                        }
-                    }, 200);
+            words.forEach((word, idx) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'word-wrapper';
+                const span = document.createElement('span');
+                span.textContent = word;
+                wrapper.appendChild(span);
+                container.appendChild(wrapper);
+                wordWrappers.push(wrapper);
+                
+                // إضافة مسافة بعد كل كلمة
+                if (idx < words.length - 1) {
+                    const space = document.createTextNode(' ');
+                    container.appendChild(space);
                 }
-            }, 100);
+            });
+            
+            let currentIndex = 0;
+            
+            if (wordInterval) clearInterval(wordInterval);
+            
+            wordInterval = setInterval(() => {
+                if (currentIndex < wordWrappers.length) {
+                    const wrapper = wordWrappers[currentIndex];
+                    wrapper.classList.add('revealed');
+                    
+                    // تأثيرات AI مع كل كلمة
+                    const rect = wrapper.getBoundingClientRect();
+                    createRoyalSparkle(rect.left + rect.width / 2, rect.top, 2);
+                    
+                    // اهتزاز خفيف
+                    gsap.to(wrapper, { 
+                        scale: 1.05, 
+                        duration: 0.1, 
+                        yoyo: true, 
+                        repeat: 1,
+                        onComplete: () => {
+                            gsap.to(wrapper, { scale: 1, duration: 0.1 });
+                        }
+                    });
+                    
+                    currentIndex++;
+                } else {
+                    clearInterval(wordInterval);
+                    // إظهار السهم بعد اكتمال الكتابة
+                    setTimeout(() => {
+                        customArrow.classList.add('visible');
+                        // تطاير قلوب حول السهم
+                        for (let i = 0; i < 12; i++) {
+                            setTimeout(() => {
+                                const arrowRect = customArrow.getBoundingClientRect();
+                                createRoyalHeart(arrowRect.left + arrowRect.width / 2, arrowRect.top);
+                                createRoyalSparkle(arrowRect.left + arrowRect.width / 2, arrowRect.top, 2);
+                            }, i * 80);
+                        }
+                    }, 300);
+                }
+            }, 180);
         }
         
         // ============ REVEAL FULL INVITATION ============
@@ -817,10 +890,10 @@
             if (fullInvitationRevealed) return;
             fullInvitationRevealed = true;
             
-            // إخفاء السهم ومنع الضغط مرة أخرى
-            const arrow = document.getElementById('magicArrow');
-            arrow.style.pointerEvents = 'none';
-            arrow.style.opacity = '0';
+            // إخفاء السهم
+            customArrow.style.pointerEvents = 'none';
+            customArrow.style.opacity = '0';
+            customArrow.style.transform = 'scale(0)';
             
             // تشغيل الموسيقى
             music.play().then(() => {
@@ -828,7 +901,7 @@
                 console.log('✅ Music started');
             }).catch(e => console.log('Play error:', e));
             
-            // إخفاء بطاقة الترحيب بأنيميشن
+            // إخفاء بطاقة الترحيب
             gsap.to(welcomeCard, {
                 scale: 0.8,
                 opacity: 0,
@@ -844,7 +917,7 @@
                         { scale: 1, opacity: 1, y: 0, duration: 0.6, ease: 'back.out(1.2)' }
                     );
                     
-                    // إظهار باقي العناصر بتأخير
+                    // إظهار الكاونتر
                     setTimeout(() => {
                         countdownWrapper.style.opacity = '1';
                         gsap.fromTo(countdownWrapper.children, 
@@ -853,6 +926,7 @@
                         );
                     }, 200);
                     
+                    // إظهار الفورم والتعليقات
                     setTimeout(() => {
                         royalForm.classList.add('active');
                         royalComments.classList.add('active');
@@ -864,12 +938,12 @@
                     }, 500);
                     
                     // كونفيتي وقلوب احتفالاً
-                    canvasConfetti({ particleCount: 400, spread: 150, origin: { y: 0.6 }, colors: ['#e8c97a', '#ffb7c5', '#c94f6b'] });
-                    for (let i = 0; i < 30; i++) {
+                    canvasConfetti({ particleCount: 500, spread: 180, origin: { y: 0.6 }, colors: ['#e8c97a', '#ffb7c5', '#c94f6b', '#ff8da3'] });
+                    for (let i = 0; i < 40; i++) {
                         setTimeout(() => {
                             createRoyalHeart(Math.random() * window.innerWidth, window.innerHeight / 2);
                             createRoyalFlower(Math.random() * window.innerWidth, window.innerHeight / 2);
-                        }, i * 80);
+                        }, i * 60);
                     }
                 }
             });
@@ -889,22 +963,20 @@
             db.ref('mainSettings').on('value', (snap) => {
                 const data = snap.val();
                 if (data) {
-                    // الأسماء في بطاقة الترحيب
+                    // الأسماء
                     document.getElementById('welcomeGroom').textContent = data.groom || 'Mahmoud';
                     document.getElementById('welcomeBride').textContent = data.bride || 'Eman';
-                    
-                    // الأسماء في البطاقة الرئيسية
                     document.getElementById('groomName').textContent = data.groom || 'Mahmoud';
                     document.getElementById('brideName').textContent = data.bride || 'Eman';
-                    document.getElementById('eventLabel').textContent = data.eventLabel || '✨ فرحة عمرنا ✨';
                     
-                    // بدء تأثير الكتابة
-                    startTypewriterEffect(data.eventLabel || '✨ فرحة عمرنا ✨');
+                    // بدء تأثير الكتابة بالكلمات
+                    const messageText = data.eventLabel || '✨ فرحة عمرنا ✨';
+                    startWordByWordEffect(messageText);
                     
                     // باقي البيانات
-                    document.getElementById('eventDate').textContent = data.eventDate || '08 . 08 . 2026';
-                    document.getElementById('eventTime').textContent = data.eventTime || '7:00 PM';
-                    document.getElementById('eventVenue').textContent = data.venue || 'Diva Hall';
+                    document.getElementById('eventDate').textContent = data.eventDate || 'الجمعة 8 أغسطس 2026';
+                    document.getElementById('eventTime').textContent = data.eventTime || 'الساعة 7:00 مساءً';
+                    document.getElementById('eventVenue').textContent = data.venue || 'قاعة ديفا هول - القاهرة';
                     document.getElementById('locationLink').href = data.locationLink || '#';
                     
                     if (data.globalBg) globalBg.src = data.globalBg;
@@ -921,7 +993,7 @@
                         }
                     }
                 } else {
-                    startTypewriterEffect('✨ فرحة عمرنا ✨');
+                    startWordByWordEffect('✨ فرحة عمرنا ✨');
                 }
             });
             
@@ -931,7 +1003,6 @@
                     allWishes.unshift({ id: child.key, ...child.val() });
                 });
                 renderWishes();
-                updateStats();
             });
         }
         
@@ -1063,7 +1134,6 @@
                     gsap.to(flipOverlay, { opacity: 0, duration: 0.5, delay: 0.5 });
                     gsap.to(flipEffect, { opacity: 0, duration: 0.5, delay: 0.5 });
                     
-                    // إظهار بطاقة الترحيب بعد انتهاء التقليب
                     mainContainer.style.opacity = '1';
                     gsap.fromTo(welcomeCard, 
                         { scale: 0.8, opacity: 0 },
@@ -1155,29 +1225,6 @@
             `).join('');
         }
         
-        function updateStats() {
-            const total = allWishes.length;
-            const present = allWishes.filter(w => w.status === 'حاضر').length;
-            const maybe = allWishes.filter(w => w.status === 'ربما').length;
-            const excused = allWishes.filter(w => w.status === 'معتذر').length;
-            const groom = allWishes.filter(w => w.side === 'عريس').length;
-            const bride = allWishes.filter(w => w.side === 'عروسة').length;
-            
-            const statTotal = document.getElementById('statTotal');
-            const statPresent = document.getElementById('statPresent');
-            const statMaybe = document.getElementById('statMaybe');
-            const statExcused = document.getElementById('statExcused');
-            const statGroom = document.getElementById('statGroom');
-            const statBride = document.getElementById('statBride');
-            
-            if (statTotal) statTotal.textContent = total;
-            if (statPresent) statPresent.textContent = present;
-            if (statMaybe) statMaybe.textContent = maybe;
-            if (statExcused) statExcused.textContent = excused;
-            if (statGroom) statGroom.textContent = groom;
-            if (statBride) statBride.textContent = bride;
-        }
-        
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
@@ -1202,8 +1249,8 @@
             startPageFlipEffect();
         }, 100);
         
-        console.log('%c👑 ROYAL MAIN PAGE - WITH TYPEWRITER EFFECT 👑', 'color: #e8c97a; font-size: 18px; font-weight: bold;');
-        console.log('%c🎵 Click the arrow to reveal full invitation', 'color: #ffb7c5; font-size: 14px;');
+        console.log('%c👑 ROYAL MAIN PAGE - PREMIUM DESIGN 👑', 'color: #e8c97a; font-size: 18px; font-weight: bold;');
+        console.log('%c🎨 Word-by-word typewriter effect | Custom SVG arrow', 'color: #ffb7c5; font-size: 14px;');
     </script>
 </body>
 </html>
