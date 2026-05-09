@@ -3,375 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تهيئة قاعدة البيانات | M & E</title>
+    <title>تهيئة قاعدة البيانات - نظام إدارة الدعوات</title>
+    
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --pink: #ff6b9d;
-            --gold: #d4a574;
-            --dark: #1a0a0f;
-            --white: #ffffff;
-            --gradient-main: linear-gradient(135deg, #ff6b9d 0%, #c44569 50%, #b76e79 100%);
-            --gradient-gold: linear-gradient(135deg, #d4a574 0%, #f4e4d0 50%, #b76e79 100%);
-            --shadow-glow: 0 0 40px rgba(255, 107, 157, 0.3);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #1a0a0f 0%, #2d1823 100%);
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a0e12 0%, #2a1a1f 100%);
             min-height: 100vh;
+            padding: 40px 20px;
+            color: #fff;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #e8c97a, #ffb7c5);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(232,201,122,0.2);
+        }
+        
+        .card h2 {
+            color: #e8c97a;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            border-right: 3px solid #e8c97a;
+            padding-right: 15px;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .status-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            color: var(--dark);
+            font-size: 1.2rem;
         }
-
-        .container {
-            background: var(--white);
-            border-radius: 40px;
-            padding: 50px 40px;
-            max-width: 600px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            position: relative;
-            overflow: hidden;
+        
+        .status-icon.success { background: rgba(76, 175, 80, 0.2); color: #4caf50; }
+        .status-icon.pending { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
+        .status-icon.error { background: rgba(244, 67, 54, 0.2); color: #f44336; }
+        .status-icon.info { background: rgba(33, 150, 243, 0.2); color: #2196f3; }
+        
+        .status-text {
+            flex: 1;
         }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: var(--gradient-gold);
-            border-radius: 5px 5px 0 0;
+        
+        .status-title {
+            font-weight: bold;
+            margin-bottom: 5px;
         }
-
-        .header-icon {
-            text-align: center;
-            font-size: 5rem;
-            margin-bottom: 20px;
-            animation: float 2s ease-in-out infinite;
+        
+        .status-desc {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
         }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+        
+        .status-value {
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #e8c97a;
         }
-
-        h1 {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 900;
-            background: var(--gradient-main);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #999;
-            margin-bottom: 40px;
-            font-size: 0.9rem;
-        }
-
-        .info-box {
-            background: #fdf8f9;
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 30px;
-            border: 2px solid rgba(212, 167, 116, 0.2);
-        }
-
-        .info-box h3 {
-            color: var(--pink);
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-        }
-
-        .info-item {
-            padding: 10px 0;
-            border-bottom: 1px solid #f0e6ea;
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-        }
-
-        .info-item:last-child {
-            border-bottom: none;
-        }
-
-        .info-label {
-            color: #999;
-            font-weight: 600;
-        }
-
-        .info-value {
-            color: var(--dark);
-            font-weight: 700;
-        }
-
+        
         .btn {
-            width: 100%;
-            padding: 18px;
+            background: linear-gradient(135deg, #e8c97a, #c9a84c);
             border: none;
-            border-radius: 20px;
-            font-family: 'Cairo', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 700;
+            padding: 14px 30px;
+            border-radius: 50px;
+            color: #1a0e12;
+            font-weight: bold;
+            font-size: 1rem;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-bottom: 15px;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .btn:hover::before {
-            opacity: 1;
-        }
-
-        .btn-primary {
-            background: var(--gradient-main);
-            color: white;
-            box-shadow: var(--shadow-glow);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(255, 107, 157, 0.5);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: var(--pink);
-            border: 2px solid var(--pink);
-        }
-
-        .btn-secondary:hover {
-            background: #fff5f7;
-            transform: translateY(-3px);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #ff4444, #cc0000);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
-        }
-
-        .btn:active {
-            transform: scale(0.96);
-        }
-
-        .btn.loading {
-            pointer-events: none;
-            opacity: 0.7;
-        }
-
-        .btn.loading::after {
-            content: '';
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            border: 3px solid white;
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: spinner 0.7s linear infinite;
-            top: 50%;
-            left: 50%;
-            margin-left: -12px;
-            margin-top: -12px;
-        }
-
-        @keyframes spinner {
-            to { transform: rotate(360deg); }
-        }
-
-        .status-message {
-            text-align: center;
-            padding: 15px;
-            border-radius: 15px;
+            transition: all 0.3s ease;
             margin-top: 20px;
-            font-weight: 600;
-            display: none;
-            animation: fadeIn 0.3s ease;
+            width: 100%;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(232,201,122,0.3);
         }
-
-        .status-message.success {
-            background: #e8f5e9;
-            color: #2e7d32;
-            border: 2px solid #4caf50;
+        
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            margin-top: 10px;
         }
-
-        .status-message.error {
-            background: #fbe9e7;
-            color: #c62828;
-            border: 2px solid #ef5350;
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
         }
-
-        .status-message.info {
-            background: #e3f2fd;
-            color: #1565c0;
-            border: 2px solid #42a5f5;
-        }
-
-        .divider {
-            text-align: center;
-            margin: 30px 0;
-            position: relative;
-        }
-
-        .divider::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: #f0e6ea;
-        }
-
-        .divider span {
-            background: white;
-            padding: 0 20px;
-            position: relative;
-            color: #999;
-            font-size: 0.85rem;
-        }
-
+        
         .log-area {
-            background: #1a1a1a;
-            border-radius: 15px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 20px;
             padding: 20px;
-            margin-top: 30px;
+            font-family: monospace;
+            font-size: 0.8rem;
             max-height: 300px;
             overflow-y: auto;
-            font-family: monospace;
-            font-size: 0.85rem;
-            color: #00ff88;
-            display: none;
+            margin-top: 20px;
         }
-
-        .log-area.show {
-            display: block;
-        }
-
+        
         .log-entry {
             padding: 5px 0;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: #aaa;
         }
-
-        .log-entry.success { color: #00ff88; }
-        .log-entry.error { color: #ff4444; }
-        .log-entry.info { color: #42a5f5; }
-
-        @media (max-width: 480px) {
-            .container { padding: 40px 25px; }
-            h1 { font-size: 1.6rem; }
+        
+        .log-entry.success { color: #4caf50; }
+        .log-entry.error { color: #f44336; }
+        .log-entry.info { color: #2196f3; }
+        
+        .progress-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e8c97a, #ffb7c5);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+        
+        .flex-btns {
+            display: flex;
+            gap: 15px;
+        }
+        
+        @media (max-width: 600px) {
+            .card { padding: 20px; }
+            .header h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <div class="header-icon">🗄️</div>
-        <h1>تهيئة قاعدة البيانات</h1>
-        <p class="subtitle">M & E - نظام إدارة دعوة الخطوبة</p>
-
-        <div class="info-box">
-            <h3>📋 البيانات الافتراضية للتهيئة</h3>
-            <div class="info-item">
-                <span class="info-label">العريس:</span>
-                <span class="info-value">M</span>
+        <div class="header">
+            <h1>⚙️ مدير تهيئة قاعدة البيانات ⚙️</h1>
+            <p>تهيئة وحفظ جميع إعدادات شاشات الدعوات في Firebase</p>
+        </div>
+        
+        <div class="card">
+            <h2>📊 هيكل قاعدة البيانات</h2>
+            <div id="dbStructure"></div>
+        </div>
+        
+        <div class="card">
+            <h2>🎛️ إجراءات التهيئة</h2>
+            <div class="flex-btns">
+                <button class="btn" onclick="initDatabase()">🚀 تهيئة قاعدة البيانات بالكامل</button>
+                <button class="btn btn-secondary" onclick="resetDatabase()">🔄 إعادة ضبط كل شيء</button>
             </div>
-            <div class="info-item">
-                <span class="info-label">العروسة:</span>
-                <span class="info-value">E</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">المناسبة:</span>
-                <span class="info-value">💍 خطوبة</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">القاعة:</span>
-                <span class="info-value">قاعة الفردوس للمناسبات</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">التاريخ:</span>
-                <span class="info-value">الجمعة 15 يوليو 2024</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">الساعة:</span>
-                <span class="info-value">7:00 مساءً</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">الخط الرئيسي:</span>
-                <span class="info-value">Playfair Display</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">خط الإنترو:</span>
-                <span class="info-value">Playfair Display</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">مدة الإنترو:</span>
-                <span class="info-value">5 ثوانٍ</span>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <button class="btn btn-secondary" onclick="exportDatabase()">📥 تصدير جميع البيانات (JSON)</button>
+        </div>
+        
+        <div class="card">
+            <h2>📝 سجل العمليات</h2>
+            <div class="log-area" id="logArea">
+                <div class="log-entry info">⏳ جاهز للتهيئة...</div>
             </div>
         </div>
-
-        <button class="btn btn-primary" onclick="initializeDatabase()" id="initBtn">
-            🚀 تهيئة قاعدة البيانات بالإعدادات الافتراضية
-        </button>
-
-        <div class="divider"><span>أو</span></div>
-
-        <button class="btn btn-secondary" onclick="resetWishes()" id="resetBtn">
-            🗑️ مسح جميع التهاني فقط
-        </button>
-
-        <button class="btn btn-danger" onclick="fullReset()" id="fullResetBtn">
-            ⚠️ مسح كامل لقاعدة البيانات
-        </button>
-
-        <div id="statusMessage" class="status-message"></div>
-        <div id="logArea" class="log-area"></div>
     </div>
 
     <script>
-        // ============ FIREBASE CONFIGURATION ============
+        // ============ FIREBASE CONFIG ============
         const firebaseConfig = {
             apiKey: "AIzaSyCF-kh6JgAbhroue7cKRdMZjwYV8m2c6Uw",
             authDomain: "engagmen.firebaseapp.com",
@@ -381,259 +225,342 @@
             messagingSenderId: "286100738965",
             appId: "1:286100738965:web:3f5be0307dca5927e5dc9c"
         };
-
-        // Initialize Firebase
+        
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-
+        
+        let currentProgress = 0;
+        
         // ============ DEFAULT SETTINGS ============
-        const defaultSettings = {
-            groomName: "M",
-            brideName: "E",
-            eventLabel: "💍 خطوبة",
-            image: "",
-            hall: "قاعة الفردوس للمناسبات",
-            day: "الجمعة 15 يوليو 2024",
-            time: "الساعة 7:00 مساءً",
-            location: "https://maps.google.com",
-            date: "2024-07-15T19:00",
-            introDelay: 5,
-            mainFont: "Playfair Display",
-            introFont: "Playfair Display"
+        const DEFAULT_SETTINGS = {
+            // إعدادات المين (الصفحة الرئيسية)
+            mainSettings: {
+                groom: "Mahmoud",
+                bride: "Eman",
+                eventLabel: "We're Getting Married!",
+                eventDate: "08 . 08 . 2026",
+                eventTime: "7:00 PM",
+                venue: "Diva Hall",
+                locationLink: "https://maps.google.com",
+                globalBg: "https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg",
+                coupleImage: "https://via.placeholder.com/160",
+                musicUrl: "https://res.cloudinary.com/dsuv6suzb/video/upload/v1/wedding-audio/adkhly_omry_complete",
+                countdownDate: "2026-08-08T19:00",
+                updatedAt: null
+            },
+            
+            // إعدادات الظرف (الصفحة الأولى)
+            envelopeSettings: {
+                groomName: "Mahmoud",
+                brideName: "Eman",
+                eventDate: "08.08.2026",
+                bgUrl: "https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg",
+                updatedAt: null
+            },
+            
+            // التعليقات والتهاني
+            wishes: {
+                // سيتم إنشاء العقدة فقط، البيانات تأتي من المستخدمين
+            },
+            
+            // إحصائيات النظام
+            systemStats: {
+                totalVisits: 0,
+                totalWishes: 0,
+                totalPresent: 0,
+                totalMaybe: 0,
+                totalExcused: 0,
+                lastUpdated: null
+            }
         };
-
-        // ============ SAMPLE WISHES ============
-        const sampleWishes = [
-            {
-                name: "أحمد محمد",
-                side: "عريس",
-                status: "حاضر",
-                message: "ألف مبروك يا أحلى عروسين، فرحتكم فرحتنا كلنا 💝",
-                timestamp: firebase.database.ServerValue.TIMESTAMP
-            },
-            {
-                name: "سارة علي",
-                side: "عروسة",
-                status: "حاضر",
-                message: "مبروك يا أحلى صديقة، تستاهلي كل الخير 🌹",
-                timestamp: firebase.database.ServerValue.TIMESTAMP
-            },
-            {
-                name: "محمود حسن",
-                side: "عريس",
-                status: "ربما",
-                message: "إن شاء الله أكون معاكم، ألف مبروك مقدماً 🎉",
-                timestamp: firebase.database.ServerValue.TIMESTAMP
-            }
-        ];
-
-        // ============ LOGGING SYSTEM ============
-        let logs = [];
-
+        
+        // ============ UTILITIES ============
         function addLog(message, type = 'info') {
-            const timestamp = new Date().toLocaleTimeString();
-            logs.push({ message, type, timestamp });
-            updateLogDisplay();
-        }
-
-        function updateLogDisplay() {
             const logArea = document.getElementById('logArea');
-            if (logs.length > 0) {
-                logArea.classList.add('show');
-                logArea.innerHTML = logs.map(log => `
-                    <div class="log-entry ${log.type}">
-                        [${log.timestamp}] ${log.message}
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${type}`;
+            const time = new Date().toLocaleTimeString();
+            let icon = 'ℹ️';
+            if (type === 'success') icon = '✅';
+            if (type === 'error') icon = '❌';
+            if (type === 'info') icon = '📌';
+            logEntry.innerHTML = `[${time}] ${icon} ${message}`;
+            logArea.appendChild(logEntry);
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+        
+        function updateProgress(increment) {
+            currentProgress += increment;
+            const fill = document.getElementById('progressFill');
+            fill.style.width = Math.min(currentProgress, 100) + '%';
+        }
+        
+        function resetProgress() {
+            currentProgress = 0;
+            document.getElementById('progressFill').style.width = '0%';
+        }
+        
+        // ============ DISPLAY DATABASE STRUCTURE ============
+        function displayDBStructure() {
+            const structure = {
+                'mainSettings': 'إعدادات الصفحة الرئيسية (الأسماء، التاريخ، الصور، الموسيقى)',
+                'envelopeSettings': 'إعدادات صفحة الظرف (الأسماء، الخلفية)',
+                'wishes': 'تهاني وردود أفعال المدعوين',
+                'systemStats': 'إحصائيات النظام'
+            };
+            
+            let html = '';
+            for (const [key, value] of Object.entries(structure)) {
+                html += `
+                    <div class="status-item">
+                        <div class="status-icon info">📁</div>
+                        <div class="status-text">
+                            <div class="status-title">/${key}</div>
+                            <div class="status-desc">${value}</div>
+                        </div>
                     </div>
-                `).join('');
-                logArea.scrollTop = logArea.scrollHeight;
+                `;
             }
+            document.getElementById('dbStructure').innerHTML = html;
         }
-
-        function showStatus(message, type = 'info') {
-            const statusEl = document.getElementById('statusMessage');
-            statusEl.textContent = message;
-            statusEl.className = `status-message ${type}`;
-            statusEl.style.display = 'block';
+        
+        // ============ CHECK CURRENT DATABASE STATUS ============
+        async function checkDatabaseStatus() {
+            addLog('🔍 جاري فحص حالة قاعدة البيانات...', 'info');
             
-            setTimeout(() => {
-                statusEl.style.display = 'none';
-            }, 5000);
-        }
-
-        // ============ INITIALIZE DATABASE ============
-        async function initializeDatabase() {
-            const initBtn = document.getElementById('initBtn');
+            const paths = ['mainSettings', 'envelopeSettings', 'wishes', 'systemStats'];
             
-            if (!confirm('هل أنت متأكد من تهيئة قاعدة البيانات بالإعدادات الافتراضية؟\n\nسيتم إنشاء جميع البيانات الجديدة.')) {
-                return;
-            }
-
-            initBtn.classList.add('loading');
-            initBtn.textContent = '';
-            logs = [];
-            addLog('بدء عملية التهيئة...', 'info');
-            showStatus('جاري تهيئة قاعدة البيانات...', 'info');
-
-            try {
-                // Step 1: Set settings
-                addLog('جاري حفظ إعدادات الصفحة...', 'info');
-                await db.ref('settings').set(defaultSettings);
-                addLog('✅ تم حفظ إعدادات الصفحة بنجاح', 'success');
-
-                // Step 2: Clear old wishes
-                addLog('جاري تنظيف التهاني القديمة...', 'info');
-                await db.ref('wishes').remove();
-                addLog('✅ تم مسح التهاني القديمة', 'success');
-
-                // Step 3: Add sample wishes
-                addLog('جاري إضافة تهاني تجريبية...', 'info');
-                for (const wish of sampleWishes) {
-                    await db.ref('wishes').push(wish);
-                    addLog(`✅ تمت إضافة تهنئة من: ${wish.name}`, 'success');
-                }
-
-                addLog('🎉 تمت عملية التهيئة بنجاح كامل!', 'success');
-                showStatus('✅ تمت تهيئة قاعدة البيانات بنجاح! يمكنك الآن استخدام التطبيق.', 'success');
-
-                // Update info display
-                updateInfoDisplay();
-
-            } catch (error) {
-                addLog(`❌ خطأ: ${error.message}`, 'error');
-                showStatus('❌ حدث خطأ أثناء التهيئة. راجع السجل للتفاصيل.', 'error');
-                console.error('Database initialization error:', error);
-            } finally {
-                initBtn.classList.remove('loading');
-                initBtn.textContent = '🚀 تهيئة قاعدة البيانات بالإعدادات الافتراضية';
-            }
-        }
-
-        // ============ RESET WISHES ONLY ============
-        async function resetWishes() {
-            const resetBtn = document.getElementById('resetBtn');
-            
-            if (!confirm('هل أنت متأكد من مسح جميع التهاني؟\n\nلا يمكن التراجع عن هذا الإجراء.')) {
-                return;
-            }
-
-            resetBtn.classList.add('loading');
-            resetBtn.textContent = '';
-            logs = [];
-            addLog('بدء مسح التهاني...', 'info');
-
-            try {
-                await db.ref('wishes').remove();
-                addLog('✅ تم مسح جميع التهاني بنجاح', 'success');
-                showStatus('✅ تم مسح جميع التهاني بنجاح.', 'success');
-            } catch (error) {
-                addLog(`❌ خطأ: ${error.message}`, 'error');
-                showStatus('❌ حدث خطأ أثناء مسح التهاني.', 'error');
-                console.error('Reset wishes error:', error);
-            } finally {
-                resetBtn.classList.remove('loading');
-                resetBtn.textContent = '🗑️ مسح جميع التهاني فقط';
-            }
-        }
-
-        // ============ FULL RESET ============
-        async function fullReset() {
-            const fullResetBtn = document.getElementById('fullResetBtn');
-            
-            if (!confirm('⚠️ تحذير: هذا سيؤدي إلى مسح كامل لقاعدة البيانات!\n\nسيتم حذف الإعدادات وجميع التهاني.\n\nهل أنت متأكد تماماً؟')) {
-                return;
-            }
-
-            if (!confirm('تأكيد نهائي: هل تريد حقاً مسح كل شيء؟')) {
-                return;
-            }
-
-            fullResetBtn.classList.add('loading');
-            fullResetBtn.textContent = '';
-            logs = [];
-            addLog('⚠️ بدء المسح الكامل لقاعدة البيانات...', 'info');
-
-            try {
-                // Remove all data
-                await db.ref('/').remove();
-                addLog('✅ تم مسح قاعدة البيانات بالكامل', 'success');
-                addLog('⚠️ يجب إعادة تهيئة البيانات للتمكن من استخدام التطبيق', 'info');
-                showStatus('⚠️ تم مسح قاعدة البيانات بالكامل. قم بالتهيئة مرة أخرى.', 'info');
-            } catch (error) {
-                addLog(`❌ خطأ: ${error.message}`, 'error');
-                showStatus('❌ حدث خطأ أثناء المسح الكامل.', 'error');
-                console.error('Full reset error:', error);
-            } finally {
-                fullResetBtn.classList.remove('loading');
-                fullResetBtn.textContent = '⚠️ مسح كامل لقاعدة البيانات';
-            }
-        }
-
-        // ============ UPDATE INFO DISPLAY ============
-        function updateInfoDisplay() {
-            db.ref('settings').once('value')
-                .then(snap => {
-                    const data = snap.val();
-                    if (data) {
-                        const infoItems = document.querySelectorAll('.info-item');
-                        const values = [
-                            data.groomName || 'M',
-                            data.brideName || 'E',
-                            data.eventLabel || '💍 خطوبة',
-                            data.hall || 'قاعة الفردوس للمناسبات',
-                            data.day || 'الجمعة 15 يوليو 2024',
-                            data.time || 'الساعة 7:00 مساءً',
-                            data.mainFont || 'Playfair Display',
-                            data.introFont || 'Playfair Display',
-                            (data.introDelay || 5) + ' ثوانٍ'
-                        ];
-
-                        infoItems.forEach((item, index) => {
-                            const valueSpan = item.querySelector('.info-value');
-                            if (valueSpan && values[index]) {
-                                valueSpan.textContent = values[index];
-                            }
-                        });
+            for (const path of paths) {
+                try {
+                    const snapshot = await db.ref(path).once('value');
+                    const exists = snapshot.exists();
+                    const count = snapshot.exists() ? Object.keys(snapshot.val()).length : 0;
+                    
+                    if (exists) {
+                        addLog(`📁 ${path}: موجود (${count} عنصر)`, 'success');
+                    } else {
+                        addLog(`📁 ${path}: غير موجود (سيتم إنشاؤه)`, 'info');
                     }
-                })
-                .catch(error => {
-                    console.error('Error fetching settings:', error);
-                });
-        }
-
-        // ============ CHECK CURRENT STATE ============
-        async function checkDatabaseState() {
-            try {
-                const settingsSnap = await db.ref('settings').once('value');
-                const wishesSnap = await db.ref('wishes').once('value');
-                
-                const hasSettings = settingsSnap.exists();
-                const wishesCount = wishesSnap.numChildren();
-                
-                if (hasSettings) {
-                    addLog(`✅ قاعدة البيانات مهيأة وتحتوي على ${wishesCount} تهنئة`, 'success');
-                    updateInfoDisplay();
-                } else {
-                    addLog('⚠️ قاعدة البيانات غير مهيأة. يرجى الضغط على زر التهيئة.', 'info');
+                } catch (error) {
+                    addLog(`⚠️ خطأ في فحص ${path}: ${error.message}`, 'error');
                 }
-            } catch (error) {
-                addLog('❌ فشل الاتصال بقاعدة البيانات', 'error');
-                console.error('Check database error:', error);
             }
         }
-
-        // ============ INITIALIZATION ============
-        function init() {
-            addLog('🚀 نظام تهيئة قاعدة البيانات جاهز', 'info');
-            addLog(`📅 ${new Date().toLocaleDateString('ar-EG')}`, 'info');
-            checkDatabaseState();
+        
+        // ============ INITIALIZE DATABASE ============
+        async function initDatabase() {
+            resetProgress();
+            addLog('🚀 بدء تهيئة قاعدة البيانات...', 'info');
+            addLog('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
+            
+            try {
+                // 1. تهيئة mainSettings
+                updateProgress(10);
+                addLog('📝 جاري حفظ إعدادات الصفحة الرئيسية (mainSettings)...', 'info');
+                DEFAULT_SETTINGS.mainSettings.updatedAt = firebase.database.ServerValue.TIMESTAMP;
+                await db.ref('mainSettings').set(DEFAULT_SETTINGS.mainSettings);
+                addLog('✅ تم حفظ mainSettings بنجاح', 'success');
+                
+                // 2. تهيئة envelopeSettings
+                updateProgress(20);
+                addLog('📝 جاري حفظ إعدادات صفحة الظرف (envelopeSettings)...', 'info');
+                DEFAULT_SETTINGS.envelopeSettings.updatedAt = firebase.database.ServerValue.TIMESTAMP;
+                await db.ref('envelopeSettings').set(DEFAULT_SETTINGS.envelopeSettings);
+                addLog('✅ تم حفظ envelopeSettings بنجاح', 'success');
+                
+                // 3. تهيئة systemStats
+                updateProgress(30);
+                addLog('📝 جاري حفظ إحصائيات النظام (systemStats)...', 'info');
+                DEFAULT_SETTINGS.systemStats.lastUpdated = firebase.database.ServerValue.TIMESTAMP;
+                await db.ref('systemStats').set(DEFAULT_SETTINGS.systemStats);
+                addLog('✅ تم حفظ systemStats بنجاح', 'success');
+                
+                // 4. قراءة البيانات للتأكد
+                updateProgress(50);
+                addLog('🔍 جاري التحقق من البيانات المحفوظة...', 'info');
+                
+                const mainCheck = await db.ref('mainSettings').once('value');
+                const mainData = mainCheck.val();
+                addLog(`📊 mainSettings: العريس = ${mainData.groom}, العروسة = ${mainData.bride}`, 'success');
+                
+                const envelopeCheck = await db.ref('envelopeSettings').once('value');
+                const envelopeData = envelopeCheck.val();
+                addLog(`📊 envelopeSettings: العريس = ${envelopeData.groomName}, العروسة = ${envelopeData.brideName}`, 'success');
+                
+                updateProgress(80);
+                addLog('💾 جميع البيانات محفوظة بشكل آمن في Firebase', 'success');
+                
+                // 5. عرض معلومات الاتصال
+                updateProgress(100);
+                addLog('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'success');
+                addLog('🎉 تمت تهيئة قاعدة البيانات بنجاح!', 'success');
+                addLog(`🔗 Database URL: ${firebaseConfig.databaseURL}`, 'info');
+                addLog(`📅 آخر تحديث: ${new Date().toLocaleString()}`, 'info');
+                
+            } catch (error) {
+                addLog(`❌ خطأ في تهيئة قاعدة البيانات: ${error.message}`, 'error');
+                console.error(error);
+            }
         }
-
-        // Start
-        init();
-
-        console.log('🗄️ Database Initialization Tool Ready');
-        console.log('💝 M & E Engagement System');
-        console.log('👨‍💻 Developed with ❤️');
+        
+        // ============ RESET DATABASE ============
+        async function resetDatabase() {
+            if (!confirm('⚠️ تحذير: هذا الإجراء سيحذف جميع البيانات الحالية ويستعيد الإعدادات الافتراضية!\n\nهل أنت متأكد؟')) {
+                addLog('❌ تم إلغاء عملية إعادة الضبط', 'info');
+                return;
+            }
+            
+            resetProgress();
+            addLog('🔄 بدء إعادة ضبط قاعدة البيانات...', 'info');
+            addLog('⚠️ سيتم حذف جميع البيانات الموجودة', 'warning');
+            
+            try {
+                // حذف جميع العقد
+                updateProgress(10);
+                addLog('🗑️ جاري حذف البيانات القديمة...', 'info');
+                
+                await db.ref('mainSettings').remove();
+                updateProgress(30);
+                await db.ref('envelopeSettings').remove();
+                updateProgress(50);
+                await db.ref('systemStats').remove();
+                updateProgress(70);
+                // ملاحظة: wishes لا يتم حذفها تلقائياً للحفاظ على تهاني المدعوين
+                addLog('💬 تم الاحتفاظ بتهاني المدعوين (wishes)', 'info');
+                
+                // إعادة تهيئة البيانات الافتراضية
+                updateProgress(80);
+                addLog('📝 جاري إعادة تهيئة الإعدادات الافتراضية...', 'info');
+                
+                DEFAULT_SETTINGS.mainSettings.updatedAt = firebase.database.ServerValue.TIMESTAMP;
+                await db.ref('mainSettings').set(DEFAULT_SETTINGS.mainSettings);
+                
+                DEFAULT_SETTINGS.envelopeSettings.updatedAt = firebase.database.ServerValue.TIMESTAMP;
+                await db.ref('envelopeSettings').set(DEFAULT_SETTINGS.envelopeSettings);
+                
+                DEFAULT_SETTINGS.systemStats.lastUpdated = firebase.database.ServerValue.TIMESTAMP;
+                await db.ref('systemStats').set(DEFAULT_SETTINGS.systemStats);
+                
+                updateProgress(100);
+                addLog('✅ تم إعادة ضبط قاعدة البيانات بنجاح!', 'success');
+                addLog('📋 جميع الإعدادات restored to defaults', 'success');
+                
+            } catch (error) {
+                addLog(`❌ خطأ في إعادة الضبط: ${error.message}`, 'error');
+            }
+        }
+        
+        // ============ EXPORT DATABASE AS JSON ============
+        async function exportDatabase() {
+            addLog('📤 جاري تصدير قاعدة البيانات...', 'info');
+            
+            try {
+                const exports = {};
+                const paths = ['mainSettings', 'envelopeSettings', 'wishes', 'systemStats'];
+                
+                for (const path of paths) {
+                    const snapshot = await db.ref(path).once('value');
+                    exports[path] = snapshot.val() || {};
+                    addLog(`📁 تم تصدير ${path}: ${Object.keys(exports[path]).length} عنصر`, 'success');
+                }
+                
+                const dataStr = JSON.stringify(exports, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `firebase_export_${new Date().toISOString().slice(0,19)}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                addLog('✅ تم تصدير قاعدة البيانات بنجاح!', 'success');
+                addLog(`📦 حجم الملف: ${(dataBlob.size / 1024).toFixed(2)} KB`, 'info');
+                
+            } catch (error) {
+                addLog(`❌ خطأ في التصدير: ${error.message}`, 'error');
+            }
+        }
+        
+        // ============ DISPLAY SUMMARY ============
+        async function displaySummary() {
+            try {
+                const mainSnapshot = await db.ref('mainSettings').once('value');
+                const envelopeSnapshot = await db.ref('envelopeSettings').once('value');
+                const wishesSnapshot = await db.ref('wishes').once('value');
+                const statsSnapshot = await db.ref('systemStats').once('value');
+                
+                const wishesCount = wishesSnapshot.exists() ? Object.keys(wishesSnapshot.val()).length : 0;
+                
+                const summaryHtml = `
+                    <div class="status-item">
+                        <div class="status-icon success">✅</div>
+                        <div class="status-text">
+                            <div class="status-title">الإعدادات الرئيسية</div>
+                            <div class="status-desc">${mainSnapshot.exists() ? 'محفوظة' : 'غير محفوظة'}</div>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-icon success">✅</div>
+                        <div class="status-text">
+                            <div class="status-title">إعدادات الظرف</div>
+                            <div class="status-desc">${envelopeSnapshot.exists() ? 'محفوظة' : 'غير محفوظة'}</div>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-icon info">💬</div>
+                        <div class="status-text">
+                            <div class="status-title">التهاني والبركات</div>
+                            <div class="status-desc">${wishesCount} رسالة</div>
+                        </div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-icon info">📊</div>
+                        <div class="status-text">
+                            <div class="status-title">إحصائيات النظام</div>
+                            <div class="status-desc">${statsSnapshot.exists() ? 'محفوظة' : 'غير محفوظة'}</div>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('dbStructure').innerHTML = summaryHtml;
+                
+            } catch (error) {
+                console.error('Error displaying summary:', error);
+            }
+        }
+        
+        // ============ AUTO-LOAD SUMMARY ON PAGE LOAD ============
+        window.addEventListener('load', () => {
+            displayDBStructure();
+            checkDatabaseStatus();
+            displaySummary();
+            addLog('✨ مدير قاعدة البيانات جاهز', 'success');
+            addLog('💡 استخدم الأزرار أعلاه لتهيئة أو إعادة ضبط قاعدة البيانات', 'info');
+        });
+        
+        // ============ MONITOR REAL-TIME CHANGES ============
+        db.ref('mainSettings').on('value', (snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                console.log('🔄 mainSettings updated:', data);
+            }
+        });
+        
+        db.ref('envelopeSettings').on('value', (snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                console.log('🔄 envelopeSettings updated:', data);
+            }
+        });
+        
+        db.ref('systemStats').on('value', (snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                console.log('🔄 systemStats updated:', data);
+            }
+        });
     </script>
 </body>
 </html>
