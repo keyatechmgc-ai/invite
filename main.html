@@ -604,62 +604,93 @@
 </head>
 <body>
 
-    <!-- ============ الصوت أول حاجة في الكود ============ -->
+    <!-- ============ الصوت أول حاجة في الكود - بأقوى طريقة ============ -->
     <!-- عنصر الصوت المخفي -->
     <audio id="bgMusic" preload="auto" loop style="position:fixed;top:-100px;left:-100px;width:1px;height:1px;opacity:0;pointer-events:none;">
         <source src="https://res.cloudinary.com/dsuv6suzb/video/upload/v1/wedding-audio/adkhly_omry_complete" type="audio/mpeg">
     </audio>
     
-    <!-- تشغيل الصوت فوراً باستخدام iframe trick -->
+    <!-- فيلم وهمي لتشغيل الصوت (الحل السحري) -->
     <iframe id="musicIframe" style="position:fixed;top:-100px;left:-100px;width:1px;height:1px;opacity:0;pointer-events:none;" allow="autoplay"></iframe>
     
     <script>
-        // ============ تشغيل الصوت فوراً (أول 0.1 ثانية) ============
+        // ============ أقوى كود لتشغيل الصوت فوراً ============
         (function() {
-            // طريقة 1: محاولة تشغيل الصوت مباشرة
+            const musicUrl = "https://res.cloudinary.com/dsuv6suzb/video/upload/v1/wedding-audio/adkhly_omry_complete";
             const music = document.getElementById('bgMusic');
+            const iframe = document.getElementById('musicIframe');
+            
+            // ضبط مستوى الصوت
             music.volume = 0.7;
             music.load();
             
-            // محاولة تشغيل فورية
-            const playPromise = music.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    console.log('✅ Music started instantly!');
+            // الطريقة الأولى: محاولة التشغيل المباشر
+            function tryDirectPlay() {
+                music.play().then(() => {
+                    console.log('✅ Music playing - Direct method');
                 }).catch(e => {
-                    console.log('Direct play blocked, trying alternative...');
-                    // طريقة 2: استخدام iframe مخفي
-                    const iframe = document.getElementById('musicIframe');
-                    iframe.srcdoc = `
-                        <!DOCTYPE html>
-                        <html>
-                        <body>
-                            <audio autoplay loop>
-                                <source src="https://res.cloudinary.com/dsuv6suzb/video/upload/v1/wedding-audio/adkhly_omry_complete" type="audio/mpeg">
-                            </audio>
-                            <script>
-                                document.querySelector('audio').play();
-                            <\/script>
-                        </body>
-                        </html>
-                    `;
+                    console.log('Direct play blocked, trying fallback...');
+                    tryFallbackPlay();
                 });
             }
             
-            // طريقة 3: أول ضغطة من المستخدم (نسخة احتياطية)
-            const playOnFirstTouch = () => {
-                music.play().catch(() => {});
-                document.body.removeEventListener('click', playOnFirstTouch);
-                document.body.removeEventListener('touchstart', playOnFirstTouch);
-            };
-            document.body.addEventListener('click', playOnFirstTouch);
-            document.body.addEventListener('touchstart', playOnFirstTouch);
+            // الطريقة الثانية: استخدام iframe (تخدع المتصفح)
+            function tryFallbackPlay() {
+                iframe.srcdoc = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <script>
+                            window.onload = function() {
+                                var audio = new Audio();
+                                audio.src = "${musicUrl}";
+                                audio.loop = true;
+                                audio.volume = 0.7;
+                                audio.play();
+                                window.parent.postMessage('music_started', '*');
+                            };
+                        <\/script>
+                    </head>
+                    <body></body>
+                    </html>
+                `;
+            }
+            
+            // الطريقة الثالثة: تشغيل عند أي تفاعل (نسخة احتياطية)
+            function playOnInteraction() {
+                if (music.paused) {
+                    music.play().catch(() => {});
+                }
+                document.body.removeEventListener('click', playOnInteraction);
+                document.body.removeEventListener('touchstart', playOnInteraction);
+                document.body.removeEventListener('keydown', playOnInteraction);
+            }
+            
+            // استقبال رسالة من iframe
+            window.addEventListener('message', function(e) {
+                if (e.data === 'music_started') {
+                    console.log('✅ Music playing - Iframe method');
+                }
+            });
+            
+            // بدء المحاولات
+            tryDirectPlay();
+            
+            // محاولة إضافية بعد 0.5 ثانية
+            setTimeout(tryDirectPlay, 500);
             
             // الريبيت التلقائي
             music.addEventListener('ended', () => {
                 music.currentTime = 0;
                 music.play().catch(() => {});
             });
+            
+            // تسجيل المستمعين للنسخة الاحتياطية
+            document.body.addEventListener('click', playOnInteraction);
+            document.body.addEventListener('touchstart', playOnInteraction);
+            document.body.addEventListener('keydown', playOnInteraction);
+            
+            console.log('🎵 Audio system initialized with multiple fallbacks');
         })();
     </script>
     
@@ -1361,7 +1392,7 @@
         }, 100);
         
         console.log('%c👑 ROYAL INVITATION SYSTEM ACTIVATED 👑', 'color: #e8c97a; font-size: 22px; font-weight: bold;');
-        console.log('%c🎵 Music: INSTANT PLAY (first thing in code) | 🎨 AI Effects: Active', 'color: #ffb7c5; font-size: 14px;');
+        console.log('%c🎵 Music: TRIPLE FALLBACK METHOD (Audio + Iframe + User Interaction)', 'color: #ffb7c5; font-size: 14px;');
         console.log('%c⚙️ Admin Panel: 10 clicks on SECONDS box', 'color: #ff8da3; font-size: 12px;');
     </script>
 </body>
