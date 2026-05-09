@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Mahmoud & Eman | دعوة زفاف</title>
+    <title>Mahmoud & Eman | عرس أحلامنا</title>
     
-    <!-- Firebase SDK -->
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     
@@ -15,7 +15,7 @@
     <!-- Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Great+Vibes&family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Dancing+Script:wght@400;500;600;700&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Great+Vibes&family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
         * {
@@ -38,7 +38,6 @@
             --gold-light: #e8d9c5;
             --gold-dark: #a8835a;
             --shadow-xl: 0 25px 50px -12px rgba(0,0,0,0.25);
-            --shadow-2xl: 0 35px 60px -15px rgba(60,44,48,0.3);
             --gradient-gold: linear-gradient(135deg, #c9a87c 0%, #e8d9c5 50%, #c9a87c 100%);
             --gradient-pink: linear-gradient(135deg, #e8a0b4 0%, #f2c8d4 50%, #e8a0b4 100%);
             --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
@@ -53,68 +52,60 @@
             position: relative;
         }
 
-        /* GLOBAL BACKGROUND */
-        .global-bg-wrapper {
+        /* الخلفية العامة */
+        .global-bg {
             position: fixed;
             inset: 0;
             z-index: 0;
-            overflow: hidden;
         }
-        .global-bg-image {
-            position: absolute;
-            inset: -5%;
-            width: 110%;
-            height: 110%;
+        .global-bg img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            transition: opacity 1.5s ease;
-            opacity: 0.4;
+            opacity: 0.35;
         }
-        .global-bg-overlay {
+        .global-bg .overlay {
             position: absolute;
             inset: 0;
-            background: radial-gradient(ellipse at center, rgba(253,245,247,0.85) 0%, rgba(253,245,247,0.92) 50%, rgba(242,200,212,0.6) 100%);
-            z-index: 1;
+            background: radial-gradient(ellipse at center, rgba(253,245,247,0.9) 0%, rgba(242,200,212,0.7) 100%);
         }
 
-        /* AI CURSOR */
+        /* AI Cursor */
         .ai-cursor {
             position: fixed;
-            width: 400px;
-            height: 400px;
+            width: 350px;
+            height: 350px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(232,160,180,0.12) 0%, rgba(232,160,180,0.04) 40%, transparent 70%);
+            background: radial-gradient(circle, rgba(232,160,180,0.15) 0%, rgba(232,160,180,0.05) 40%, transparent 70%);
             pointer-events: none;
             z-index: 9998;
             transform: translate(-50%, -50%);
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s;
         }
         .ai-cursor.active { opacity: 1; }
 
-        /* FLOATING HEARTS */
-        .heart-particle {
+        /* قلوب متطايرة */
+        .heart {
             position: fixed;
             pointer-events: none;
             z-index: 9997;
-            animation: heartFloat var(--duration) ease-out forwards;
-            font-size: var(--size);
-            color: var(--heart-color);
-            text-shadow: 0 0 10px currentColor;
+            animation: heartFloat var(--d) ease-out forwards;
+            font-size: var(--s);
         }
         @keyframes heartFloat {
-            0% { transform: translateY(100vh) translateX(0) scale(0) rotate(0deg); opacity: 0; }
-            15% { opacity: 0.8; }
-            50% { transform: translateY(50vh) translateX(var(--drift-x)) scale(var(--scale)) rotate(var(--rotate)); opacity: 0.9; }
-            85% { opacity: 0.7; }
-            100% { transform: translateY(-10vh) translateX(var(--drift-x-end)) scale(0.3) rotate(var(--rotate-end)); opacity: 0; }
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            20% { opacity: 0.9; }
+            50% { transform: translateY(50vh) translateX(var(--x)) scale(var(--sc)) rotate(var(--r)); opacity: 0.9; }
+            100% { transform: translateY(-10vh) translateX(var(--xe)) scale(0.2); opacity: 0; }
         }
 
-        /* SPARKLES */
+        /* سباركلز */
         .sparkle {
             position: fixed;
             pointer-events: none;
             z-index: 9996;
-            animation: sparkleAnim var(--duration) ease-out forwards;
+            animation: sparkleAnim var(--dur) ease-out forwards;
         }
         @keyframes sparkleAnim {
             0% { transform: scale(0) rotate(0deg); opacity: 0; }
@@ -122,17 +113,17 @@
             100% { transform: scale(0) rotate(180deg); opacity: 0; }
         }
 
-        /* PARTICLES */
+        /* Canvas للجزيئات */
         #particlesCanvas {
             position: fixed;
             inset: 0;
             pointer-events: none;
             z-index: 1;
-            opacity: 0.5;
+            opacity: 0.4;
         }
 
-        /* MAIN CONTAINER */
-        .main-container {
+        /* الحاوية الرئيسية */
+        .container {
             position: relative;
             z-index: 10;
             max-width: 550px;
@@ -140,7 +131,7 @@
             padding: 20px 16px 60px;
         }
 
-        /* HERO CARD */
+        /* البطاقة الرئيسية */
         .hero-card {
             background: rgba(255,255,255,0.92);
             backdrop-filter: blur(12px);
@@ -148,196 +139,337 @@
             padding: 35px 25px 45px;
             margin-bottom: 30px;
             box-shadow: var(--shadow-xl);
-            transition: all 0.6s var(--transition-smooth);
+            text-align: center;
             opacity: 0;
-            transform: translateY(40px) scale(0.98);
+            transform: translateY(40px);
+            transition: all 0.7s var(--transition-smooth);
         }
-        .hero-card.visible { opacity: 1; transform: translateY(0) scale(1); }
-        .hero-card:hover { transform: translateY(-5px) scale(1.01); }
+        .hero-card.visible { opacity: 1; transform: translateY(0); }
 
-        .couple-image-frame {
+        .frame {
             width: 140px;
             height: 140px;
             margin: 0 auto 25px;
             border-radius: 50%;
             padding: 5px;
             background: var(--gradient-gold);
-            animation: framePulse 3s ease-in-out infinite;
+            animation: pulse 3s infinite;
         }
-        @keyframes framePulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,124,0.4); }
+        @keyframes pulse {
+            0%,100% { box-shadow: 0 0 0 0 rgba(201,168,124,0.4); }
             50% { box-shadow: 0 0 0 20px rgba(201,168,124,0); }
         }
-        .couple-image-frame img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid white;
+        .frame img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid white; }
+
+        .hero-name { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; font-weight: 600; color: var(--pink-dark); }
+        .hero-and { font-family: 'Great Vibes', cursive; font-size: 2rem; color: var(--gold); margin: 5px 0; }
+        .event-badge { display: inline-block; padding: 8px 25px; background: var(--gradient-pink); color: white; border-radius: 40px; font-size: 0.7rem; letter-spacing: 3px; font-weight: 700; margin: 15px 0 20px; }
+
+        .detail { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 10px 0; color: var(--dark-soft); }
+        .detail-icon { width: 38px; height: 38px; background: rgba(232,160,180,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .invite-link { display: inline-block; margin-top: 20px; padding: 12px 30px; background: var(--gradient-gold); color: white; text-decoration: none; border-radius: 35px; font-weight: 700; }
+
+        /* الصورة السفلية */
+        .bottom-card {
+            margin: 20px 0 25px;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s var(--transition-smooth);
+        }
+        .bottom-card.visible { opacity: 1; transform: translateY(0); }
+        .bottom-card img { width: 100%; height: 200px; object-fit: cover; display: block; }
+
+        /* الكاونتر */
+        .countdown {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s var(--transition-smooth);
+        }
+        .countdown.visible { opacity: 1; transform: translateY(0); }
+        .count-item {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(8px);
+            padding: 18px 8px;
+            border-radius: 28px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .count-item:hover { transform: translateY(-5px); background: white; }
+        .count-item.animate { animation: pop 0.4s var(--transition-bounce); }
+        @keyframes pop {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.08); background: white; }
+        }
+        .count-num { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 800; color: var(--pink-dark); display: block; }
+        .count-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 3px; color: var(--gold-dark); font-weight: 700; margin-top: 6px; }
+
+        /* الفورم */
+        .form-card, .comments-card {
+            background: rgba(255,255,255,0.94);
+            backdrop-filter: blur(12px);
+            border-radius: 42px;
+            padding: 30px 22px;
+            margin-bottom: 25px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s var(--transition-smooth);
+        }
+        .form-card.visible, .comments-card.visible { opacity: 1; transform: translateY(0); }
+
+        .form-title, .comments-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            text-align: center;
+            color: var(--pink-dark);
+            margin-bottom: 25px;
         }
 
-        .hero-groom, .hero-bride { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; font-weight: 600; color: var(--pink-dark); letter-spacing: 4px; text-align: center; }
-        .hero-and { display: block; font-family: 'Great Vibes', cursive; font-size: 2rem; color: var(--gold); margin: 5px 0; text-align: center; }
-        .hero-event-label { display: inline-block; padding: 8px 25px; background: var(--gradient-pink); color: white; border-radius: 40px; font-size: 0.7rem; letter-spacing: 3px; font-weight: 700; text-transform: uppercase; margin: 15px auto 20px; width: fit-content; }
-        .hero-details { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; align-items: center; }
-        .hero-detail-item { display: flex; align-items: center; gap: 12px; color: var(--dark-soft); font-size: 0.9rem; }
-        .hero-detail-icon { width: 38px; height: 38px; background: rgba(232,160,180,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .location-btn { display: inline-flex; align-items: center; gap: 10px; margin-top: 20px; padding: 12px 30px; background: var(--gradient-gold); color: white; text-decoration: none; border-radius: 35px; font-weight: 700; font-size: 0.8rem; transition: all 0.4s var(--transition-bounce); }
-
-        /* FLOATING CARD IMAGE */
-        .floating-card-image { margin: 20px 0 25px; border-radius: 32px; overflow: hidden; box-shadow: var(--shadow-xl); opacity: 0; transform: translateY(30px); transition: all 0.6s var(--transition-smooth); }
-        .floating-card-image.visible { opacity: 1; transform: translateY(0); }
-        .floating-card-image img { width: 100%; height: 200px; object-fit: cover; display: block; transition: transform 0.6s ease; }
-        .floating-card-image:hover img { transform: scale(1.05); }
-
-        /* COUNTDOWN */
-        .countdown-wrapper { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 30px; opacity: 0; transform: translateY(30px); transition: all 0.6s var(--transition-smooth); }
-        .countdown-wrapper.visible { opacity: 1; transform: translateY(0); }
-        .countdown-item { background: rgba(255,255,255,0.9); backdrop-filter: blur(8px); padding: 18px 8px; border-radius: 28px; text-align: center; box-shadow: 0 8px 25px rgba(60,44,48,0.06); border: 1px solid rgba(232,160,180,0.15); transition: all 0.3s var(--transition-smooth); cursor: pointer; }
-        .countdown-item:hover { transform: translateY(-5px); background: white; }
-        .countdown-item.animate-item { animation: countPop 0.4s var(--transition-bounce); }
-        @keyframes countPop { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); background: white; } }
-        .countdown-number { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 800; color: var(--pink-dark); display: block; }
-        .countdown-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 3px; color: var(--gold-dark); font-weight: 700; margin-top: 6px; }
-
-        /* FORM & COMMENTS */
-        .form-card, .comments-card { background: rgba(255,255,255,0.94); backdrop-filter: blur(12px); border-radius: 42px; padding: 30px 22px; margin-bottom: 25px; box-shadow: var(--shadow-xl); opacity: 0; transform: translateY(30px); transition: all 0.5s var(--transition-smooth); }
-        .form-card.visible, .comments-card.visible { opacity: 1; transform: translateY(0); }
-        .form-title, .comments-header { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; text-align: center; color: var(--pink-dark); margin-bottom: 25px; }
-        .input-group { margin-bottom: 18px; }
-        .input-field, .status-select, .message-area { width: 100%; padding: 14px 18px; border: 2px solid rgba(232,160,180,0.2); border-radius: 24px; font-family: 'Cairo', sans-serif; background: white; outline: none; }
-        .side-group { display: flex; gap: 12px; margin-bottom: 18px; }
-        .side-btn { flex: 1; padding: 12px; border: 2px solid rgba(232,160,180,0.2); border-radius: 28px; background: white; font-weight: 700; cursor: pointer; text-align: center; transition: all 0.3s; }
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid rgba(232,160,180,0.2);
+            border-radius: 24px;
+            font-family: 'Cairo', sans-serif;
+            background: white;
+            margin-bottom: 18px;
+            outline: none;
+        }
+        .side-btns { display: flex; gap: 12px; margin-bottom: 18px; }
+        .side-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid rgba(232,160,180,0.2);
+            border-radius: 28px;
+            background: white;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
         .side-btn.active { background: var(--gradient-pink); border-color: transparent; color: white; transform: translateY(-2px); }
-        .submit-btn { width: 100%; padding: 16px; background: var(--gradient-pink); border: none; border-radius: 35px; color: white; font-weight: 800; cursor: pointer; transition: all 0.3s; }
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--gradient-pink);
+            border: none;
+            border-radius: 35px;
+            color: white;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 10px;
+        }
 
         .filter-tabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
-        .filter-tab { padding: 8px 20px; border: 2px solid rgba(232,160,180,0.2); border-radius: 30px; background: white; font-size: 0.75rem; font-weight: 700; cursor: pointer; }
+        .filter-tab {
+            padding: 8px 20px;
+            border: 2px solid rgba(232,160,180,0.2);
+            border-radius: 30px;
+            background: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
         .filter-tab.active { background: var(--gradient-pink); color: white; }
 
         .comments-list { max-height: 450px; overflow-y: auto; }
-        .comment-item { background: rgba(253,245,247,0.7); padding: 16px; border-radius: 24px; margin-bottom: 12px; border-right: 3px solid var(--pink); animation: commentSlide 0.4s ease; }
-        @keyframes commentSlide { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
-        .comment-side { display: inline-block; padding: 4px 12px; background: var(--gradient-pink); color: white; border-radius: 20px; font-size: 0.7rem; font-weight: 700; margin-bottom: 8px; }
+        .comment {
+            background: rgba(253,245,247,0.7);
+            padding: 16px;
+            border-radius: 24px;
+            margin-bottom: 12px;
+            border-right: 3px solid var(--pink);
+        }
+        .comment-badge { display: inline-block; padding: 4px 12px; background: var(--gradient-pink); color: white; border-radius: 20px; font-size: 0.7rem; font-weight: 700; margin-bottom: 8px; }
         .comment-name { font-weight: 800; margin-left: 10px; }
-        .comment-message { color: #666; font-size: 0.85rem; margin-top: 8px; }
+        .comment-msg { color: #666; font-size: 0.85rem; margin-top: 8px; }
 
-        /* ADMIN PANEL */
-        .admin-panel { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100000; display: none; overflow-y: auto; padding: 20px; align-items: center; justify-content: center; }
+        /* لوحة التحكم */
+        .admin-panel {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 100000;
+            display: none;
+            overflow-y: auto;
+            padding: 20px;
+            align-items: center;
+            justify-content: center;
+        }
         .admin-panel.active { display: flex; }
-        .admin-card { background: #1a0a0f; border-radius: 40px; padding: 35px 25px; max-width: 500px; width: 100%; border: 1px solid var(--gold); }
+        .admin-card {
+            background: #1a0a0f;
+            border-radius: 40px;
+            padding: 35px 25px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid var(--gold);
+        }
         .admin-title { color: var(--gold-light); font-size: 1.6rem; text-align: center; margin-bottom: 25px; }
         .admin-label { color: rgba(255,255,255,0.7); font-size: 0.75rem; display: block; margin-bottom: 5px; }
-        .admin-input { width: 100%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; color: white; margin-bottom: 15px; }
-        .admin-btn { width: 100%; padding: 12px; border: none; border-radius: 20px; font-weight: 700; cursor: pointer; margin-bottom: 10px; }
+        .admin-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 16px;
+            color: white;
+            margin-bottom: 15px;
+        }
+        .admin-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
         .admin-btn-primary { background: var(--gradient-gold); color: #1a0a0f; }
         .admin-btn-danger { background: linear-gradient(135deg, #f5576c, #c44569); color: white; }
 
-        /* MODAL & SCROLL */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 1000000; display: none; align-items: center; justify-content: center; }
-        .modal-overlay.active { display: flex; }
-        .modal-content { background: white; border-radius: 50px; padding: 40px 30px; text-align: center; max-width: 350px; width: 100%; }
-        .scroll-hidden { opacity: 0; transform: translateY(40px); transition: all 0.7s var(--transition-smooth); }
-        .scroll-visible { opacity: 1; transform: translateY(0); }
+        /* مودال */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: 50px;
+            padding: 40px 30px;
+            text-align: center;
+            max-width: 350px;
+            width: 100%;
+        }
         .footer { text-align: center; padding: 30px 20px; color: var(--gold-dark); font-size: 0.7rem; }
 
         @media (max-width: 480px) {
-            .hero-groom, .hero-bride { font-size: 2rem; }
-            .countdown-number { font-size: 1.5rem; }
+            .hero-name { font-size: 2rem; }
+            .count-num { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Global Background -->
-    <div class="global-bg-wrapper">
-        <img class="global-bg-image" id="globalBgImage" src="https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg" alt="">
-        <div class="global-bg-overlay"></div>
+    <!-- خلفية الموقع -->
+    <div class="global-bg">
+        <img id="bgImage" src="https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg" alt="">
+        <div class="overlay"></div>
     </div>
 
-    <div class="ai-cursor" id="aiCursor"></div>
+    <div class="ai-cursor" id="cursor"></div>
     <canvas id="particlesCanvas"></canvas>
 
-    <div class="main-container">
-        <!-- Hero Card -->
-        <div class="hero-card scroll-hidden" id="heroCard">
-            <div class="couple-image-frame"><img id="coupleImage" src="https://via.placeholder.com/140" alt="Couple"></div>
-            <div class="hero-groom" id="groomName">Mahmoud</div>
+    <div class="container">
+        <!-- الهيدر -->
+        <div class="hero-card scroll" id="heroCard">
+            <div class="frame"><img id="coupleImg" src="https://via.placeholder.com/140" alt=""></div>
+            <div class="hero-name" id="groomName">Mahmoud</div>
             <div class="hero-and">&</div>
-            <div class="hero-bride" id="brideName">Eman</div>
-            <div style="text-align: center;"><div class="hero-event-label" id="eventLabel">We're Getting Married!</div></div>
-            <div class="hero-details">
-                <div class="hero-detail-item"><span class="hero-detail-icon">📅</span><span id="eventDate">08 . 08 . 2026</span></div>
-                <div class="hero-detail-item"><span class="hero-detail-icon">🕖</span><span id="eventTime">7:00 PM</span></div>
-                <div class="hero-detail-item"><span class="hero-detail-icon">📍</span><span id="eventVenue">Diva Hall</span></div>
-            </div>
-            <div style="text-align: center;"><a href="#" id="locationLink" target="_blank" class="location-btn">📍 Formal Invitation to Follow</a></div>
+            <div class="hero-name" id="brideName">Eman</div>
+            <div><span class="event-badge" id="eventLabel">We're Getting Married!</span></div>
+            <div class="detail"><span class="detail-icon">📅</span><span id="eventDate">08 . 08 . 2026</span></div>
+            <div class="detail"><span class="detail-icon">🕖</span><span id="eventTime">7:00 PM</span></div>
+            <div class="detail"><span class="detail-icon">📍</span><span id="eventVenue">Diva Hall</span></div>
+            <div><a href="#" id="locationLink" target="_blank" class="invite-link">📍 Formal Invitation</a></div>
         </div>
 
-        <!-- Floating Card Image -->
-        <div class="floating-card-image scroll-hidden" id="floatingCard">
-            <img id="floatingCardImg" src="https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg" alt="Decorative">
+        <!-- الصورة السفلية -->
+        <div class="bottom-card scroll"><img id="bottomImg" src="https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg" alt=""></div>
+
+        <!-- الكاونتر -->
+        <div class="countdown scroll" id="countdown">
+            <div class="count-item" id="daysBox"><span class="count-num" id="days">00</span><span class="count-label">Days</span></div>
+            <div class="count-item" id="hoursBox"><span class="count-num" id="hours">00</span><span class="count-label">Hours</span></div>
+            <div class="count-item" id="minutesBox"><span class="count-num" id="minutes">00</span><span class="count-label">Minutes</span></div>
+            <div class="count-item" id="secondsBox"><span class="count-num" id="seconds">00</span><span class="count-label">Seconds</span></div>
         </div>
 
-        <!-- Countdown -->
-        <div class="countdown-wrapper scroll-hidden" id="countdownWrapper">
-            <div class="countdown-item" id="daysBox"><span class="countdown-number" id="days">00</span><span class="countdown-label">Days</span></div>
-            <div class="countdown-item" id="hoursBox"><span class="countdown-number" id="hours">00</span><span class="countdown-label">Hours</span></div>
-            <div class="countdown-item" id="minutesBox"><span class="countdown-number" id="minutes">00</span><span class="countdown-label">Minutes</span></div>
-            <div class="countdown-item" id="secondsBox"><span class="countdown-number" id="seconds">00</span><span class="countdown-label">Seconds</span></div>
-        </div>
-
-        <!-- Form -->
-        <div class="form-card scroll-hidden" id="formCard">
+        <!-- فورم التأكيد -->
+        <div class="form-card scroll">
             <div class="form-title">تأكيد الحضور</div>
-            <div class="input-group"><label>الاسم الكريم</label><input type="text" id="guestName" class="input-field" placeholder="اكتب اسمك"></div>
-            <div class="side-group"><div class="side-btn" onclick="selectSide('عريس', this)">عريس</div><div class="side-btn" onclick="selectSide('عروسة', this)">عروسة</div></div>
-            <select id="guestStatus" class="status-select"><option value="حاضر">بإذن الله سأحضر</option><option value="ربما">سأحاول الحضور</option><option value="معتذر">أعتذر لظروف خاصة</option></select>
-            <textarea id="guestMessage" class="message-area" placeholder="رسالة تهنئة..."></textarea>
+            <input type="text" id="guestName" placeholder="الاسم الكريم">
+            <div class="side-btns">
+                <div class="side-btn" onclick="selectSide('عريس', this)">عريس</div>
+                <div class="side-btn" onclick="selectSide('عروسة', this)">عروسة</div>
+            </div>
+            <select id="guestStatus">
+                <option value="حاضر">بإذن الله سأحضر</option>
+                <option value="ربما">سأحاول الحضور</option>
+                <option value="معتذر">أعتذر لظروف خاصة</option>
+            </select>
+            <textarea id="guestMessage" rows="3" placeholder="رسالة تهنئة..."></textarea>
             <button class="submit-btn" onclick="submitRSVP()">إرسال التهنئة</button>
         </div>
 
-        <!-- Comments -->
-        <div class="comments-card scroll-hidden" id="commentsCard">
-            <div class="comments-header">🎀 التهاني والبركات 🎀</div>
-            <div class="filter-tabs"><button class="filter-tab active" onclick="filterWishes('all', this)">الكل</button><button class="filter-tab" onclick="filterWishes('عريس', this)">العريس</button><button class="filter-tab" onclick="filterWishes('عروسة', this)">العروسة</button></div>
+        <!-- التعليقات -->
+        <div class="comments-card scroll">
+            <div class="comments-title">🎀 التهاني والبركات 🎀</div>
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="filterWishes('all', this)">الكل</button>
+                <button class="filter-tab" onclick="filterWishes('عريس', this)">العريس</button>
+                <button class="filter-tab" onclick="filterWishes('عروسة', this)">العروسة</button>
+            </div>
             <div class="comments-list" id="wishesList"></div>
         </div>
-        <div class="footer"><p>✨ جميع الحقوق محفوظة ✨</p></div>
+        <div class="footer">✨ جميع الحقوق محفوظة ✨</div>
     </div>
 
-    <!-- Admin Panel -->
+    <!-- لوحة التحكم -->
     <div class="admin-panel" id="adminPanel">
         <div class="admin-card">
             <div class="admin-title">✨ لوحة التحكم ✨</div>
-            <label class="admin-label">🌍 باك جراوند الموقع (الخلفية العامة)</label>
-            <input type="text" id="adminBgUrl" class="admin-input" placeholder="رابط صورة الخلفية">
-            <button class="admin-btn admin-btn-primary" onclick="uploadGlobalBg()">📤 رفع خلفية جديدة</button>
-            <button class="admin-btn" onclick="resetGlobalBg()" style="background:#666;">↺ استعادة الافتراضية</button>
-            <div style="height:20px;"></div>
-            <label class="admin-label">🖼️ الصورة السفلية (تحت الأسماء والكاونتر)</label>
-            <input type="text" id="adminCardImgUrl" class="admin-input" placeholder="رابط الصورة">
-            <button class="admin-btn admin-btn-primary" onclick="uploadCardImage()">📤 رفع صورة البطاقة</button>
-            <button class="admin-btn" onclick="resetCardImage()" style="background:#666;">↺ استعادة الافتراضية</button>
-            <div style="height:20px;"></div>
+            <label class="admin-label">🌍 خلفية الموقع</label>
+            <input type="text" id="adminBg" class="admin-input" placeholder="رابط الصورة">
+            <button class="admin-btn admin-btn-primary" onclick="uploadBg()">📤 رفع خلفية</button>
+            <button class="admin-btn" onclick="resetBg()" style="background:#666;">↺ استعادة الافتراضية</button>
+            
+            <label class="admin-label">🖼️ الصورة السفلية</label>
+            <input type="text" id="adminBottom" class="admin-input" placeholder="رابط الصورة">
+            <button class="admin-btn admin-btn-primary" onclick="uploadBottom()">📤 رفع الصورة</button>
+            <button class="admin-btn" onclick="resetBottom()" style="background:#666;">↺ استعادة الافتراضية</button>
+            
             <label class="admin-label">👰 اسم العريس</label><input type="text" id="adminGroom" class="admin-input">
             <label class="admin-label">🤵 اسم العروسة</label><input type="text" id="adminBride" class="admin-input">
-            <label class="admin-label">🏷️ النص التعريفي</label><input type="text" id="adminEventLabel" class="admin-input">
+            <label class="admin-label">🏷️ النص التعريفي</label><input type="text" id="adminLabel" class="admin-input">
             <label class="admin-label">📅 التاريخ</label><input type="text" id="adminDate" class="admin-input">
             <label class="admin-label">🕖 الوقت</label><input type="text" id="adminTime" class="admin-input">
             <label class="admin-label">📍 القاعة</label><input type="text" id="adminVenue" class="admin-input">
-            <label class="admin-label">🔗 رابط الموقع</label><input type="text" id="adminLocationLink" class="admin-input">
-            <button class="admin-btn admin-btn-primary" onclick="saveAllSettings()">💾 حفظ جميع الإعدادات</button>
-            <button class="admin-btn admin-btn-danger" onclick="closeAdminPanel()">❌ إغلاق</button>
+            <label class="admin-label">🔗 رابط الموقع</label><input type="text" id="adminLink" class="admin-input">
+            
+            <button class="admin-btn admin-btn-primary" onclick="saveSettings()">💾 حفظ الكل</button>
+            <button class="admin-btn admin-btn-danger" onclick="closeAdmin()">❌ إغلاق</button>
         </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal-overlay" id="modalOverlay"><div class="modal-content"><div class="modal-title" id="modalTitle"></div><div class="modal-message" id="modalMessage"></div><button class="submit-btn" onclick="closeModal()" style="margin-top:20px;">حسناً</button></div></div>
+    <!-- مودال -->
+    <div class="modal" id="modal"><div class="modal-content"><div class="modal-title" id="modalTitle"></div><div class="modal-message" id="modalMessage"></div><button class="submit-btn" onclick="closeModal()" style="margin-top:20px;">حسناً</button></div></div>
 
     <script>
         // Firebase
-        const firebaseConfig = { apiKey: "AIzaSyCF-kh6JgAbhroue7cKRdMZjwYV8m2c6Uw", authDomain: "engagmen.firebaseapp.com", databaseURL: "https://engagmen-default-rtdb.firebaseio.com", projectId: "engagmen", storageBucket: "engagmen.firebasestorage.app", messagingSenderId: "286100738965", appId: "1:286100738965:web:3f5be0307dca5927e5dc9c" };
+        const firebaseConfig = {
+            apiKey: "AIzaSyCF-kh6JgAbhroue7cKRdMZjwYV8m2c6Uw",
+            authDomain: "engagmen.firebaseapp.com",
+            databaseURL: "https://engagmen-default-rtdb.firebaseio.com",
+            projectId: "engagmen",
+            storageBucket: "engagmen.firebasestorage.app",
+            messagingSenderId: "286100738965",
+            appId: "1:286100738965:web:3f5be0307dca5927e5dc9c"
+        };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
@@ -352,9 +484,8 @@
         let adminClicks = 0;
 
         // Elements
-        const globalBgImg = document.getElementById('globalBgImage');
-        const floatingCardImg = document.getElementById('floatingCardImg');
-        const coupleImage = document.getElementById('coupleImage');
+        const bgImg = document.getElementById('bgImage');
+        const bottomImg = document.getElementById('bottomImg');
 
         // ============ AI PARTICLES ============
         const canvas = document.getElementById('particlesCanvas');
@@ -364,7 +495,15 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
         for (let i = 0; i < 100; i++) {
-            particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 4 + 1, speedX: (Math.random() - 0.5) * 0.4, speedY: (Math.random() - 0.5) * 0.3, color: `rgba(232,160,180,${Math.random() * 0.3 + 0.1})`, phase: Math.random() * Math.PI * 2 });
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 4 + 1,
+                speedX: (Math.random() - 0.5) * 0.3,
+                speedY: (Math.random() - 0.5) * 0.2,
+                color: `rgba(232,160,180,${Math.random() * 0.3 + 0.1})`,
+                phase: Math.random() * Math.PI * 2
+            });
         }
         function animateParticles() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -388,26 +527,26 @@
         // ============ AI HEARTS & SPARKLES ============
         function createHeart(x, y) {
             const heart = document.createElement('div');
-            heart.className = 'heart-particle';
+            heart.className = 'heart';
             const size = Math.random() * 25 + 15;
             heart.innerHTML = ['❤️', '💖', '💗', '💕', '💘', '💝'][Math.floor(Math.random() * 6)];
-            heart.style.cssText = `left: ${x}px; font-size: ${size}px; --duration: ${Math.random() * 4 + 4}s; --drift-x: ${(Math.random() - 0.5) * 150}px; --drift-x-end: ${(Math.random() - 0.5) * 100}px; --rotate: ${(Math.random() - 0.5) * 180}deg; --rotate-end: ${(Math.random() - 0.5) * 200}deg; --scale: ${Math.random() * 0.6 + 0.7}; --heart-color: ${['#e8a0b4', '#f2c8d4', '#c9a87c'][Math.floor(Math.random() * 3)]};`;
+            heart.style.cssText = `left: ${x}px; font-size: ${size}px; --d: ${Math.random() * 4 + 4}s; --x: ${(Math.random() - 0.5) * 150}px; --xe: ${(Math.random() - 0.5) * 100}px; --r: ${(Math.random() - 0.5) * 180}deg; --sc: ${Math.random() * 0.6 + 0.7};`;
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 8000);
         }
-        function createSparkleEffect(x, y) {
+        function createSparkle(x, y) {
             for (let i = 0; i < 5; i++) {
                 const s = document.createElement('div');
                 s.className = 'sparkle';
                 s.innerHTML = ['✨', '⭐', '💫', '🌟'][Math.floor(Math.random() * 4)];
-                s.style.cssText = `left: ${x + (Math.random() - 0.5) * 80}px; top: ${y + (Math.random() - 0.5) * 80}px; font-size: ${Math.random() * 16 + 10}px; --duration: ${Math.random() * 1 + 0.8}s;`;
+                s.style.cssText = `left: ${x + (Math.random() - 0.5) * 80}px; top: ${y + (Math.random() - 0.5) * 80}px; font-size: ${Math.random() * 16 + 10}px; --dur: ${Math.random() * 1 + 0.8}s;`;
                 document.body.appendChild(s);
                 setTimeout(() => s.remove(), 1500);
             }
         }
 
         // AI Cursor
-        const cursor = document.getElementById('aiCursor');
+        const cursor = document.getElementById('cursor');
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
@@ -417,16 +556,16 @@
         document.addEventListener('mouseleave', () => cursor.classList.remove('active'));
 
         setInterval(() => { if (Math.random() > 0.7) createHeart(Math.random() * window.innerWidth, window.innerHeight - 50); }, 800);
-        setInterval(() => { if (Math.random() > 0.85) createSparkleEffect(Math.random() * window.innerWidth, Math.random() * window.innerHeight); }, 1500);
+        setInterval(() => { if (Math.random() > 0.85) createSparkle(Math.random() * window.innerWidth, Math.random() * window.innerHeight); }, 1500);
 
         // ============ SCROLL REVEAL ============
-        const scrollElements = document.querySelectorAll('.scroll-hidden');
+        const scrollElements = document.querySelectorAll('.scroll');
         function checkScroll() {
             scrollElements.forEach(el => {
                 const rect = el.getBoundingClientRect();
                 if (rect.top < window.innerHeight - 100) {
-                    el.classList.add('scroll-visible');
-                    if (Math.random() > 0.8) createSparkleEffect(rect.left + rect.width/2, rect.top + 10);
+                    el.classList.add('visible');
+                    if (Math.random() > 0.8) createSparkle(rect.left + rect.width/2, rect.top + 10);
                 }
             });
         }
@@ -437,7 +576,10 @@
         // ============ COUNTDOWN ============
         function updateCountdown() {
             const diff = targetDate - Date.now();
-            if (diff <= 0) { ['days','hours','minutes','seconds'].forEach(id => document.getElementById(id).textContent = '00'); return; }
+            if (diff <= 0) {
+                ['days','hours','minutes','seconds'].forEach(id => document.getElementById(id).textContent = '00');
+                return;
+            }
             document.getElementById('days').textContent = String(Math.floor(diff / 86400000)).padStart(2,'0');
             document.getElementById('hours').textContent = String(Math.floor((diff % 86400000) / 3600000)).padStart(2,'0');
             document.getElementById('minutes').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0');
@@ -446,80 +588,96 @@
             if (Math.random() > 0.7) {
                 const boxes = ['daysBox', 'hoursBox', 'minutesBox', 'secondsBox'];
                 const box = document.getElementById(boxes[Math.floor(Math.random() * 4)]);
-                box.classList.add('animate-item');
-                setTimeout(() => box.classList.remove('animate-item'), 400);
+                box.classList.add('animate');
+                setTimeout(() => box.classList.remove('animate'), 400);
             }
         }
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // ============ ADMIN TRIGGER ============
+        // ============ ADMIN (10 clicks on seconds) ============
         document.getElementById('secondsBox').addEventListener('click', () => {
             adminClicks++;
             setTimeout(() => { if (adminClicks < 10) adminClicks = 0; }, 3000);
             if (adminClicks >= 10) {
                 document.getElementById('adminPanel').classList.add('active');
-                loadSettingsToAdmin();
+                loadToAdmin();
                 adminClicks = 0;
             }
         });
 
-        function loadSettingsToAdmin() {
+        function loadToAdmin() {
             document.getElementById('adminGroom').value = document.getElementById('groomName').textContent;
             document.getElementById('adminBride').value = document.getElementById('brideName').textContent;
-            document.getElementById('adminEventLabel').value = document.getElementById('eventLabel').textContent;
+            document.getElementById('adminLabel').value = document.getElementById('eventLabel').textContent;
             document.getElementById('adminDate').value = document.getElementById('eventDate').textContent.replace(/\s/g, '');
             document.getElementById('adminTime').value = document.getElementById('eventTime').textContent;
             document.getElementById('adminVenue').value = document.getElementById('eventVenue').textContent;
-            document.getElementById('adminLocationLink').value = document.getElementById('locationLink').href;
-            document.getElementById('adminBgUrl').value = globalBgImg.src;
-            document.getElementById('adminCardImgUrl').value = floatingCardImg.src;
+            document.getElementById('adminLink').value = document.getElementById('locationLink').href;
+            document.getElementById('adminBg').value = bgImg.src;
+            document.getElementById('adminBottom').value = bottomImg.src;
         }
+        function closeAdmin() { document.getElementById('adminPanel').classList.remove('active'); }
 
-        function closeAdminPanel() { document.getElementById('adminPanel').classList.remove('active'); }
-
-        // ============ UPLOAD FUNCTIONS ============
-        function uploadGlobalBg() {
+        // Upload functions
+        function uploadBg() {
             cloudinary.openUploadWidget({ cloudName: CLOUD_NAME, uploadPreset: UPLOAD_PRESET, sources: ['local', 'url'] }, (err, res) => {
-                if (res && res.event === 'success') { globalBgImg.src = res.info.secure_url; document.getElementById('adminBgUrl').value = res.info.secure_url; db.ref('mainSettings/globalBg').set(res.info.secure_url); }
+                if (res && res.event === 'success') { bgImg.src = res.info.secure_url; document.getElementById('adminBg').value = res.info.secure_url; db.ref('settings/bg').set(res.info.secure_url); }
             });
         }
-        function uploadCardImage() {
+        function uploadBottom() {
             cloudinary.openUploadWidget({ cloudName: CLOUD_NAME, uploadPreset: UPLOAD_PRESET, sources: ['local', 'url'] }, (err, res) => {
-                if (res && res.event === 'success') { floatingCardImg.src = res.info.secure_url; document.getElementById('adminCardImgUrl').value = res.info.secure_url; db.ref('mainSettings/cardImage').set(res.info.secure_url); }
+                if (res && res.event === 'success') { bottomImg.src = res.info.secure_url; document.getElementById('adminBottom').value = res.info.secure_url; db.ref('settings/bottom').set(res.info.secure_url); }
             });
         }
-        function resetGlobalBg() { const def = 'https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg'; globalBgImg.src = def; document.getElementById('adminBgUrl').value = def; db.ref('mainSettings/globalBg').set(def); }
-        function resetCardImage() { const def = 'https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg'; floatingCardImg.src = def; document.getElementById('adminCardImgUrl').value = def; db.ref('mainSettings/cardImage').set(def); }
+        function resetBg() { const def = 'https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg'; bgImg.src = def; document.getElementById('adminBg').value = def; db.ref('settings/bg').set(def); }
+        function resetBottom() { const def = 'https://i.pinimg.com/736x/47/aa/57/47aa57cabff46306447e777ac52e8a8e.jpg'; bottomImg.src = def; document.getElementById('adminBottom').value = def; db.ref('settings/bottom').set(def); }
 
-        function saveAllSettings() {
-            const settings = {
-                groom: document.getElementById('adminGroom').value, bride: document.getElementById('adminBride').value,
-                eventLabel: document.getElementById('adminEventLabel').value, eventDate: document.getElementById('adminDate').value,
-                eventTime: document.getElementById('adminTime').value, venue: document.getElementById('adminVenue').value,
-                locationLink: document.getElementById('adminLocationLink').value, globalBg: globalBgImg.src, cardImage: floatingCardImg.src
+        function saveSettings() {
+            const s = {
+                groom: document.getElementById('adminGroom').value,
+                bride: document.getElementById('adminBride').value,
+                label: document.getElementById('adminLabel').value,
+                date: document.getElementById('adminDate').value,
+                time: document.getElementById('adminTime').value,
+                venue: document.getElementById('adminVenue').value,
+                link: document.getElementById('adminLink').value,
+                bg: bgImg.src,
+                bottom: bottomImg.src
             };
-            document.getElementById('groomName').textContent = settings.groom; document.getElementById('brideName').textContent = settings.bride;
-            document.getElementById('eventLabel').textContent = settings.eventLabel; document.getElementById('eventDate').textContent = settings.eventDate;
-            document.getElementById('eventTime').textContent = settings.eventTime; document.getElementById('eventVenue').textContent = settings.venue;
-            document.getElementById('locationLink').href = settings.locationLink;
-            db.ref('mainSettings').set(settings);
+            document.getElementById('groomName').textContent = s.groom;
+            document.getElementById('brideName').textContent = s.bride;
+            document.getElementById('eventLabel').textContent = s.label;
+            document.getElementById('eventDate').textContent = s.date;
+            document.getElementById('eventTime').textContent = s.time;
+            document.getElementById('eventVenue').textContent = s.venue;
+            document.getElementById('locationLink').href = s.link;
+            db.ref('settings').set(s);
             showModal('✅ تم الحفظ', 'تم حفظ جميع الإعدادات بنجاح!');
         }
 
-        // Load settings
-        db.ref('mainSettings').on('value', (snap) => {
+        // Load settings from FB
+        db.ref('settings').on('value', snap => {
             const data = snap.val();
             if (data) {
                 if (data.groom) document.getElementById('groomName').textContent = data.groom;
                 if (data.bride) document.getElementById('brideName').textContent = data.bride;
-                if (data.eventLabel) document.getElementById('eventLabel').textContent = data.eventLabel;
-                if (data.eventDate) document.getElementById('eventDate').textContent = data.eventDate;
-                if (data.eventTime) document.getElementById('eventTime').textContent = data.eventTime;
+                if (data.label) document.getElementById('eventLabel').textContent = data.label;
+                if (data.date) document.getElementById('eventDate').textContent = data.date;
+                if (data.time) document.getElementById('eventTime').textContent = data.time;
                 if (data.venue) document.getElementById('eventVenue').textContent = data.venue;
-                if (data.locationLink) document.getElementById('locationLink').href = data.locationLink;
-                if (data.globalBg) globalBgImg.src = data.globalBg;
-                if (data.cardImage) floatingCardImg.src = data.cardImage;
+                if (data.link) document.getElementById('locationLink').href = data.link;
+                if (data.bg) bgImg.src = data.bg;
+                if (data.bottom) bottomImg.src = data.bottom;
+            }
+        });
+
+        // Load couple image from envelope settings
+        db.ref('envelopeSettings').on('value', snap => {
+            const data = snap.val();
+            if (data) {
+                if (data.groomName) document.getElementById('groomName').textContent = data.groomName;
+                if (data.brideName) document.getElementById('brideName').textContent = data.brideName;
             }
         });
 
@@ -532,19 +690,20 @@
         function submitRSVP() {
             const name = document.getElementById('guestName').value.trim();
             const status = document.getElementById('guestStatus').value;
-            const message = document.getElementById('guestMessage').value.trim();
+            const msg = document.getElementById('guestMessage').value.trim();
             if (!name || !selectedSide) { showModal('تنبيه', 'يرجى إدخال الاسم واختيار الطرف'); return; }
-            db.ref('wishes').push({ name, side: selectedSide, status, message, timestamp: firebase.database.ServerValue.TIMESTAMP }).then(() => {
+            db.ref('wishes').push({ name, side: selectedSide, status, message: msg, timestamp: firebase.database.ServerValue.TIMESTAMP }).then(() => {
                 showModal('🎉 تم الإرسال', `شكراً ${name} على تهنئتك!`);
-                document.getElementById('guestName').value = ''; document.getElementById('guestMessage').value = '';
+                document.getElementById('guestName').value = '';
+                document.getElementById('guestMessage').value = '';
                 document.querySelectorAll('.side-btn').forEach(btn => btn.classList.remove('active'));
                 selectedSide = '';
                 canvasConfetti({ particleCount: 200, spread: 100, origin: { y: 0.6 }, colors: ['#e8a0b4', '#c9a87c'] });
-                createSparkleEffect(window.innerWidth/2, window.innerHeight/2);
+                createSparkle(window.innerWidth/2, window.innerHeight/2);
             }).catch(() => showModal('خطأ', 'حدث خطأ، حاول مرة أخرى'));
         }
 
-        db.ref('wishes').orderByChild('timestamp').on('value', (snap) => {
+        db.ref('wishes').orderByChild('timestamp').on('value', snap => {
             allWishes = [];
             snap.forEach(child => { allWishes.unshift({ id: child.key, ...child.val() }); });
             renderWishes();
@@ -559,18 +718,11 @@
             const list = document.getElementById('wishesList');
             let filtered = currentFilter === 'all' ? allWishes : allWishes.filter(w => w.side === currentFilter);
             if (filtered.length === 0) { list.innerHTML = '<div style="text-align:center;padding:40px;">✨ لا توجد تهاني بعد ✨</div>'; return; }
-            list.innerHTML = filtered.map(w => `<div class="comment-item"><span class="comment-side">${w.side === 'عريس' ? 'العريس' : 'العروسة'}</span><span class="comment-name">${escapeHtml(w.name)}</span><div class="comment-message">${w.message ? '"' + escapeHtml(w.message) + '"' : '❤️'}</div></div>`).join('');
+            list.innerHTML = filtered.map(w => `<div class="comment"><span class="comment-badge">${w.side === 'عريس' ? 'العريس' : 'العروسة'}</span><span class="comment-name">${escapeHtml(w.name)}</span><div class="comment-msg">${w.message ? '"' + escapeHtml(w.message) + '"' : '❤️'}</div></div>`).join('');
         }
-        function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
-        function showModal(title, msg) { document.getElementById('modalTitle').textContent = title; document.getElementById('modalMessage').innerHTML = msg; document.getElementById('modalOverlay').classList.add('active'); }
-        function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
-
-        // Initial couple image
-        db.ref('envelopeSettings').on('value', (snap) => {
-            const data = snap.val();
-            if (data && data.groomName) document.getElementById('groomName').textContent = data.groomName;
-            if (data && data.brideName) document.getElementById('brideName').textContent = data.brideName;
-        });
+        function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+        function showModal(title, msg) { document.getElementById('modalTitle').textContent = title; document.getElementById('modalMessage').innerHTML = msg; document.getElementById('modal').classList.add('active'); }
+        function closeModal() { document.getElementById('modal').classList.remove('active'); }
     </script>
 </body>
 </html>
