@@ -1078,7 +1078,7 @@
         </div>
         
         <div class="envelope-instruction" id="envelopeInstruction">
-            اسحب الطرف الذهبي للأعلى لفتح الظرف
+            اسحب بأحد جوانب الختم الذهبي للأعلى لفتح الظرف
         </div>
     </div>
 
@@ -1251,7 +1251,7 @@
                 isAnimating = true; flapOpen = true;
                 flap.classList.add('opened'); letter.classList.add('revealed');
                 seal.classList.add('hidden'); seal.classList.add('paused');
-                instruction.textContent = 'اضغط على الرسالة للمتابعة';
+                instruction.textContent = 'اضغط على الرسالة اللي ظهرت للمتابعة';
                 const rect = container.getBoundingClientRect();
                 for (let i = 0; i < 18; i++) {
                     setTimeout(() => createSparkle(rect.left+rect.width/2+(Math.random()-0.5)*250, rect.top+rect.height/2+(Math.random()-0.5)*200, 2), i*40);
@@ -1264,7 +1264,7 @@
                 isAnimating = true; flapOpen = false;
                 flap.classList.remove('opened'); letter.classList.remove('revealed');
                 seal.classList.remove('hidden'); seal.classList.remove('paused');
-                instruction.textContent = 'اسحب الطرف الذهبي للأعلى لفتح الظرف';
+                instruction.textContent = 'اسحب بأحد جوانب الختم الذهبي للأعلى لفتح الظرف';
                 setTimeout(() => { isAnimating = false; }, 900);
             }
             
